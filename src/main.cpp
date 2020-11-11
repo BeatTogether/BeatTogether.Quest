@@ -5,6 +5,8 @@
 #include "beatsaber-hook/shared/utils/logging.hpp"
 #include "beatsaber-hook/shared/utils/utils.h"
 
+#include "GlobalNamespace/PlatformAuthenticationTokenProvider.hpp"
+#include "GlobalNamespace/AuthenticationToken.hpp"
 #include "GlobalNamespace/MasterServerEndPoint.hpp"
 #include "GlobalNamespace/MenuRpcManager.hpp"
 #include "GlobalNamespace/BeatmapIdentifierNetSerializable.hpp"
@@ -24,6 +26,19 @@ extern "C" void setup(ModInfo& info)
     info.id = ID;
     info.version = VERSION;
     modInfo = info;
+}
+
+MAKE_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
+{
+    auto* sessionToken = Array<uint8_t>::NewLength(1);
+    sessionToken->values[0] = 10;
+    auto authenticationToken = AuthenticationToken(
+        *reinterpret_cast<AuthenticationToken::Platform*>(self->platformUserModel),
+        self->userId,
+        self->userName,
+        sessionToken
+    );
+    return System::Threading::Tasks::Task_1<AuthenticationToken>::New_ctor(authenticationToken);
 }
 
 MAKE_HOOK_OFFSETLESS(NetworkConfigSO_get_masterServerEndPoint, MasterServerEndPoint*, Il2CppObject* self)
@@ -76,6 +91,8 @@ extern "C" void load()
 {
     il2cpp_functions::Init();
 
+    INSTALL_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken,
+        il2cpp_utils::FindMethod("", "PlatformAuthenticationTokenProvider", "GetAuthenticationToken"));
     INSTALL_HOOK_OFFSETLESS(NetworkConfigSO_get_masterServerEndPoint,
         il2cpp_utils::FindMethod("", "NetworkConfigSO", "get_masterServerEndPoint"));
     INSTALL_HOOK_OFFSETLESS(X509CertificateUtility_ValidateCertificateChain,
