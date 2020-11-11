@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Quest",
+            "defines": [
+                "MOD_ID=\"beat-together-lite\"",
+                "VERSION=\"0.1.0\"",
+                "__GNUC__",
+                "__aarch64__"
+            ],
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/Program Files/Unity/Hub/Editor/2018.3.14f1/Editor/Data/il2cpp/libil2cpp",
+                "c:/android-ndk/**"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}

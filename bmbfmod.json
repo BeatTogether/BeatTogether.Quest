@@ -1,0 +1,38 @@
+{
+    "id": "BeatTogether",
+    "name": "Beat Together",
+    "author": "Python",
+    "description": [
+        "A multiplayer private server for the modding community.",
+        "Supports crossplay between PC and Quest."
+    ],
+    "coverImageFilename": "Cover.png",
+    "icon": "Cover.png",
+    "category": "Gameplay",
+    "gameVersion": "1.12.2",
+    "version": "0.2.0",
+    "platform": "Quest",
+    "components": [
+        {
+            "type": "HookMod",
+            "installAction": {
+                "installLibraryFile": "libbeattogether.so"
+            },
+            "uninstallAction": {
+                "removeLibraryFile": "libbeattogether.so"
+            }
+        },
+        {
+            "type": "HookModLibrary",
+            "installAction": {
+              "installLibraryFile": "libbeatsaber-hook_0_8_4.so"
+            }
+        },
+        {
+            "type": "HookModLibrary",
+            "installAction": {
+                "installLibraryFile": "libcodegen_0_3_6.so"
+            }
+        }
+    ]
+}
