@@ -5,6 +5,8 @@
 #include "beatsaber-hook/shared/utils/logging.hpp"
 #include "beatsaber-hook/shared/utils/utils.h"
 
+#include "System/Threading/Tasks/Task_1.hpp"
+
 #include "GlobalNamespace/PlatformAuthenticationTokenProvider.hpp"
 #include "GlobalNamespace/AuthenticationToken.hpp"
 #include "GlobalNamespace/MasterServerEndPoint.hpp"
