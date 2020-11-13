@@ -83,23 +83,20 @@ MAKE_HOOK_OFFSETLESS(MenuRpcManager_SelectBeatmap, void, MenuRpcManager* self, B
 MAKE_HOOK_OFFSETLESS(MenuRpcManager_InvokeSelectedBeatmap, void, MenuRpcManager* self, Il2CppString* userId, BeatmapIdentifierNetSerializable* identifier)
 {
     auto* levelID = identifier->get_levelID();
-    makeIdUpperCase(identifier);
+    makeIdLowerCase(identifier);
     MenuRpcManager_InvokeSelectedBeatmap(self, userId, identifier);
 }
 
 MAKE_HOOK_OFFSETLESS(MenuRpcManager_StartLevel, void, MenuRpcManager* self, BeatmapIdentifierNetSerializable* identifier, GameplayModifiers* gameplayModifiers, float startTime)
 {
     auto* levelID = identifier->get_levelID();
-    if (levelID->StartsWith(il2cpp_utils::createcsstr("custom_level_")))
-        identifier->set_levelID(il2cpp_utils::createcsstr("custom_level_" + to_utf8(csstrtostr(levelID->Substring(13)->ToUpper()))));
+    makeIdUpperCase(identifier);
     MenuRpcManager_StartLevel(self, identifier, gameplayModifiers, startTime);
 }
 
 MAKE_HOOK_OFFSETLESS(MenuRpcManager_InvokeStartLevel, void, MenuRpcManager* self, Il2CppString* userId, BeatmapIdentifierNetSerializable* identifier, GameplayModifiers* gameplayModifiers, float startTime)
 {
-    auto* levelID = identifier->get_levelID();
-    if (levelID->StartsWith(il2cpp_utils::createcsstr("custom_level_")))
-        identifier->set_levelID(levelID->ToLower());
+    makeIdLowerCase(identifier);
     MenuRpcManager_InvokeStartLevel(self, userId, identifier, gameplayModifiers, startTime);
 }
 
