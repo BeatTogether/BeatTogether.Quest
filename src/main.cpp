@@ -36,14 +36,14 @@ extern "C" void setup(ModInfo& info)
 void makeIdLowerCase(BeatmapIdentifierNetSerializable* identifier) {
     // Check if it is a custom level
     if (identifier->levelID->StartsWith(il2cpp_utils::createcsstr("custom_level_")))
-        identifier->set_levelID(il2cpp_utils::createcsstr("custom_level_" + to_utf8(csstrtostr(levelID->Substring(13)->ToLower()))));
+        identifier->set_levelID(il2cpp_utils::createcsstr("custom_level_" + to_utf8(csstrtostr(identifier->levelID->Substring(13)->ToLower()))));
 }
 
 // Makes the Level ID stored in this identifer upper case if it is a custom level
 void makeIdUpperCase(BeatmapIdentifierNetSerializable* identifier) {
     // Check if it is a custom level
     if (identifier->levelID->StartsWith(il2cpp_utils::createcsstr("custom_level_")))
-        identifier->set_levelID(il2cpp_utils::createcsstr("custom_level_" + to_utf8(csstrtostr(levelID->Substring(13)->ToUpper()))));
+        identifier->set_levelID(il2cpp_utils::createcsstr("custom_level_" + to_utf8(csstrtostr(identifier->levelID->Substring(13)->ToUpper()))));
 }
 
 MAKE_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
