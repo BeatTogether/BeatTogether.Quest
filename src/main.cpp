@@ -12,6 +12,8 @@
 #include "GlobalNamespace/MasterServerEndPoint.hpp"
 #include "GlobalNamespace/MenuRpcManager.hpp"
 #include "GlobalNamespace/BeatmapIdentifierNetSerializable.hpp"
+#include "GlobalNamespace/MultiplayerLevelLoader.hpp"
+#include "GlobalNamespace/IPreviewBeatmapLevel.hpp"
 
 using namespace GlobalNamespace;
 
@@ -28,6 +30,20 @@ extern "C" void setup(ModInfo& info)
     info.id = ID;
     info.version = VERSION;
     modInfo = info;
+}
+
+// Makes the Level ID stored in this identifer lower case if it is a custom level
+void makeIdLowerCase(BeatmapIdentifierNetSerializable* identifier) {
+    // Check if it is a custom level
+    if (identifier->levelID->StartsWith(il2cpp_utils::createcsstr("custom_level_")))
+        identifier->set_levelID(il2cpp_utils::createcsstr("custom_level_" + to_utf8(csstrtostr(levelID->Substring(13)->ToLower()))));
+}
+
+// Makes the Level ID stored in this identifer upper case if it is a custom level
+void makeIdUpperCase(BeatmapIdentifierNetSerializable* identifier) {
+    // Check if it is a custom level
+    if (identifier->levelID->StartsWith(il2cpp_utils::createcsstr("custom_level_")))
+        identifier->set_levelID(il2cpp_utils::createcsstr("custom_level_" + to_utf8(csstrtostr(levelID->Substring(13)->ToUpper()))));
 }
 
 MAKE_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
@@ -60,16 +76,14 @@ MAKE_HOOK_OFFSETLESS(X509CertificateUtility_ValidateCertificateChain, void, Il2C
 MAKE_HOOK_OFFSETLESS(MenuRpcManager_SelectBeatmap, void, MenuRpcManager* self, BeatmapIdentifierNetSerializable* identifier)
 {
     auto* levelID = identifier->get_levelID();
-    if (levelID->StartsWith(il2cpp_utils::createcsstr("custom_level_")))
-        identifier->set_levelID(il2cpp_utils::createcsstr("custom_level_" + to_utf8(csstrtostr(levelID->Substring(13)->ToUpper()))));
+    makeIdUpperCase(identifier);
     MenuRpcManager_SelectBeatmap(self, identifier);
 }
 
 MAKE_HOOK_OFFSETLESS(MenuRpcManager_InvokeSelectedBeatmap, void, MenuRpcManager* self, Il2CppString* userId, BeatmapIdentifierNetSerializable* identifier)
 {
     auto* levelID = identifier->get_levelID();
-    if (levelID->StartsWith(il2cpp_utils::createcsstr("custom_level_")))
-        identifier->set_levelID(levelID->ToLower());
+    makeIdUpperCase(identifier);
     MenuRpcManager_InvokeSelectedBeatmap(self, userId, identifier);
 }
 
@@ -87,6 +101,13 @@ MAKE_HOOK_OFFSETLESS(MenuRpcManager_InvokeStartLevel, void, MenuRpcManager* self
     if (levelID->StartsWith(il2cpp_utils::createcsstr("custom_level_")))
         identifier->set_levelID(levelID->ToLower());
     MenuRpcManager_InvokeStartLevel(self, userId, identifier, gameplayModifiers, startTime);
+}
+
+MAKE_HOOK_OFFSETLESS(MultiplayerLevelLoader_LoadLevel, void, MultiplayerLevelLoader* self, BeatmapIdentifierNetSerializable* beatmapId, GameplayModifiers* gameplayModifiers, float initialStartTime) {
+    // Change the ID to lower case temporarily so the level gets fetched correctly
+    makeIdLowerCase(beatmapId);
+    MultiplayerLevelLoader_LoadLevel(self, beatmapId, gameplayModifiers, initialStartTime);
+    makeIdUpperCase(beatmapId);
 }
 
 extern "C" void load()
@@ -107,4 +128,6 @@ extern "C" void load()
         il2cpp_utils::FindMethodUnsafe("", "MenuRpcManager", "StartLevel", 3));
     INSTALL_HOOK_OFFSETLESS(MenuRpcManager_InvokeStartLevel,
         il2cpp_utils::FindMethodUnsafe("", "MenuRpcManager", "InvokeStartLevel", 4));
+    INSTALL_HOOK_OFFSETLESS(MultiplayerLevelLoader_LoadLevel,
+        il2cpp_utils::FindMethodUnsafe("", "MultiplayerLevelLoader", "LoadLevel", 3));
 }
