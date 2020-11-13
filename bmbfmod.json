@@ -9,8 +9,8 @@
     "coverImageFilename": "Cover.png",
     "icon": "Cover.png",
     "category": "Gameplay",
-    "gameVersion": "1.12.2",
-    "version": "0.2.0",
+    "gameVersion": "1.13.0",
+    "version": "0.3.0",
     "platform": "Quest",
     "components": [
         {
@@ -31,7 +31,7 @@
         {
             "type": "HookModLibrary",
             "installAction": {
-                "installLibraryFile": "libcodegen_0_3_6.so"
+                "installLibraryFile": "libcodegen_0_4_0.so"
             }
         }
     ]
