@@ -9,7 +9,7 @@ A multiplayer private server for the modding community. Supports crossplay betwe
 ## Installation
 
 ## Custom Song Support
-For now, Customs are built in with this plugin. If you have the matching beatmap with other players inside your lobby prior to a session you can freely play with them with that custom song! In the future, this will definitely change and include a SongLoader. Thus skipping the requirement of needing to download the beatmap prior to the session.
+Customs are built in with this plugin. If you have the matching beatmap with other players inside your lobby prior to a session you can freely play with them with that custom song! In the future, this will definitely change and include a SongLoader. Thus skipping the requirement of needing to download the beatmap prior to the session.
 
 ## Special Thanks
 Special thanks to [Sc2ad](https://github.com/Sc2ad) for helping me debug this.
