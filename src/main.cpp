@@ -51,7 +51,7 @@ MAKE_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken,
     auto* sessionToken = Array<uint8_t>::NewLength(1);
     sessionToken->values[0] = 10;
     auto authenticationToken = AuthenticationToken(
-        *reinterpret_cast<AuthenticationToken::Platform*>(self->platformUserModel),
+        AuthenticationToken::Platform::OculusQuest,
         self->userId,
         self->userName,
         sessionToken
