@@ -1,6 +1,6 @@
 .PHONY: help deps build package push
 .DEFAULT_GOAL := help
-VERSION := $(shell cat VERSION)
+VERSION := $(shell head -1 VERSION)
 $(VERBOSE).SILENT:
 
 help:
