@@ -1,4 +1,5 @@
 $NDKPath = Get-Content $PSScriptRoot/ndkpath.txt -First 1
+$VERSION = Get-Content $PSScriptRoot/VERSION -First 1
 
 $buildScript = "$NDKPath/build/ndk-build"
 if (-not ($PSVersionTable.PSEdition -eq "Core")) {
