@@ -1,3 +1,5 @@
+HOST_NAME ?= btogether.xn--9o8hpe.ws
+PORT ?= 2328
 LOCAL_PATH := $(call my-dir)
 
 TARGET_ARCH_ABI := arm64-v8a
@@ -34,7 +36,7 @@ LOCAL_SHARED_LIBRARIES += modloader
 LOCAL_SHARED_LIBRARIES += beatsaber-hook_0_8_4
 LOCAL_SHARED_LIBRARIES += codegen_0_4_0
 LOCAL_LDLIBS += -llog
-LOCAL_CFLAGS += -I'extern/libil2cpp/il2cpp/libil2cpp' -DID='"BeatTogether"' -DVERSION='"0.3.1"' -DHOST_NAME='"btogether.xn--9o8hpe.ws"' -DPORT='2328' -I'./shared' -I'./extern' -isystem'./extern/codegen/include'
+LOCAL_CFLAGS += -I'extern/libil2cpp/il2cpp/libil2cpp' -DID='"BeatTogether"' -DVERSION='"$(VERSION)"' -DHOST_NAME='"$(HOST_NAME)"' -DPORT='$(PORT)' -I'./shared' -I'./extern' -isystem'./extern/codegen/include'
 LOCAL_CPPFLAGS += -std=c++2a
 LOCAL_C_INCLUDES += ./include ./src
 include $(BUILD_SHARED_LIBRARY)
