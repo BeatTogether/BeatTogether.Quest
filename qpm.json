@@ -2,7 +2,7 @@
   "sharedDir": "shared",
   "dependenciesDir": "extern",
   "info": {
-    "name": "Beat Together",
+    "name": "BeatTogether",
     "id": "BeatTogether",
     "version": "0.3.0",
     "url": null,
