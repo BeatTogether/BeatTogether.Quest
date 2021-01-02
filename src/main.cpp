@@ -14,8 +14,14 @@
 #include "GlobalNamespace/BeatmapIdentifierNetSerializable.hpp"
 #include "GlobalNamespace/MultiplayerLevelLoader.hpp"
 #include "GlobalNamespace/IPreviewBeatmapLevel.hpp"
+#include "GlobalNamespace/MultiplayerModeSelectionViewController.hpp"
+#include "GlobalNamespace/MainMenuViewController.hpp"
 
 using namespace GlobalNamespace;
+
+#include "UnityEngine/GameObject.hpp"
+#include "UnityEngine/Transform.hpp"
+#include "TMPro/TextMeshProUGUI.hpp"
 
 static ModInfo modInfo;
 
@@ -107,6 +113,33 @@ MAKE_HOOK_OFFSETLESS(MultiplayerLevelLoader_LoadLevel, void, MultiplayerLevelLoa
     makeIdUpperCase(beatmapId);
 }
 
+// Disable the quick play button
+MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, MultiplayerModeSelectionViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling) {
+    UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
+    UnityEngine::GameObject* quickPlayButton = transform->Find(il2cpp_utils::createcsstr("Buttons/QuickPlayButton"))->get_gameObject();
+    quickPlayButton->SetActive(false);
+
+    MultiplayerModeSelectionViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
+}
+
+// Change the "Online" menu text to "Modded Online"
+MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling) {
+    UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
+    UnityEngine::GameObject* onlineButton = transform->Find(il2cpp_utils::createcsstr("MainButtons/OnlineButton"))->get_gameObject();
+    UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(il2cpp_utils::createcsstr("Text"))->get_gameObject();
+
+    // Move the text slightly to the left so it is centred
+    UnityEngine::Vector3 currentTextPos = onlineButtonTextObj->get_transform()->get_position();
+    currentTextPos.x += 0.025;
+    onlineButtonTextObj->get_transform()->set_position(currentTextPos);
+
+    // Set the "Modded Online" text
+    TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
+    onlineButtonText->set_text(il2cpp_utils::createcsstr("Modded Online"));
+
+    MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
+}
+
 extern "C" void load()
 {
     il2cpp_functions::Init();
@@ -127,4 +160,8 @@ extern "C" void load()
         il2cpp_utils::FindMethodUnsafe("", "MenuRpcManager", "InvokeStartLevel", 4));
     INSTALL_HOOK_OFFSETLESS(MultiplayerLevelLoader_LoadLevel,
         il2cpp_utils::FindMethodUnsafe("", "MultiplayerLevelLoader", "LoadLevel", 3));
+    INSTALL_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate,
+        il2cpp_utils::FindMethodUnsafe("", "MultiplayerModeSelectionViewController", "DidActivate", 3));
+    INSTALL_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, 
+        il2cpp_utils::FindMethodUnsafe("", "MainMenuViewController", "DidActivate", 3));
 }
