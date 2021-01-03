@@ -2,6 +2,7 @@
 A multiplayer private server for the modding community. Supports crossplay between PC and Quest. **This is the Quest Plugin.**
 
 Feel free to join our Discord! https://discord.com/invite/gezGrFG4tz (Support, Coordinating games with friends, etc) 
+
 Want to support development and server costs? [Click Here](https://www.patreon.com/BeatTogether)
 
 ## Features
