@@ -131,22 +131,23 @@ MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, M
 
 // Change the "Online" menu text to "Modded Online"
 MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
-{
+{   
+    // Find the GameObject for the online button's text
+    UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
+    UnityEngine::GameObject* onlineButton = transform->Find(il2cpp_utils::createcsstr("MainButtons/OnlineButton"))->get_gameObject();
+    UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(il2cpp_utils::createcsstr("Text"))->get_gameObject();
+
     if (firstActivation)
     {
-        UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
-        UnityEngine::GameObject* onlineButton = transform->Find(il2cpp_utils::createcsstr("MainButtons/OnlineButton"))->get_gameObject();
-        UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(il2cpp_utils::createcsstr("Text"))->get_gameObject();
-
-        // Move the text slightly to the left so it is centred
+        // Move the text slightly to the right so it is centred
         UnityEngine::Vector3 currentTextPos = onlineButtonTextObj->get_transform()->get_position();
         currentTextPos.x += 0.025;
         onlineButtonTextObj->get_transform()->set_position(currentTextPos);
-
-        // Set the "Modded Online" text
-        TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
-        onlineButtonText->set_text(il2cpp_utils::createcsstr("Modded Online"));
     }
+
+    // Set the "Modded Online" text every time so that it doesn't change back
+    TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
+    onlineButtonText->set_text(il2cpp_utils::createcsstr("Modded Online"));
 
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
