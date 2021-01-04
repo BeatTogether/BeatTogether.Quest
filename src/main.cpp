@@ -39,14 +39,16 @@ extern "C" void setup(ModInfo& info)
 }
 
 // Makes the Level ID stored in this identifer lower case if it is a custom level
-void makeIdLowerCase(BeatmapIdentifierNetSerializable* identifier) {
+void makeIdLowerCase(BeatmapIdentifierNetSerializable* identifier)
+{
     // Check if it is a custom level
     if (identifier->levelID->StartsWith(il2cpp_utils::createcsstr("custom_level_")))
         identifier->set_levelID(il2cpp_utils::createcsstr("custom_level_" + to_utf8(csstrtostr(identifier->levelID->Substring(13)->ToLower()))));
 }
 
 // Makes the Level ID stored in this identifer upper case if it is a custom level
-void makeIdUpperCase(BeatmapIdentifierNetSerializable* identifier) {
+void makeIdUpperCase(BeatmapIdentifierNetSerializable* identifier)
+{
     // Check if it is a custom level
     if (identifier->levelID->StartsWith(il2cpp_utils::createcsstr("custom_level_")))
         identifier->set_levelID(il2cpp_utils::createcsstr("custom_level_" + to_utf8(csstrtostr(identifier->levelID->Substring(13)->ToUpper()))));
@@ -106,7 +108,8 @@ MAKE_HOOK_OFFSETLESS(MenuRpcManager_InvokeStartLevel, void, MenuRpcManager* self
     MenuRpcManager_InvokeStartLevel(self, userId, identifier, gameplayModifiers, startTime);
 }
 
-MAKE_HOOK_OFFSETLESS(MultiplayerLevelLoader_LoadLevel, void, MultiplayerLevelLoader* self, BeatmapIdentifierNetSerializable* beatmapId, GameplayModifiers* gameplayModifiers, float initialStartTime) {
+MAKE_HOOK_OFFSETLESS(MultiplayerLevelLoader_LoadLevel, void, MultiplayerLevelLoader* self, BeatmapIdentifierNetSerializable* beatmapId, GameplayModifiers* gameplayModifiers, float initialStartTime)
+{
     // Change the ID to lower case temporarily so the level gets fetched correctly
     makeIdLowerCase(beatmapId);
     MultiplayerLevelLoader_LoadLevel(self, beatmapId, gameplayModifiers, initialStartTime);
@@ -114,28 +117,36 @@ MAKE_HOOK_OFFSETLESS(MultiplayerLevelLoader_LoadLevel, void, MultiplayerLevelLoa
 }
 
 // Disable the quick play button
-MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, MultiplayerModeSelectionViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling) {
-    UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
-    UnityEngine::GameObject* quickPlayButton = transform->Find(il2cpp_utils::createcsstr("Buttons/QuickPlayButton"))->get_gameObject();
-    quickPlayButton->SetActive(false);
+MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, MultiplayerModeSelectionViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
+{
+    if (firstActivation)
+    {
+        UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
+        UnityEngine::GameObject* quickPlayButton = transform->Find(il2cpp_utils::createcsstr("Buttons/QuickPlayButton"))->get_gameObject();
+        quickPlayButton->SetActive(false);
+    }
 
     MultiplayerModeSelectionViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
 
 // Change the "Online" menu text to "Modded Online"
-MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling) {
-    UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
-    UnityEngine::GameObject* onlineButton = transform->Find(il2cpp_utils::createcsstr("MainButtons/OnlineButton"))->get_gameObject();
-    UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(il2cpp_utils::createcsstr("Text"))->get_gameObject();
+MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
+{
+    if (firstActivation)
+    {
+        UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
+        UnityEngine::GameObject* onlineButton = transform->Find(il2cpp_utils::createcsstr("MainButtons/OnlineButton"))->get_gameObject();
+        UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(il2cpp_utils::createcsstr("Text"))->get_gameObject();
 
-    // Move the text slightly to the left so it is centred
-    UnityEngine::Vector3 currentTextPos = onlineButtonTextObj->get_transform()->get_position();
-    currentTextPos.x += 0.025;
-    onlineButtonTextObj->get_transform()->set_position(currentTextPos);
+        // Move the text slightly to the left so it is centred
+        UnityEngine::Vector3 currentTextPos = onlineButtonTextObj->get_transform()->get_position();
+        currentTextPos.x += 0.025;
+        onlineButtonTextObj->get_transform()->set_position(currentTextPos);
 
-    // Set the "Modded Online" text
-    TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
-    onlineButtonText->set_text(il2cpp_utils::createcsstr("Modded Online"));
+        // Set the "Modded Online" text
+        TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
+        onlineButtonText->set_text(il2cpp_utils::createcsstr("Modded Online"));
+    }
 
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
