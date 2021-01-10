@@ -1,3 +1,6 @@
+#include <iostream>
+#include <fstream>
+
 #include "modloader/shared/modloader.hpp"
 
 #include "beatsaber-hook/shared/utils/typedefs.h"
@@ -23,7 +26,33 @@ using namespace GlobalNamespace;
 #include "UnityEngine/Transform.hpp"
 #include "TMPro/TextMeshProUGUI.hpp"
 
+const Logger& getLogger();
+
 static ModInfo modInfo;
+
+class ModConfig {
+    public:
+        ModConfig() : hostname(HOST_NAME), port(PORT), button("Modded Online") {};
+        virtual ~ModConfig() {};
+        virtual void read(const std::string& filename);
+
+        std::string hostname;
+        int port;
+        std::string button;
+};
+
+void ModConfig::read(const std::string& filename) {
+    std::ifstream file(filename, std::ios::in);
+    if (!file) {
+        getLogger().debug("No readable configuration at %s.", filename.c_str());
+        return;
+    } else {
+        file >> this->hostname >> this->port;
+        this->button = this->hostname;
+    }
+}
+
+static ModConfig config;
 
 const Logger& getLogger()
 {
@@ -69,8 +98,8 @@ MAKE_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken,
 
 MAKE_HOOK_OFFSETLESS(NetworkConfigSO_get_masterServerEndPoint, MasterServerEndPoint*, Il2CppObject* self)
 {
-    getLogger().debug("Patching master server end point (EndPoint='%s:%u').", HOST_NAME, PORT);
-    static auto* hostName = il2cpp_utils::createcsstr(HOST_NAME, il2cpp_utils::StringType::Manual);
+    getLogger().debug("Patching master server end point (EndPoint='%s:%u').", config.hostname.c_str(), config.port);
+    static auto* hostName = il2cpp_utils::createcsstr(config.hostname.c_str(), il2cpp_utils::StringType::Manual);
     return MasterServerEndPoint::New_ctor(hostName, PORT);
 }
 
@@ -147,7 +176,7 @@ MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewContr
 
     // Set the "Modded Online" text every time so that it doesn't change back
     TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
-    onlineButtonText->set_text(il2cpp_utils::createcsstr("Modded Online"));
+    onlineButtonText->set_text(il2cpp_utils::createcsstr(config.button.c_str()));
 
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
@@ -155,6 +184,7 @@ MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewContr
 extern "C" void load()
 {
     il2cpp_functions::Init();
+    config.read("/sdcard/BMBFData/BeatTogether.cfg");
 
     INSTALL_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken,
         il2cpp_utils::FindMethod("", "PlatformAuthenticationTokenProvider", "GetAuthenticationToken"));
