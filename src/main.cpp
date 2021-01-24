@@ -62,13 +62,6 @@ Logger& getLogger()
     return *logger;
 }
 
-extern "C" void setup(ModInfo& info)
-{
-    info.id = ID;
-    info.version = VERSION;
-    modInfo = info;
-}
-
 // Makes the Level ID stored in this identifer lower case if it is a custom level
 void makeIdLowerCase(BeatmapIdentifierNetSerializable* identifier)
 {
@@ -183,6 +176,13 @@ MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewContr
     onlineButtonText->set_text(il2cpp_utils::createcsstr(config.button.c_str()));
 
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
+}
+
+extern "C" void setup(ModInfo& info)
+{
+    info.id = ID;
+    info.version = VERSION;
+    modInfo = info;
 }
 
 extern "C" void load()
