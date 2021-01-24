@@ -9,8 +9,8 @@
     "coverImageFilename": "Cover.png",
     "icon": "Cover.png",
     "category": "Gameplay",
-    "gameVersion": "1.13.0",
-    "version": "1.0.1",
+    "gameVersion": "1.13.2",
+    "version": "1.1.0",
     "platform": "Quest",
     "components": [
         {
@@ -25,7 +25,7 @@
         {
             "type": "HookModLibrary",
             "installAction": {
-              "installLibraryFile": "libbeatsaber-hook_0_8_4.so"
+              "installLibraryFile": "libbeatsaber-hook_1_0_10.so"
             }
         }
     ]
