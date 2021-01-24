@@ -1,4 +1,4 @@
-{
+
     "id": "BeatTogether",
     "name": "BeatTogether",
     "author": "Python",
@@ -20,12 +20,6 @@
             },
             "uninstallAction": {
                 "removeLibraryFile": "libbeattogether.so"
-            }
-        },
-        {
-            "type": "HookModLibrary",
-            "installAction": {
-              "installLibraryFile": "libbeatsaber-hook_1_0_10.so"
             }
         }
     ]
