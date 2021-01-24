@@ -7,6 +7,7 @@
 #include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
 #include "beatsaber-hook/shared/utils/logging.hpp"
 #include "beatsaber-hook/shared/utils/utils.h"
+#include "beatsaber-hook/shared/config/config-utils.hpp"
 
 #include "System/Threading/Tasks/Task_1.hpp"
 
@@ -187,8 +188,13 @@ extern "C" void setup(ModInfo& info)
 
 extern "C" void load()
 {
+    std::string path = Configuration::getConfigFilePath(modInfo);
+    path.replace(path.length() - 4, 4, "cfg");
+
+    getLogger().info("Config path: " + path);
+    config.read(path);
+
     il2cpp_functions::Init();
-    config.read("/sdcard/BMBFData/BeatTogether.cfg");
 
     INSTALL_HOOK_OFFSETLESS(getLogger(), PlatformAuthenticationTokenProvider_GetAuthenticationToken,
         il2cpp_utils::FindMethod("", "PlatformAuthenticationTokenProvider", "GetAuthenticationToken"));
