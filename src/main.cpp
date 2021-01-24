@@ -35,13 +35,14 @@ static ModInfo modInfo;
 
 class ModConfig {
     public:
-        ModConfig() : hostname(HOST_NAME), port(PORT), button("Modded Online") {};
+        ModConfig() : hostname(HOST_NAME), port(PORT), statusUrl(STATUS_URL), button("Modded Online") {};
         virtual ~ModConfig() {};
         virtual void read(const std::string& filename);
 
         std::string hostname;
         int port;
         std::string button;
+        std::string statusUrl;
 };
 
 void ModConfig::read(const std::string& filename) {
@@ -50,7 +51,7 @@ void ModConfig::read(const std::string& filename) {
         getLogger().debug("No readable configuration at %s.", filename.c_str());
         return;
     } else {
-        file >> this->hostname >> this->port;
+        file >> this->hostname >> this->port >> this->statusUrl;
         this->button = this->hostname;
     }
 }
@@ -99,6 +100,7 @@ MAKE_HOOK_OFFSETLESS(MainSystemInit_Init, void, MainSystemInit* self) {
     getLogger().info("Overriding master server end point . . .");
     networkConfig->masterServerHostName = il2cpp_utils::createcsstr(config.hostname.c_str(), il2cpp_utils::StringType::Manual);
     networkConfig->masterServerPort = PORT;
+    networkConfig->masterServerStatusUrl = il2cpp_utils::createcsstr(config.statusUrl.c_str(), il2cpp_utils::StringType::Manual);
 }
 
 MAKE_HOOK_OFFSETLESS(X509CertificateUtility_ValidateCertificateChain, void, Il2CppObject* self, Il2CppObject* certificate, Il2CppObject* certificateChain)
