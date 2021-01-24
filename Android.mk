@@ -1,5 +1,6 @@
 HOST_NAME ?= btogether.xn--9o8hpe.ws
 PORT ?= 2328
+STATUS_URL ?= "http://btogether.xn--9o8hpe.ws/status"
 LOCAL_PATH := $(call my-dir)
 
 TARGET_ARCH_ABI := arm64-v8a
@@ -36,7 +37,7 @@ LOCAL_SHARED_LIBRARIES += modloader
 LOCAL_SHARED_LIBRARIES += beatsaber-hook_1_0_10
 LOCAL_SHARED_LIBRARIES += codegen_0_6_1
 LOCAL_LDLIBS += -llog
-LOCAL_CFLAGS += -I'extern/libil2cpp/il2cpp/libil2cpp' -DID='"BeatTogether"' -DVERSION='"$(VERSION)"' -DHOST_NAME='"$(HOST_NAME)"' -DPORT='$(PORT)' -I'./shared' -I'./extern' -isystem'./extern/codegen/include'
+LOCAL_CFLAGS += -I'extern/libil2cpp/il2cpp/libil2cpp' -DID='"BeatTogether"' -DVERSION='"$(VERSION)"' -DHOST_NAME='"$(HOST_NAME)"' -DPORT='$(PORT)' -DSTATUS_URL='$(STATUS_URL)' -I'./shared' -I'./extern' -isystem'./extern/codegen/include'
 LOCAL_CPPFLAGS += -std=c++2a
 LOCAL_C_INCLUDES += ./include ./src
 include $(BUILD_SHARED_LIBRARY)
