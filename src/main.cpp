@@ -19,6 +19,8 @@
 #include "GlobalNamespace/IPreviewBeatmapLevel.hpp"
 #include "GlobalNamespace/MultiplayerModeSelectionViewController.hpp"
 #include "GlobalNamespace/MainMenuViewController.hpp"
+#include "GlobalNamespace/MainSystemInit.hpp"
+#include "GlobalNamespace/NetworkConfigSO.hpp"
 
 using namespace GlobalNamespace;
 
@@ -26,7 +28,7 @@ using namespace GlobalNamespace;
 #include "UnityEngine/Transform.hpp"
 #include "TMPro/TextMeshProUGUI.hpp"
 
-const Logger& getLogger();
+Logger& getLogger();
 
 static ModInfo modInfo;
 
@@ -54,10 +56,10 @@ void ModConfig::read(const std::string& filename) {
 
 static ModConfig config;
 
-const Logger& getLogger()
+Logger& getLogger()
 {
-    static const Logger logger(modInfo);
-    return logger;
+    static Logger* logger = new Logger(modInfo);
+    return *logger;
 }
 
 extern "C" void setup(ModInfo& info)
@@ -96,11 +98,13 @@ MAKE_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken,
     return System::Threading::Tasks::Task_1<AuthenticationToken>::New_ctor(authenticationToken);
 }
 
-MAKE_HOOK_OFFSETLESS(NetworkConfigSO_get_masterServerEndPoint, MasterServerEndPoint*, Il2CppObject* self)
-{
-    getLogger().debug("Patching master server end point (EndPoint='%s:%u').", config.hostname.c_str(), config.port);
-    static auto* hostName = il2cpp_utils::createcsstr(config.hostname.c_str(), il2cpp_utils::StringType::Manual);
-    return MasterServerEndPoint::New_ctor(hostName, PORT);
+MAKE_HOOK_OFFSETLESS(MainSystemInit_Init, void, MainSystemInit* self) {
+    MainSystemInit_Init(self);
+    NetworkConfigSO* networkConfig = self->networkConfig;
+
+    getLogger().info("Overriding master server end point . . .");
+    networkConfig->masterServerHostName = il2cpp_utils::createcsstr(config.hostname.c_str(), il2cpp_utils::StringType::Manual);
+    networkConfig->masterServerPort = PORT;
 }
 
 MAKE_HOOK_OFFSETLESS(X509CertificateUtility_ValidateCertificateChain, void, Il2CppObject* self, Il2CppObject* certificate, Il2CppObject* certificateChain)
@@ -186,24 +190,24 @@ extern "C" void load()
     il2cpp_functions::Init();
     config.read("/sdcard/BMBFData/BeatTogether.cfg");
 
-    INSTALL_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken,
+    INSTALL_HOOK_OFFSETLESS(getLogger(), PlatformAuthenticationTokenProvider_GetAuthenticationToken,
         il2cpp_utils::FindMethod("", "PlatformAuthenticationTokenProvider", "GetAuthenticationToken"));
-    INSTALL_HOOK_OFFSETLESS(NetworkConfigSO_get_masterServerEndPoint,
-        il2cpp_utils::FindMethod("", "NetworkConfigSO", "get_masterServerEndPoint"));
-    INSTALL_HOOK_OFFSETLESS(X509CertificateUtility_ValidateCertificateChain,
+    INSTALL_HOOK_OFFSETLESS(getLogger(), MainSystemInit_Init,
+        il2cpp_utils::FindMethod("", "MainSystemInit", "Init"));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), X509CertificateUtility_ValidateCertificateChain,
         il2cpp_utils::FindMethodUnsafe("", "X509CertificateUtility", "ValidateCertificateChain", 2));
-    INSTALL_HOOK_OFFSETLESS(MenuRpcManager_SelectBeatmap,
+    INSTALL_HOOK_OFFSETLESS(getLogger(), MenuRpcManager_SelectBeatmap,
         il2cpp_utils::FindMethodUnsafe("", "MenuRpcManager", "SelectBeatmap", 1));
-    INSTALL_HOOK_OFFSETLESS(MenuRpcManager_InvokeSelectedBeatmap,
+    INSTALL_HOOK_OFFSETLESS(getLogger(), MenuRpcManager_InvokeSelectedBeatmap,
         il2cpp_utils::FindMethodUnsafe("", "MenuRpcManager", "InvokeSelectedBeatmap", 2));
-    INSTALL_HOOK_OFFSETLESS(MenuRpcManager_StartLevel,
+    INSTALL_HOOK_OFFSETLESS(getLogger(), MenuRpcManager_StartLevel,
         il2cpp_utils::FindMethodUnsafe("", "MenuRpcManager", "StartLevel", 3));
-    INSTALL_HOOK_OFFSETLESS(MenuRpcManager_InvokeStartLevel,
+    INSTALL_HOOK_OFFSETLESS(getLogger(), MenuRpcManager_InvokeStartLevel,
         il2cpp_utils::FindMethodUnsafe("", "MenuRpcManager", "InvokeStartLevel", 4));
-    INSTALL_HOOK_OFFSETLESS(MultiplayerLevelLoader_LoadLevel,
+    INSTALL_HOOK_OFFSETLESS(getLogger(), MultiplayerLevelLoader_LoadLevel,
         il2cpp_utils::FindMethodUnsafe("", "MultiplayerLevelLoader", "LoadLevel", 3));
-    INSTALL_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate,
+    INSTALL_HOOK_OFFSETLESS(getLogger(), MultiplayerModeSelectionViewController_DidActivate,
         il2cpp_utils::FindMethodUnsafe("", "MultiplayerModeSelectionViewController", "DidActivate", 3));
-    INSTALL_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, 
+    INSTALL_HOOK_OFFSETLESS(getLogger(), MainMenuViewController_DidActivate, 
         il2cpp_utils::FindMethodUnsafe("", "MainMenuViewController", "DidActivate", 3));
 }
