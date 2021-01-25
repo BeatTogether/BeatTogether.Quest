@@ -9,7 +9,7 @@ Want to support development and server costs? [Click Here](https://www.patreon.c
 * Private server free from Beat Saber official; allowing Quest to play freely on modded installs
 * Crossplay between all compatible platforms
 * Custom songs between platforms
-* 10 Player lobbies (If a PC players hosts the lobby and has MultiplayerExtensions plugin installed which is PC only.)
+* 10 Player lobbies (If a PC players hosts the lobby and has MultiplayerExtensions plugin installed which is PC only)
 
 ## Installation
 
