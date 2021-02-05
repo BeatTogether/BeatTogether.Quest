@@ -123,12 +123,18 @@ Il2CppString* getCustomLevelStr() {
     return customStr;
 }
 
+// Helper method for concatenating two strings using the Concat(System.Object) method.
+Il2CppString* concatHelper(Il2CppString* src, Il2CppString* dst) {
+    static auto* concatMethod = il2cpp_utils::FindMethod(il2cpp_functions::defaults->string_class, "Concat", std::vector<Il2CppClass*>{il2cpp_functions::defaults->object_class});
+    return RET_DEFAULT_UNLESS(getLogger(), il2cpp_utils::RunMethod<Il2CppString*>(src, concatMethod, dst));
+}
+
 // Makes the Level ID stored in this identifer lower case if it is a custom level
 void makeIdLowerCase(BeatmapIdentifierNetSerializable* identifier)
 {
     // Check if it is a custom level
     if (identifier->levelID->StartsWith(getCustomLevelStr()))
-        identifier->set_levelID(getCustomLevelStr()->Concat(identifier->levelID->Substring(customLevelPrefixLength)->ToLower()));
+        identifier->set_levelID(RET_V_UNLESS(getLogger(), concatHelper(getCustomLevelStr(), identifier->levelID->Substring(customLevelPrefixLength)->ToLower())));
 }
 
 // Makes the Level ID stored in this identifer upper case if it is a custom level
@@ -136,7 +142,7 @@ void makeIdUpperCase(BeatmapIdentifierNetSerializable* identifier)
 {
     // Check if it is a custom level
     if (identifier->levelID->StartsWith(getCustomLevelStr()))
-        identifier->set_levelID(getCustomLevelStr()->Concat(identifier->levelID->Substring(customLevelPrefixLength)->ToUpper()));
+        identifier->set_levelID(RET_V_UNLESS(getLogger(), concatHelper(getCustomLevelStr(), identifier->levelID->Substring(customLevelPrefixLength)->ToUpper())));
 }
 
 MAKE_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
