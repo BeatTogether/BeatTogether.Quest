@@ -3,14 +3,17 @@
         {
             "name": "Quest",
             "defines": [
-                "MOD_ID=\"BeatTogether\"",
+                "ID=\"BeatTogether\"",
                 "VERSION=\"1.1.0\"",
                 "__GNUC__",
-                "__aarch64__"
+                "__aarch64__",
+                "HOST_NAME=\"btogether.xn--9o8hpe.ws\"",
+                "PORT=2328",
+                "STATUS_URL=\"http://btogether.xn--9o8hpe.ws/status\""
             ],
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/Program Files/Unity/Hub/Editor/2018.3.14f1/Editor/Data/il2cpp/libil2cpp",
+                "${workspaceFolder}/extern/libil2cpp/il2cpp/libil2cpp",
                 "c:/android-ndk/**"
             ],
             "cStandard": "c11",
