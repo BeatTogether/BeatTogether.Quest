@@ -20,9 +20,14 @@
 #include "GlobalNamespace/MultiplayerLevelLoader.hpp"
 #include "GlobalNamespace/IPreviewBeatmapLevel.hpp"
 #include "GlobalNamespace/MultiplayerModeSelectionViewController.hpp"
+#include "GlobalNamespace/HostLobbySetupViewController.hpp"
+#include "GlobalNamespace/HostLobbySetupViewController_CannotStartGameReason.hpp"
 #include "GlobalNamespace/MainMenuViewController.hpp"
 #include "GlobalNamespace/MainSystemInit.hpp"
 #include "GlobalNamespace/NetworkConfigSO.hpp"
+#include "GlobalNamespace/AdditionalContentModel.hpp"
+
+#include "UnityEngine/Resources.hpp"
 
 using namespace GlobalNamespace;
 
@@ -247,6 +252,35 @@ MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewContr
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
 
+// The base game's code always returns pwmed for a custom song, regardless of if we actually have it downloaded.
+// We change this to only return owned if we actually have a level with that ID loaded.
+// This fixes issues with people soft-locking if they don't have the song - players will be told if someone doesn't have it downloaded.
+MAKE_HOOK_OFFSETLESS(AdditionalContentModel_GetLevelEntitlementStatusAsync, System::Threading::Tasks::Task_1<AdditionalContentModel::EntitlementStatus>*, AdditionalContentModel* self, Il2CppString* levelId, System::Threading::CancellationToken token) {
+    static BeatmapLevelsModel* levelsModel = UnityEngine::Resources::FindObjectsOfTypeAll<BeatmapLevelsModel*>()->values[0];
+    if(!levelsModel->IsBeatmapLevelLoaded(levelId)) {
+        getLogger().info("custom song not owned!");
+        return System::Threading::Tasks::Task_1<AdditionalContentModel::EntitlementStatus>::New_ctor(AdditionalContentModel::EntitlementStatus::NotOwned);
+    }
+    
+    return AdditionalContentModel_GetLevelEntitlementStatusAsync(self, levelId, token);
+}
+
+// This hook makes sure to grey-out the play button so that players can't start a level that someone doesn't have.
+// This prevents crashes.
+MAKE_HOOK_OFFSETLESS(HostLobbySetupViewController_SetPlayersMissingLevelText, void, HostLobbySetupViewController* self, Il2CppString* playersMissingLevelText) {
+    static bool wasPreviouslyHidden = false;
+
+    if(playersMissingLevelText && !wasPreviouslyHidden) {
+        self->SetStartGameEnabled(false, HostLobbySetupViewController::CannotStartGameReason::DoNotOwnSong);
+        wasPreviouslyHidden = true;
+    }   else if(!playersMissingLevelText && wasPreviouslyHidden)   {
+        self->SetStartGameEnabled(true, HostLobbySetupViewController::CannotStartGameReason::None);
+        wasPreviouslyHidden = false;
+    }
+
+    HostLobbySetupViewController_SetPlayersMissingLevelText(self, playersMissingLevelText);
+}
+
 extern "C" void setup(ModInfo& info)
 {
     info.id = ID;
@@ -288,4 +322,8 @@ extern "C" void load()
         il2cpp_utils::FindMethodUnsafe("", "MultiplayerModeSelectionViewController", "DidActivate", 3));
     INSTALL_HOOK_OFFSETLESS(getLogger(), MainMenuViewController_DidActivate, 
         il2cpp_utils::FindMethodUnsafe("", "MainMenuViewController", "DidActivate", 3));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), AdditionalContentModel_GetLevelEntitlementStatusAsync,
+        il2cpp_utils::FindMethodUnsafe("", "AdditionalContentModel", "GetLevelEntitlementStatusAsync", 2));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), HostLobbySetupViewController_SetPlayersMissingLevelText,
+        il2cpp_utils::FindMethodUnsafe("", "HostLobbySetupViewController", "SetPlayersMissingLevelText", 1));
 }
