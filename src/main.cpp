@@ -141,14 +141,13 @@ void makeIdUpperCase(BeatmapIdentifierNetSerializable* identifier)
 
 MAKE_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
 {
-    auto authenticationToken = AuthenticationToken(
+    getLogger().debug("Returning custom authentication token!");
+    return System::Threading::Tasks::Task_1<AuthenticationToken>::New_ctor(AuthenticationToken(
         AuthenticationToken::Platform::OculusQuest,
         self->userId,
         self->userName,
         Array<uint8_t>::NewLength(0)
-    );
-    getLogger().debug("Returning custom authentication token!");
-    return System::Threading::Tasks::Task_1<AuthenticationToken>::New_ctor(authenticationToken);
+    ));
 }
 
 MAKE_HOOK_OFFSETLESS(MainSystemInit_Init, void, MainSystemInit* self) {
