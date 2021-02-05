@@ -29,32 +29,83 @@ using namespace GlobalNamespace;
 #include "UnityEngine/Transform.hpp"
 #include "TMPro/TextMeshProUGUI.hpp"
 
+#ifndef HOST_NAME
+#error "Define HOST_NAME!"
+#endif
+
+#ifndef PORT
+#error "Define PORT!"
+#endif
+
+#ifndef STATUS_URL
+#error "Define STATUS_URL!"
+#endif
+
 Logger& getLogger();
 
 static ModInfo modInfo;
 
 class ModConfig {
     public:
-        ModConfig() : hostname(HOST_NAME), port(PORT), statusUrl(STATUS_URL), button("Modded Online") {};
-        virtual ~ModConfig() {};
-        virtual void read(const std::string& filename);
-
-        std::string hostname;
+        ModConfig() : hostname(HOST_NAME), port(PORT), statusUrl(STATUS_URL), button("Modded Online") {}
+        // Should be called after modification of the fields has already taken place.
+        // Creates the C# strings for the configuration.
+        void load() {
+            createStrings();
+        }
+        // Read MUST be called after load.
+        void read(std::string_view filename) {
+            // Each time we read, we must start by cleaning up our old strings.
+            // TODO: This may not be necessary if we only ever plan to load our configuration once.
+            invalidateStrings();
+            std::ifstream file(filename.data());
+            if (!file) {
+                getLogger().debug("No readable configuration at %s.", filename.data());
+            } else {
+                file >> hostname >> port >> statusUrl;
+                button = hostname;
+            }
+            file.close();
+        }
+        constexpr inline int get_port() const {
+            return port;
+        }
+        constexpr inline Il2CppString* get_hostname() const {
+            return valid ? hostnameStr : nullptr;
+        }
+        constexpr inline Il2CppString* get_button() const {
+            return valid ? buttonStr : nullptr;
+        }
+        constexpr inline Il2CppString* get_statusUrl() const {
+            return valid ? statusUrlStr : nullptr;
+        }
+    private:
+        // Invalidates all Il2CppString* pointers we have
+        void invalidateStrings() {
+            free(hostnameStr);
+            free(buttonStr);
+            free(statusUrlStr);
+            valid = false;
+        }
+        // Creates all Il2CppString* pointers we need
+        void createStrings() {
+            hostnameStr = RET_V_UNLESS(getLogger(), il2cpp_utils::createcsstr(hostname, il2cpp_utils::StringType::Manual));
+            buttonStr = RET_V_UNLESS(getLogger(), il2cpp_utils::createcsstr(button, il2cpp_utils::StringType::Manual));
+            statusUrlStr = RET_V_UNLESS(getLogger(), il2cpp_utils::createcsstr(statusUrl, il2cpp_utils::StringType::Manual));
+            // If we can make the strings okay, we are valid.
+            valid = true;
+        }
+        bool valid;
         int port;
+        std::string hostname;
         std::string button;
         std::string statusUrl;
+        // C# strings of the configuration strings.
+        // TODO: Consider replacing the C++ string fields entirely, as they serve no purpose outside of debugging.
+        Il2CppString* hostnameStr = nullptr;
+        Il2CppString* buttonStr = nullptr;
+        Il2CppString* statusUrlStr = nullptr;
 };
-
-void ModConfig::read(const std::string& filename) {
-    std::ifstream file(filename, std::ios::in);
-    if (!file) {
-        getLogger().debug("No readable configuration at %s.", filename.c_str());
-        return;
-    } else {
-        file >> this->hostname >> this->port >> this->statusUrl;
-        this->button = this->hostname;
-    }
-}
 
 static ModConfig config;
 
