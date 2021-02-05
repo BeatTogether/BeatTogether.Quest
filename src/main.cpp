@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string_view>
 
 #include "modloader/shared/modloader.hpp"
 
@@ -115,46 +116,52 @@ Logger& getLogger()
     return *logger;
 }
 
+static auto customLevelPrefixLength = 13;
+
+Il2CppString* getCustomLevelStr() {
+    static auto* customStr = il2cpp_utils::createcsstr("custom_level_", il2cpp_utils::StringType::Manual);
+    return customStr;
+}
+
 // Makes the Level ID stored in this identifer lower case if it is a custom level
 void makeIdLowerCase(BeatmapIdentifierNetSerializable* identifier)
 {
     // Check if it is a custom level
-    if (identifier->levelID->StartsWith(il2cpp_utils::createcsstr("custom_level_")))
-        identifier->set_levelID(il2cpp_utils::createcsstr("custom_level_" + to_utf8(csstrtostr(identifier->levelID->Substring(13)->ToLower()))));
+    if (identifier->levelID->StartsWith(getCustomLevelStr()))
+        identifier->set_levelID(getCustomLevelStr()->Concat(identifier->levelID->Substring(customLevelPrefixLength)->ToLower()));
 }
 
 // Makes the Level ID stored in this identifer upper case if it is a custom level
 void makeIdUpperCase(BeatmapIdentifierNetSerializable* identifier)
 {
     // Check if it is a custom level
-    if (identifier->levelID->StartsWith(il2cpp_utils::createcsstr("custom_level_")))
-        identifier->set_levelID(il2cpp_utils::createcsstr("custom_level_" + to_utf8(csstrtostr(identifier->levelID->Substring(13)->ToUpper()))));
+    if (identifier->levelID->StartsWith(getCustomLevelStr()))
+        identifier->set_levelID(getCustomLevelStr()->Concat(identifier->levelID->Substring(customLevelPrefixLength)->ToUpper()));
 }
 
 MAKE_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
 {
-    auto* sessionToken = Array<uint8_t>::NewLength(1);
-    sessionToken->values[0] = 10;
     auto authenticationToken = AuthenticationToken(
         AuthenticationToken::Platform::OculusQuest,
         self->userId,
         self->userName,
-        sessionToken
+        Array<uint8_t>::NewLength(0)
     );
+    getLogger().debug("Returning custom authentication token!");
     return System::Threading::Tasks::Task_1<AuthenticationToken>::New_ctor(authenticationToken);
 }
 
 MAKE_HOOK_OFFSETLESS(MainSystemInit_Init, void, MainSystemInit* self) {
     MainSystemInit_Init(self);
-    NetworkConfigSO* networkConfig = self->networkConfig;
+    auto* networkConfig = self->networkConfig;
 
     getLogger().info("Overriding master server end point . . .");
-    networkConfig->masterServerHostName = il2cpp_utils::createcsstr(config.hostname.c_str(), il2cpp_utils::StringType::Manual);
-    networkConfig->masterServerPort = PORT;
-    networkConfig->masterServerStatusUrl = il2cpp_utils::createcsstr(config.statusUrl.c_str(), il2cpp_utils::StringType::Manual);
+    networkConfig->masterServerHostName = config.get_hostname();
+    networkConfig->masterServerPort = config.get_port();
+    networkConfig->masterServerStatusUrl = config.get_statusUrl();
 }
 
-MAKE_HOOK_OFFSETLESS(X509CertificateUtility_ValidateCertificateChain, void, Il2CppObject* self, Il2CppObject* certificate, Il2CppObject* certificateChain)
+MAKE_HOOK_OFFSETLESS(X509CertificateUtility_ValidateCertificateChainUnity, void, Il2CppObject* self, Il2CppObject* certificate, Il2CppObject* certificateChain)
 {
     // TODO: Support disabling the mod if official multiplayer is ever fixed
     // It'd be best if we do certificate validation here...
@@ -201,8 +208,9 @@ MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, M
 {
     if (firstActivation)
     {
+        static auto* searchPath = il2cpp_utils::createcsstr("Buttons/QuickPlayButton", il2cpp_utils::StringType::Manual);
         UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
-        UnityEngine::GameObject* quickPlayButton = transform->Find(il2cpp_utils::createcsstr("Buttons/QuickPlayButton"))->get_gameObject();
+        UnityEngine::GameObject* quickPlayButton = transform->Find(searchPath)->get_gameObject();
         quickPlayButton->SetActive(false);
     }
 
@@ -213,9 +221,11 @@ MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, M
 MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
 {   
     // Find the GameObject for the online button's text
+    static auto* searchPath = il2cpp_utils::createcsstr("MainButtons/OnlineButton", il2cpp_utils::StringType::Manual);
+    static auto* textName = il2cpp_utils::createcsstr("Text", il2cpp_utils::StringType::Manual);
     UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
-    UnityEngine::GameObject* onlineButton = transform->Find(il2cpp_utils::createcsstr("MainButtons/OnlineButton"))->get_gameObject();
-    UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(il2cpp_utils::createcsstr("Text"))->get_gameObject();
+    UnityEngine::GameObject* onlineButton = transform->Find(searchPath)->get_gameObject();
+    UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(textName)->get_gameObject();
 
     if (firstActivation)
     {
@@ -227,7 +237,7 @@ MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewContr
 
     // Set the "Modded Online" text every time so that it doesn't change back
     TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
-    onlineButtonText->set_text(il2cpp_utils::createcsstr(config.button.c_str()));
+    onlineButtonText->set_text(config.get_button());
 
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
@@ -246,6 +256,10 @@ extern "C" void load()
 
     getLogger().info("Config path: " + path);
     config.read(path);
+    // Load and create all C# strings after we attempt to read it.
+    // If we failed to read it, we will have default values.
+    // If we fail to create the strings, valid will be false.
+    config.load();
 
     il2cpp_functions::Init();
 
@@ -253,8 +267,8 @@ extern "C" void load()
         il2cpp_utils::FindMethod("", "PlatformAuthenticationTokenProvider", "GetAuthenticationToken"));
     INSTALL_HOOK_OFFSETLESS(getLogger(), MainSystemInit_Init,
         il2cpp_utils::FindMethod("", "MainSystemInit", "Init"));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), X509CertificateUtility_ValidateCertificateChain,
-        il2cpp_utils::FindMethodUnsafe("", "X509CertificateUtility", "ValidateCertificateChain", 2));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), X509CertificateUtility_ValidateCertificateChainUnity,
+        il2cpp_utils::FindMethodUnsafe("", "X509CertificateUtility", "ValidateCertificateChainUnity", 2));
     INSTALL_HOOK_OFFSETLESS(getLogger(), MenuRpcManager_SelectBeatmap,
         il2cpp_utils::FindMethodUnsafe("", "MenuRpcManager", "SelectBeatmap", 1));
     INSTALL_HOOK_OFFSETLESS(getLogger(), MenuRpcManager_InvokeSelectedBeatmap,
