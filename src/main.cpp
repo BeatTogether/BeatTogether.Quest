@@ -258,7 +258,6 @@ MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewContr
 MAKE_HOOK_OFFSETLESS(AdditionalContentModel_GetLevelEntitlementStatusAsync, System::Threading::Tasks::Task_1<AdditionalContentModel::EntitlementStatus>*, AdditionalContentModel* self, Il2CppString* levelId, System::Threading::CancellationToken token) {
     static BeatmapLevelsModel* levelsModel = UnityEngine::Resources::FindObjectsOfTypeAll<BeatmapLevelsModel*>()->values[0];
     if(!levelsModel->IsBeatmapLevelLoaded(levelId)) {
-        getLogger().info("custom song not owned!");
         return System::Threading::Tasks::Task_1<AdditionalContentModel::EntitlementStatus>::New_ctor(AdditionalContentModel::EntitlementStatus::NotOwned);
     }
     
