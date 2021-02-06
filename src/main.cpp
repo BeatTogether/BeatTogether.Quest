@@ -252,7 +252,7 @@ MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewContr
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
 
-// The base game's code always returns pwmed for a custom song, regardless of if we actually have it downloaded.
+// The base game's code always returns owned for a custom song, regardless of if we actually have it downloaded.
 // We change this to only return owned if we actually have a level with that ID loaded.
 // This fixes issues with people soft-locking if they don't have the song - players will be told if someone doesn't have it downloaded.
 MAKE_HOOK_OFFSETLESS(AdditionalContentModel_GetLevelEntitlementStatusAsync, System::Threading::Tasks::Task_1<AdditionalContentModel::EntitlementStatus>*, AdditionalContentModel* self, Il2CppString* levelId, System::Threading::CancellationToken token) {
