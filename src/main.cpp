@@ -55,18 +55,20 @@ class ModConfig {
             createStrings();
         }
         // Read MUST be called after load.
-        void read(std::string_view filename) {
+        bool read(std::string_view filename) {
             // Each time we read, we must start by cleaning up our old strings.
             // TODO: This may not be necessary if we only ever plan to load our configuration once.
             invalidateStrings();
             std::ifstream file(filename.data());
             if (!file) {
                 getLogger().debug("No readable configuration at %s.", filename.data());
+                return false;
             } else {
                 file >> hostname >> port >> statusUrl;
                 button = hostname;
             }
             file.close();
+            return true;
         }
         constexpr inline int get_port() const {
             return port;
@@ -112,7 +114,7 @@ static ModConfig config;
 
 Logger& getLogger()
 {
-    static Logger* logger = new Logger(modInfo);
+    static Logger* logger = new Logger(modInfo, LoggerOptions(false, true));
     return *logger;
 }
 
@@ -260,7 +262,10 @@ extern "C" void load()
     path.replace(path.length() - 4, 4, "cfg");
 
     getLogger().info("Config path: " + path);
-    config.read(path);
+    if (!config.read(path)) {
+        getLogger().warning("Not installing any hooks because config could not be loaded!");
+        return;
+    }
     // Load and create all C# strings after we attempt to read it.
     // If we failed to read it, we will have default values.
     // If we fail to create the strings, valid will be false.
