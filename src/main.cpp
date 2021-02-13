@@ -55,20 +55,18 @@ class ModConfig {
             createStrings();
         }
         // Read MUST be called after load.
-        bool read(std::string_view filename) {
+        void read(std::string_view filename) {
             // Each time we read, we must start by cleaning up our old strings.
             // TODO: This may not be necessary if we only ever plan to load our configuration once.
             invalidateStrings();
             std::ifstream file(filename.data());
             if (!file) {
                 getLogger().debug("No readable configuration at %s.", filename.data());
-                return false;
             } else {
                 file >> hostname >> port >> statusUrl;
                 button = hostname;
             }
             file.close();
-            return true;
         }
         constexpr inline int get_port() const {
             return port;
@@ -163,9 +161,11 @@ MAKE_HOOK_OFFSETLESS(MainSystemInit_Init, void, MainSystemInit* self) {
     auto* networkConfig = self->networkConfig;
 
     getLogger().info("Overriding master server end point . . .");
-    networkConfig->masterServerHostName = config.get_hostname();
-    networkConfig->masterServerPort = config.get_port();
-    networkConfig->masterServerStatusUrl = config.get_statusUrl();
+    // If we fail to make the strings, we should fail silently
+    // This could also be replaced with a CRASH_UNLESS call, if you want to fail verbosely.
+    networkConfig->masterServerHostName = RET_V_UNLESS(getLogger(), config.get_hostname());
+    networkConfig->masterServerPort = RET_V_UNLESS(getLogger(), config.get_port());
+    networkConfig->masterServerStatusUrl = RET_V_UNLESS(getLogger(), config.get_statusUrl());
 }
 
 MAKE_HOOK_OFFSETLESS(X509CertificateUtility_ValidateCertificateChainUnity, void, Il2CppObject* self, Il2CppObject* certificate, Il2CppObject* certificateChain)
@@ -244,7 +244,9 @@ MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewContr
 
     // Set the "Modded Online" text every time so that it doesn't change back
     TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
-    onlineButtonText->set_text(config.get_button());
+    // If we fail to get any valid button text, crash verbosely.
+    // TODO: This could be replaced with a non-intense crash, if we can ensure that DidActivate also works as intended.
+    onlineButtonText->set_text(CRASH_UNLESS(config.get_button()));
 
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
@@ -262,10 +264,7 @@ extern "C" void load()
     path.replace(path.length() - 4, 4, "cfg");
 
     getLogger().info("Config path: " + path);
-    if (!config.read(path)) {
-        getLogger().warning("Not installing any hooks because config could not be loaded!");
-        return;
-    }
+    config.read(path);
     // Load and create all C# strings after we attempt to read it.
     // If we failed to read it, we will have default values.
     // If we fail to create the strings, valid will be false.
