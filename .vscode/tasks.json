@@ -58,5 +58,19 @@
                 "env": {}
             }
         },
+        {
+            "label": "QuestPatcher Build",
+            "detail": "Builds a .qmod to be loaded into QuestPatcher",
+            "type": "shell",
+            "command": "./buildQP.ps1",
+            "windows": {
+                "command": "./buildQP.ps1"
+            },
+            "args": [],
+            "group": "build",
+            "options": {
+                "env": {}
+            }
+        }
     ]
 }
