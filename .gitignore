@@ -45,3 +45,4 @@ ndkpath.txt
 *.zip
 extern/
 qpm.shared.json
+Android.mk.backup
