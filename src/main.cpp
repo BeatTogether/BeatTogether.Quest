@@ -68,16 +68,18 @@ class ModConfig {
             }
             file.close();
         }
-        constexpr inline int get_port() const {
+        inline int get_port() const {
             return port;
         }
-        constexpr inline Il2CppString* get_hostname() const {
+        inline Il2CppString* get_hostname() const {
+            getLogger().info("Host name: " + to_utf8(csstrtostr(hostnameStr)));
             return valid ? hostnameStr : nullptr;
         }
-        constexpr inline Il2CppString* get_button() const {
+        inline Il2CppString* get_button() const {
             return valid ? buttonStr : nullptr;
         }
-        constexpr inline Il2CppString* get_statusUrl() const {
+        inline Il2CppString* get_statusUrl() const {
+            getLogger().info("Status URL: " + to_utf8(csstrtostr(statusUrlStr)));
             return valid ? statusUrlStr : nullptr;
         }
     private:
@@ -125,8 +127,8 @@ Il2CppString* getCustomLevelStr() {
 
 // Helper method for concatenating two strings using the Concat(System.Object) method.
 Il2CppString* concatHelper(Il2CppString* src, Il2CppString* dst) {
-    static auto* concatMethod = il2cpp_utils::FindMethod(il2cpp_functions::defaults->string_class, "Concat", std::vector<Il2CppClass*>{il2cpp_functions::defaults->object_class});
-    return RET_DEFAULT_UNLESS(getLogger(), il2cpp_utils::RunMethod<Il2CppString*>(src, concatMethod, dst));
+    static auto* concatMethod = il2cpp_utils::FindMethod(il2cpp_functions::defaults->string_class, "Concat", il2cpp_functions::defaults->string_class, il2cpp_functions::defaults->string_class);
+    return RET_DEFAULT_UNLESS(getLogger(), il2cpp_utils::RunMethod<Il2CppString*>((Il2CppObject*) nullptr, concatMethod, src, dst));
 }
 
 // Makes the Level ID stored in this identifer lower case if it is a custom level
@@ -161,14 +163,15 @@ MAKE_HOOK_OFFSETLESS(MainSystemInit_Init, void, MainSystemInit* self) {
     auto* networkConfig = self->networkConfig;
 
     getLogger().info("Overriding master server end point . . .");
+    getLogger().info("Original status URL: " + to_utf8(csstrtostr(networkConfig->masterServerStatusUrl)));
     // If we fail to make the strings, we should fail silently
     // This could also be replaced with a CRASH_UNLESS call, if you want to fail verbosely.
-    networkConfig->masterServerHostName = RET_V_UNLESS(getLogger(), config.get_hostname());
-    networkConfig->masterServerPort = RET_V_UNLESS(getLogger(), config.get_port());
-    networkConfig->masterServerStatusUrl = RET_V_UNLESS(getLogger(), config.get_statusUrl());
+    networkConfig->masterServerHostName = CRASH_UNLESS(/*getLogger(), */config.get_hostname());
+    networkConfig->masterServerPort = CRASH_UNLESS(/*getLogger(), */config.get_port());
+    networkConfig->masterServerStatusUrl = CRASH_UNLESS(/*getLogger(), */config.get_statusUrl());
 }
 
-MAKE_HOOK_OFFSETLESS(X509CertificateUtility_ValidateCertificateChainUnity, void, Il2CppObject* self, Il2CppObject* certificate, Il2CppObject* certificateChain)
+MAKE_HOOK_OFFSETLESS(UserMessageHandler_ValidateCertificateChainInternal, void, Il2CppObject* self, Il2CppObject* certificate, Il2CppObject* certificateChain)
 {
     // TODO: Support disabling the mod if official multiplayer is ever fixed
     // It'd be best if we do certificate validation here...
@@ -209,6 +212,7 @@ MAKE_HOOK_OFFSETLESS(MultiplayerLevelLoader_LoadLevel, void, MultiplayerLevelLoa
     MultiplayerLevelLoader_LoadLevel(self, beatmapId, gameplayModifiers, initialStartTime);
     makeIdUpperCase(beatmapId);
 }
+
 
 // Disable the quick play button
 MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, MultiplayerModeSelectionViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
@@ -276,8 +280,8 @@ extern "C" void load()
         il2cpp_utils::FindMethod("", "PlatformAuthenticationTokenProvider", "GetAuthenticationToken"));
     INSTALL_HOOK_OFFSETLESS(getLogger(), MainSystemInit_Init,
         il2cpp_utils::FindMethod("", "MainSystemInit", "Init"));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), X509CertificateUtility_ValidateCertificateChainUnity,
-        il2cpp_utils::FindMethodUnsafe("", "X509CertificateUtility", "ValidateCertificateChainUnity", 2));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), UserMessageHandler_ValidateCertificateChainInternal,
+        il2cpp_utils::FindMethodUnsafe("MasterServer", "UserMessageHandler", "ValidateCertificateChainInternal", 2));
     INSTALL_HOOK_OFFSETLESS(getLogger(), MenuRpcManager_SelectBeatmap,
         il2cpp_utils::FindMethodUnsafe("", "MenuRpcManager", "SelectBeatmap", 1));
     INSTALL_HOOK_OFFSETLESS(getLogger(), MenuRpcManager_InvokeSelectedBeatmap,
