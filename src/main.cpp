@@ -26,6 +26,10 @@
 #include "GlobalNamespace/HostLobbySetupViewController.hpp"
 #include "GlobalNamespace/HostLobbySetupViewController_CannotStartGameReason.hpp"
 #include "GlobalNamespace/AdditionalContentModel.hpp"
+#include "GlobalNamespace/MultiplayerLevelSelectionFlowCoordinator.hpp"
+#include "GlobalNamespace/LevelSelectionFlowCoordinator_State.hpp"
+#include "GlobalNamespace/SongPackMask.hpp"
+#include "GlobalNamespace/BeatmapDifficultyMask.hpp"
 
 using namespace GlobalNamespace;
 
@@ -135,22 +139,6 @@ Il2CppString* concatHelper(Il2CppString* src, Il2CppString* dst) {
     return RET_DEFAULT_UNLESS(getLogger(), il2cpp_utils::RunMethod<Il2CppString*>((Il2CppObject*) nullptr, concatMethod, src, dst));
 }
 
-// Makes the Level ID stored in this identifer lower case if it is a custom level
-void makeIdLowerCase(BeatmapIdentifierNetSerializable* identifier)
-{
-    // Check if it is a custom level
-    if (identifier->levelID->StartsWith(getCustomLevelStr()))
-        identifier->set_levelID(RET_V_UNLESS(getLogger(), concatHelper(getCustomLevelStr(), identifier->levelID->Substring(customLevelPrefixLength)->ToLower())));
-}
-
-// Makes the Level ID stored in this identifer upper case if it is a custom level
-void makeIdUpperCase(BeatmapIdentifierNetSerializable* identifier)
-{
-    // Check if it is a custom level
-    if (identifier->levelID->StartsWith(getCustomLevelStr()))
-        identifier->set_levelID(RET_V_UNLESS(getLogger(), concatHelper(getCustomLevelStr(), identifier->levelID->Substring(customLevelPrefixLength)->ToUpper())));
-}
-
 MAKE_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
 {
     getLogger().debug("Returning custom authentication token!");
@@ -185,36 +173,36 @@ MAKE_HOOK_OFFSETLESS(UserMessageHandler_ValidateCertificateChainInternal, void, 
 MAKE_HOOK_OFFSETLESS(MenuRpcManager_SelectBeatmap, void, MenuRpcManager* self, BeatmapIdentifierNetSerializable* identifier)
 {
     auto* levelID = identifier->get_levelID();
-    makeIdUpperCase(identifier);
+    //makeIdUpperCase(identifier);
     MenuRpcManager_SelectBeatmap(self, identifier);
 }
 
 MAKE_HOOK_OFFSETLESS(MenuRpcManager_InvokeSelectedBeatmap, void, MenuRpcManager* self, Il2CppString* userId, BeatmapIdentifierNetSerializable* identifier)
 {
     auto* levelID = identifier->get_levelID();
-    makeIdLowerCase(identifier);
+    //makeIdLowerCase(identifier);
     MenuRpcManager_InvokeSelectedBeatmap(self, userId, identifier);
 }
 
 MAKE_HOOK_OFFSETLESS(MenuRpcManager_StartLevel, void, MenuRpcManager* self, BeatmapIdentifierNetSerializable* identifier, GameplayModifiers* gameplayModifiers, float startTime)
 {
     auto* levelID = identifier->get_levelID();
-    makeIdUpperCase(identifier);
+    //makeIdUpperCase(identifier);
     MenuRpcManager_StartLevel(self, identifier, gameplayModifiers, startTime);
 }
 
 MAKE_HOOK_OFFSETLESS(MenuRpcManager_InvokeStartLevel, void, MenuRpcManager* self, Il2CppString* userId, BeatmapIdentifierNetSerializable* identifier, GameplayModifiers* gameplayModifiers, float startTime)
 {
-    makeIdLowerCase(identifier);
+    //makeIdLowerCase(identifier);
     MenuRpcManager_InvokeStartLevel(self, userId, identifier, gameplayModifiers, startTime);
 }
 
 MAKE_HOOK_OFFSETLESS(MultiplayerLevelLoader_LoadLevel, void, MultiplayerLevelLoader* self, BeatmapIdentifierNetSerializable* beatmapId, GameplayModifiers* gameplayModifiers, float initialStartTime)
 {
     // Change the ID to lower case temporarily so the level gets fetched correctly
-    makeIdLowerCase(beatmapId);
+    //makeIdLowerCase(beatmapId);
     MultiplayerLevelLoader_LoadLevel(self, beatmapId, gameplayModifiers, initialStartTime);
-    makeIdUpperCase(beatmapId);
+    //xmakeIdUpperCase(beatmapId);
 }
 
 
@@ -259,33 +247,49 @@ MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewContr
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
 
-// The base game's code always returns owned for a custom song, regardless of if we actually have it downloaded.
-// We change this to only return owned if we actually have a level with that ID loaded.
-// This fixes issues with people soft-locking if they don't have the song - players will be told if someone doesn't have it downloaded.
-MAKE_HOOK_OFFSETLESS(AdditionalContentModel_GetLevelEntitlementStatusAsync, System::Threading::Tasks::Task_1<AdditionalContentModel::EntitlementStatus>*, AdditionalContentModel* self, Il2CppString* levelId, System::Threading::CancellationToken token) {
-    static BeatmapLevelsModel* levelsModel = UnityEngine::Resources::FindObjectsOfTypeAll<BeatmapLevelsModel*>()->values[0];
-    if(!levelsModel->IsBeatmapLevelLoaded(levelId)) {
-        getLogger().info("custom song not owned!");
-        return System::Threading::Tasks::Task_1<AdditionalContentModel::EntitlementStatus>::New_ctor(AdditionalContentModel::EntitlementStatus::NotOwned);
-    }
-
-    return AdditionalContentModel_GetLevelEntitlementStatusAsync(self, levelId, token);
-}
+static bool isMissingLevel = false;
 
 // This hook makes sure to grey-out the play button so that players can't start a level that someone doesn't have.
 // This prevents crashes.
 MAKE_HOOK_OFFSETLESS(HostLobbySetupViewController_SetPlayersMissingLevelText, void, HostLobbySetupViewController* self, Il2CppString* playersMissingLevelText) {
-    static bool wasPreviouslyHidden = false;
-
-    if(playersMissingLevelText && !wasPreviouslyHidden) {
+    getLogger().info("HostLobbySetupViewController_SetPlayersMissingLevelText");
+    if(playersMissingLevelText && !isMissingLevel) {
+        getLogger().info("Disabling start game as missing level text exists . . .");
+        isMissingLevel = true;
         self->SetStartGameEnabled(false, HostLobbySetupViewController::CannotStartGameReason::DoNotOwnSong);
-        wasPreviouslyHidden = true;
-    }   else if(!playersMissingLevelText && wasPreviouslyHidden)   {
+    }   else if(!playersMissingLevelText && isMissingLevel)   {
+        getLogger().info("Enabling start game as missing level text does not exist . . .");
+        isMissingLevel = false;
         self->SetStartGameEnabled(true, HostLobbySetupViewController::CannotStartGameReason::None);
-        wasPreviouslyHidden = false;
     }
 
     HostLobbySetupViewController_SetPlayersMissingLevelText(self, playersMissingLevelText);
+}
+
+// Prevent the button becoming shown when we're force disabling it, as pressing it would crash
+MAKE_HOOK_OFFSETLESS(HostLobbySetupViewController_SetStartGameEnabled, void, HostLobbySetupViewController* self, bool startGameEnabled, HostLobbySetupViewController::CannotStartGameReason cannotStartGameReason) {
+    getLogger().info(string_format("HostLobbySetupViewController_SetStartGameEnabled. Enabled: %d. Reason: %d", startGameEnabled, cannotStartGameReason));
+    if(isMissingLevel && cannotStartGameReason == HostLobbySetupViewController::CannotStartGameReason::None) {
+        getLogger().info("Game attempted to enable the play button when the level was missing, stopping it!");
+        startGameEnabled = false;
+        cannotStartGameReason = HostLobbySetupViewController::CannotStartGameReason::DoNotOwnSong;
+    }
+    HostLobbySetupViewController_SetStartGameEnabled(self, startGameEnabled, cannotStartGameReason);
+}
+
+MAKE_HOOK_OFFSETLESS(MultiplayerLevelSelectionFlowCoordinator_Setup, void, MultiplayerLevelSelectionFlowCoordinator* self, LevelSelectionFlowCoordinator::State* state, SongPackMask songPackMask, BeatmapDifficultyMask allowedBeatmapDifficultyMask, Il2CppString* actionText, Il2CppString* titleText) {
+    getLogger().info("Enabling custom songs in multiplayer . . .");
+    MultiplayerLevelSelectionFlowCoordinator_Setup(self, state, SongPackMask::get_all(), allowedBeatmapDifficultyMask, actionText, titleText);
+}
+
+// Show the custom levels tab in multiplayer
+MAKE_HOOK_OFFSETLESS(LevelSelectionNavigationController_Setup, void, LevelSelectionNavigationController* self,
+    SongPackMask songPackMask, BeatmapDifficultyMask allowedBeatmapDifficultyMask, Il2CppObject* notAllowedCharacteristics,
+    bool hidePacksIfOneOrNone, bool hidePracticeButton, bool showPlayerStatsInDetailView, Il2CppString* actionButtonText, IBeatmapLevelPack* levelPackToBeSelectedAfterPrecent,
+    SelectLevelCategoryViewController::LevelCategory startLevelCategory, IPreviewBeatmapLevel* beatmapLevelToBeSelectedAfterPresent, bool enableCustomLevels) {
+    getLogger().info("LevelSelectionNavigationController_Setup enabling custom songs . . .");
+    LevelSelectionNavigationController_Setup(self, songPackMask, allowedBeatmapDifficultyMask, notAllowedCharacteristics, hidePacksIfOneOrNone, hidePracticeButton, showPlayerStatsInDetailView,
+                                             actionButtonText, levelPackToBeSelectedAfterPrecent, startLevelCategory, beatmapLevelToBeSelectedAfterPresent, true);
 }
 
 extern "C" void setup(ModInfo& info)
@@ -329,8 +333,13 @@ extern "C" void load()
         il2cpp_utils::FindMethodUnsafe("", "MultiplayerModeSelectionViewController", "DidActivate", 3));
     INSTALL_HOOK_OFFSETLESS(getLogger(), MainMenuViewController_DidActivate, 
         il2cpp_utils::FindMethodUnsafe("", "MainMenuViewController", "DidActivate", 3));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), AdditionalContentModel_GetLevelEntitlementStatusAsync,
-        il2cpp_utils::FindMethodUnsafe("", "AdditionalContentModel", "GetLevelEntitlementStatusAsync", 2));
     INSTALL_HOOK_OFFSETLESS(getLogger(), HostLobbySetupViewController_SetPlayersMissingLevelText,
-        il2cpp_utils::FindMethodUnsafe("", "HostLobbySetupViewController", "SetPlayersMissingLevelText", 1));
+       il2cpp_utils::FindMethodUnsafe("", "HostLobbySetupViewController", "SetPlayersMissingLevelText", 1));
+    //INSTALL_HOOK_OFFSETLESS(getLogger(), MultiplayerLevelSelectionFlowCoordinator_Setup,
+    //    il2cpp_utils::FindMethodUnsafe("", "MultiplayerLevelSelectionFlowCoordinator", "Setup", 5));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), HostLobbySetupViewController_SetStartGameEnabled,
+        il2cpp_utils::FindMethodUnsafe("", "HostLobbySetupViewController", "SetStartGameEnabled", 2));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), LevelSelectionNavigationController_Setup,
+        il2cpp_utils::FindMethodUnsafe("", "LevelSelectionNavigationController", "Setup", 11));
+
 }
