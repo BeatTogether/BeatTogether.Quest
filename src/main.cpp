@@ -48,7 +48,7 @@ static ModInfo modInfo;
 
 class ModConfig {
     public:
-        ModConfig() : hostname(HOST_NAME), port(PORT), statusUrl(STATUS_URL), button("Modded Online") {}
+        ModConfig() : hostname(HOST_NAME), port(PORT), statusUrl(STATUS_URL), button("  Modded\nOnline") {}
         // Should be called after modification of the fields has already taken place.
         // Creates the C# strings for the configuration.
         void load() {
@@ -238,19 +238,14 @@ MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewContr
     UnityEngine::GameObject* onlineButton = transform->Find(searchPath)->get_gameObject();
     UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(textName)->get_gameObject();
 
-    if (firstActivation)
-    {
-        // Move the text slightly to the right so it is centred
-        UnityEngine::Vector3 currentTextPos = onlineButtonTextObj->get_transform()->get_position();
-        currentTextPos.x += 0.025;
-        onlineButtonTextObj->get_transform()->set_position(currentTextPos);
-    }
-
     // Set the "Modded Online" text every time so that it doesn't change back
     TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
     // If we fail to get any valid button text, crash verbosely.
     // TODO: This could be replaced with a non-intense crash, if we can ensure that DidActivate also works as intended.
     onlineButtonText->set_text(CRASH_UNLESS(config.get_button()));
+    
+    // Align the Text in the Center
+    onlineButtonText->set_alignment(TMPro::TextAlignmentOptions::Center);
 
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
