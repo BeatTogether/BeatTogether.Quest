@@ -1,6 +1,6 @@
 HOST_NAME ?= master.beattogether.systems
 PORT ?= 2328
-STATUS_URL ?= "https://quest-status.beattogether.systems/status"
+STATUS_URL ?= "http://master.beattogether.systems/status"
 LOCAL_PATH := $(call my-dir)
 
 TARGET_ARCH_ABI := arm64-v8a
