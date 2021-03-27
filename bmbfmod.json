@@ -10,7 +10,7 @@
     "icon": "Cover.png",
     "category": "Gameplay",
     "gameVersion": "1.13.2",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "platform": "Quest",
     "components": [
         {

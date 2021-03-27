@@ -4,7 +4,7 @@
             "name": "Quest",
             "defines": [
                 "ID=\"BeatTogether\"",
-                "VERSION=\"1.1.0\"",
+                "VERSION=\"1.2.0\"",
                 "__GNUC__",
                 "__aarch64__",
                 "HOST_NAME=\"btogether.xn--9o8hpe.ws\"",

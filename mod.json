@@ -1,0 +1,39 @@
+
+{
+    "_QPVersion": "0.1.0",
+    "name": "Beat Together",
+    "id": "beattogether",
+    "author": "BeatTogether Team",
+    "version": "1.2.0",
+    "packageId": "com.beatgames.beatsaber",
+    "packageVersion": "1.14.0",
+    "type": "Gameplay",
+    "modFiles": [
+        "libbeattogether.so"
+    ],
+    "libraryFiles": [
+        "libbeatsaber-hook_1_2_4.so"
+    ],
+    "dependencies": [
+        {
+            "id": "beatsaber-hook",
+            "version": "^1.2.3",
+            "downloadIfMissing": "https://cdn.discordapp.com/attachments/769457887415894036/822610080234078278/libbeatsaber-hook_1_2_3.qmod"
+        },
+        {
+            "id": "questui",
+            "version": "^0.5.0",
+            "downloadIfMissing": "https://cdn.discordapp.com/attachments/769457887415894036/822610086736166972/questui.qmod"
+        },
+        {
+            "id": "custom-types",
+            "version": "^0.5.1",
+            "downloadIfMissing": "https://cdn.discordapp.com/attachments/769457887415894036/822610084160077834/custom-types.qmod"
+        },
+        {
+            "id": "codegen",
+            "version": "0.7.0",
+            "downloadIfMissing": "https://cdn.discordapp.com/attachments/769457887415894036/822610128515498024/codegen_0_7_0.qmod"
+        }
+    ]
+}
