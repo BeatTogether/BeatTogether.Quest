@@ -158,9 +158,9 @@ MAKE_HOOK_OFFSETLESS(MainSystemInit_Init, void, MainSystemInit* self) {
     getLogger().info("Original status URL: " + to_utf8(csstrtostr(networkConfig->masterServerStatusUrl)));
     // If we fail to make the strings, we should fail silently
     // This could also be replaced with a CRASH_UNLESS call, if you want to fail verbosely.
-    networkConfig->masterServerHostName = CRASH_UNLESS(/*getLogger(), */config.get_hostname());
-    networkConfig->masterServerPort = CRASH_UNLESS(/*getLogger(), */config.get_port());
-    networkConfig->masterServerStatusUrl = CRASH_UNLESS(/*getLogger(), */config.get_statusUrl());
+    networkConfig->masterServerHostName = RET_V_UNLESS(getLogger(), config.get_hostname());
+    networkConfig->masterServerPort = RET_V_UNLESS(getLogger(), config.get_port());
+    networkConfig->masterServerStatusUrl = RET_V_UNLESS(getLogger(), config.get_statusUrl());
 }
 
 MAKE_HOOK_OFFSETLESS(UserMessageHandler_ValidateCertificateChainInternal, void, Il2CppObject* self, Il2CppObject* certificate, Il2CppObject* certificateChain)
@@ -169,42 +169,6 @@ MAKE_HOOK_OFFSETLESS(UserMessageHandler_ValidateCertificateChainInternal, void, 
     // It'd be best if we do certificate validation here...
     // but for now we'll just skip it.
 }
-
-MAKE_HOOK_OFFSETLESS(MenuRpcManager_SelectBeatmap, void, MenuRpcManager* self, BeatmapIdentifierNetSerializable* identifier)
-{
-    auto* levelID = identifier->get_levelID();
-    //makeIdUpperCase(identifier);
-    MenuRpcManager_SelectBeatmap(self, identifier);
-}
-
-MAKE_HOOK_OFFSETLESS(MenuRpcManager_InvokeSelectedBeatmap, void, MenuRpcManager* self, Il2CppString* userId, BeatmapIdentifierNetSerializable* identifier)
-{
-    auto* levelID = identifier->get_levelID();
-    //makeIdLowerCase(identifier);
-    MenuRpcManager_InvokeSelectedBeatmap(self, userId, identifier);
-}
-
-MAKE_HOOK_OFFSETLESS(MenuRpcManager_StartLevel, void, MenuRpcManager* self, BeatmapIdentifierNetSerializable* identifier, GameplayModifiers* gameplayModifiers, float startTime)
-{
-    auto* levelID = identifier->get_levelID();
-    //makeIdUpperCase(identifier);
-    MenuRpcManager_StartLevel(self, identifier, gameplayModifiers, startTime);
-}
-
-MAKE_HOOK_OFFSETLESS(MenuRpcManager_InvokeStartLevel, void, MenuRpcManager* self, Il2CppString* userId, BeatmapIdentifierNetSerializable* identifier, GameplayModifiers* gameplayModifiers, float startTime)
-{
-    //makeIdLowerCase(identifier);
-    MenuRpcManager_InvokeStartLevel(self, userId, identifier, gameplayModifiers, startTime);
-}
-
-MAKE_HOOK_OFFSETLESS(MultiplayerLevelLoader_LoadLevel, void, MultiplayerLevelLoader* self, BeatmapIdentifierNetSerializable* beatmapId, GameplayModifiers* gameplayModifiers, float initialStartTime)
-{
-    // Change the ID to lower case temporarily so the level gets fetched correctly
-    //makeIdLowerCase(beatmapId);
-    MultiplayerLevelLoader_LoadLevel(self, beatmapId, gameplayModifiers, initialStartTime);
-    //xmakeIdUpperCase(beatmapId);
-}
-
 
 // Disable the quick play button
 MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, MultiplayerModeSelectionViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
@@ -314,16 +278,6 @@ extern "C" void load()
         il2cpp_utils::FindMethod("", "MainSystemInit", "Init"));
     INSTALL_HOOK_OFFSETLESS(getLogger(), UserMessageHandler_ValidateCertificateChainInternal,
         il2cpp_utils::FindMethodUnsafe("MasterServer", "UserMessageHandler", "ValidateCertificateChainInternal", 2));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), MenuRpcManager_SelectBeatmap,
-        il2cpp_utils::FindMethodUnsafe("", "MenuRpcManager", "SelectBeatmap", 1));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), MenuRpcManager_InvokeSelectedBeatmap,
-        il2cpp_utils::FindMethodUnsafe("", "MenuRpcManager", "InvokeSelectedBeatmap", 2));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), MenuRpcManager_StartLevel,
-        il2cpp_utils::FindMethodUnsafe("", "MenuRpcManager", "StartLevel", 3));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), MenuRpcManager_InvokeStartLevel,
-        il2cpp_utils::FindMethodUnsafe("", "MenuRpcManager", "InvokeStartLevel", 4));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), MultiplayerLevelLoader_LoadLevel,
-        il2cpp_utils::FindMethodUnsafe("", "MultiplayerLevelLoader", "LoadLevel", 3));
     INSTALL_HOOK_OFFSETLESS(getLogger(), MultiplayerModeSelectionViewController_DidActivate,
         il2cpp_utils::FindMethodUnsafe("", "MultiplayerModeSelectionViewController", "DidActivate", 3));
     INSTALL_HOOK_OFFSETLESS(getLogger(), MainMenuViewController_DidActivate, 
@@ -331,7 +285,6 @@ extern "C" void load()
     INSTALL_HOOK_OFFSETLESS(getLogger(), HostLobbySetupViewController_SetPlayersMissingLevelText,
        il2cpp_utils::FindMethodUnsafe("", "HostLobbySetupViewController", "SetPlayersMissingLevelText", 1));
     //INSTALL_HOOK_OFFSETLESS(getLogger(), MultiplayerLevelSelectionFlowCoordinator_Setup,
-    //    il2cpp_utils::FindMethodUnsafe("", "MultiplayerLevelSelectionFlowCoordinator", "Setup", 5));
     INSTALL_HOOK_OFFSETLESS(getLogger(), HostLobbySetupViewController_SetStartGameEnabled,
         il2cpp_utils::FindMethodUnsafe("", "HostLobbySetupViewController", "SetStartGameEnabled", 2));
     INSTALL_HOOK_OFFSETLESS(getLogger(), LevelSelectionNavigationController_Setup,
