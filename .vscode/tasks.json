@@ -45,20 +45,6 @@
             }
         },
         {
-            "label": "BMBF Build",
-            "detail": "Builds a .zip to be uploaded into BMBF",
-            "type": "shell",
-            "command": "./buildBMBF.ps1",
-            "windows": {
-                "command": "./buildBMBF.ps1"
-            },
-            "args": [],
-            "group": "build",
-            "options": {
-                "env": {}
-            }
-        },
-        {
             "label": "QuestPatcher Build",
             "detail": "Builds a .qmod to be loaded into QuestPatcher",
             "type": "shell",
