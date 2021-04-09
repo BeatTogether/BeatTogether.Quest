@@ -49,3 +49,6 @@ Android.mk.backup
 
 # QuestPatcher mods
 *.qmod
+
+# Logs
+*.log
