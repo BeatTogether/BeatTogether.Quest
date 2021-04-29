@@ -206,7 +206,6 @@ MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewContr
     onlineButtonText->set_text(CRASH_UNLESS(config.get_button()));
     
     // Align the Text in the Center
-    //onlineButtonText->UpdateAlignment(TMPro::TextAlignmentOptions::Center, Polyglot::LanguageDirection::LeftToRight);
     onlineButtonText->set_alignment(TMPro::TextAlignmentOptions::Center);
 
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
