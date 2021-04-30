@@ -38,6 +38,11 @@ using namespace GlobalNamespace;
 #include "UnityEngine/Resources.hpp"
 #include "TMPro/TextMeshProUGUI.hpp"
 
+//#include "Polyglot/LocalizedTextMeshProUGUI.hpp"
+//#include "Polyglot/LanguageDirection.hpp"
+
+//using namespace Polyglot;
+
 #ifndef HOST_NAME
 #error "Define HOST_NAME!"
 #endif
@@ -56,7 +61,7 @@ static ModInfo modInfo;
 
 class ModConfig {
     public:
-        ModConfig() : hostname(HOST_NAME), port(PORT), statusUrl(STATUS_URL), button("  Modded\nOnline") {}
+        ModConfig() : hostname(HOST_NAME), port(PORT), statusUrl(STATUS_URL), button("Modded\nOnline") {}
         // Should be called after modification of the fields has already taken place.
         // Creates the C# strings for the configuration.
         void load() {
@@ -188,7 +193,7 @@ MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, M
 MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
 {   
     // Find the GameObject for the online button's text
-    static auto* searchPath = il2cpp_utils::createcsstr("MainButtons/OnlineButton", il2cpp_utils::StringType::Manual);
+    static auto* searchPath = il2cpp_utils::createcsstr("MainContent/OnlineButton", il2cpp_utils::StringType::Manual);
     static auto* textName = il2cpp_utils::createcsstr("Text", il2cpp_utils::StringType::Manual);
     UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
     UnityEngine::GameObject* onlineButton = transform->Find(searchPath)->get_gameObject();
