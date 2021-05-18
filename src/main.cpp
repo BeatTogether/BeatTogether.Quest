@@ -105,9 +105,9 @@ class ModConfig {
         }
         // Creates all Il2CppString* pointers we need
         void createStrings() {
-            hostnameStr = RET_V_UNLESS(getLogger(), il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>(hostname));
-            buttonStr = RET_V_UNLESS(getLogger(), il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>(button));
-            statusUrlStr = RET_V_UNLESS(getLogger(), il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>(statusUrl));
+            networkConfig->masterServerHostName = CRASH_UNLESS(/*getLogger(), */config.get_hostname());
+            networkConfig->masterServerPort = CRASH_UNLESS(/*getLogger(), */config.get_port());
+            networkConfig->masterServerStatusUrl = CRASH_UNLESS(/*getLogger(), */config.get_statusUrl());
             // If we can make the strings okay, we are valid.
             valid = true;
         }
