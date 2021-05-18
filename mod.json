@@ -4,7 +4,7 @@
     "name": "Beat Together",
     "id": "beattogether",
     "author": "BeatTogether Team",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "packageId": "com.beatgames.beatsaber",
     "packageVersion": "1.15.0",
 	"description": "A multiplayer private server for the modding community. Supports crossplay between PC and Quest.",
@@ -14,6 +14,6 @@
         "libbeattogether.so"
     ],
     "libraryFiles": [
-        "libbeatsaber-hook_1_3_3.so"
+        "libbeatsaber-hook_1_3_5.so"
     ]
 }

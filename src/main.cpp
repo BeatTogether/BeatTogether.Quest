@@ -105,9 +105,9 @@ class ModConfig {
         }
         // Creates all Il2CppString* pointers we need
         void createStrings() {
-            hostnameStr = RET_V_UNLESS(getLogger(), il2cpp_utils::createcsstr(hostname, il2cpp_utils::StringType::Manual));
-            buttonStr = RET_V_UNLESS(getLogger(), il2cpp_utils::createcsstr(button, il2cpp_utils::StringType::Manual));
-            statusUrlStr = RET_V_UNLESS(getLogger(), il2cpp_utils::createcsstr(statusUrl, il2cpp_utils::StringType::Manual));
+            networkConfig->masterServerHostName = CRASH_UNLESS(/*getLogger(), */config.get_hostname());
+            networkConfig->masterServerPort = CRASH_UNLESS(/*getLogger(), */config.get_port());
+            networkConfig->masterServerStatusUrl = CRASH_UNLESS(/*getLogger(), */config.get_statusUrl());
             // If we can make the strings okay, we are valid.
             valid = true;
         }
@@ -134,7 +134,7 @@ Logger& getLogger()
 static auto customLevelPrefixLength = 13;
 
 Il2CppString* getCustomLevelStr() {
-    static auto* customStr = il2cpp_utils::createcsstr("custom_level_", il2cpp_utils::StringType::Manual);
+    static auto* customStr = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("custom_level_");
     return customStr;
 }
 
@@ -180,7 +180,7 @@ MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, M
 {
     if (firstActivation)
     {
-        static auto* searchPath = il2cpp_utils::createcsstr("Buttons/QuickPlayButton", il2cpp_utils::StringType::Manual);
+        static auto* searchPath = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("Buttons/QuickPlayButton");
         UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
         UnityEngine::GameObject* quickPlayButton = transform->Find(searchPath)->get_gameObject();
         quickPlayButton->SetActive(false);
@@ -193,8 +193,8 @@ MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, M
 MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
 {   
     // Find the GameObject for the online button's text
-    static auto* searchPath = il2cpp_utils::createcsstr("MainContent/OnlineButton", il2cpp_utils::StringType::Manual);
-    static auto* textName = il2cpp_utils::createcsstr("Text", il2cpp_utils::StringType::Manual);
+    static auto* searchPath = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("MainContent/OnlineButton");
+    static auto* textName = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("Text");
     UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
     UnityEngine::GameObject* onlineButton = transform->Find(searchPath)->get_gameObject();
     UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(textName)->get_gameObject();
