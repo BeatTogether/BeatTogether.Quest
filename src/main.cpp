@@ -163,9 +163,9 @@ MAKE_HOOK_OFFSETLESS(MainSystemInit_Init, void, MainSystemInit* self) {
     getLogger().info("Original status URL: " + to_utf8(csstrtostr(networkConfig->masterServerStatusUrl)));
     // If we fail to make the strings, we should fail silently
     // This could also be replaced with a CRASH_UNLESS call, if you want to fail verbosely.
-    networkConfig->masterServerHostName = CRASH_UNLESS(/*getLogger(), */config.get_hostname());
-    networkConfig->masterServerPort = CRASH_UNLESS(/*getLogger(), */config.get_port());
-    networkConfig->masterServerStatusUrl = CRASH_UNLESS(/*getLogger(), */config.get_statusUrl());
+    networkConfig->masterServerHostName = RET_V_UNLESS(/*getLogger(), */config.get_hostname());
+    networkConfig->masterServerPort = RET_V_UNLESS(/*getLogger(), */config.get_port());
+    networkConfig->masterServerStatusUrl = RET_V_UNLESS(/*getLogger(), */config.get_statusUrl());
 }
 
 MAKE_HOOK_OFFSETLESS(UserMessageHandler_ValidateCertificateChainInternal, void, Il2CppObject* self, Il2CppObject* certificate, Il2CppObject* certificateChain)
