@@ -38,6 +38,11 @@ using namespace GlobalNamespace;
 #include "UnityEngine/Resources.hpp"
 #include "TMPro/TextMeshProUGUI.hpp"
 
+//#include "Polyglot/LocalizedTextMeshProUGUI.hpp"
+//#include "Polyglot/LanguageDirection.hpp"
+
+//using namespace Polyglot;
+
 #ifndef HOST_NAME
 #error "Define HOST_NAME!"
 #endif
@@ -56,7 +61,7 @@ static ModInfo modInfo;
 
 class ModConfig {
     public:
-        ModConfig() : hostname(HOST_NAME), port(PORT), statusUrl(STATUS_URL), button("  Modded\nOnline") {}
+        ModConfig() : hostname(HOST_NAME), port(PORT), statusUrl(STATUS_URL), button("Modded\nOnline") {}
         // Should be called after modification of the fields has already taken place.
         // Creates the C# strings for the configuration.
         void load() {
@@ -170,8 +175,6 @@ MAKE_HOOK_OFFSETLESS(UserMessageHandler_ValidateCertificateChainInternal, void, 
     // but for now we'll just skip it.
 }
 
-
-
 // Disable the quick play button
 MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, MultiplayerModeSelectionViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
 {
@@ -190,7 +193,7 @@ MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, M
 MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
 {   
     // Find the GameObject for the online button's text
-    static auto* searchPath = il2cpp_utils::createcsstr("MainButtons/OnlineButton", il2cpp_utils::StringType::Manual);
+    static auto* searchPath = il2cpp_utils::createcsstr("MainContent/OnlineButton", il2cpp_utils::StringType::Manual);
     static auto* textName = il2cpp_utils::createcsstr("Text", il2cpp_utils::StringType::Manual);
     UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
     UnityEngine::GameObject* onlineButton = transform->Find(searchPath)->get_gameObject();
@@ -206,6 +209,36 @@ MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewContr
     onlineButtonText->set_alignment(TMPro::TextAlignmentOptions::Center);
 
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
+}
+
+static bool isMissingLevel = false;
+
+// This hook makes sure to grey-out the play button so that players can't start a level that someone doesn't have.
+// This prevents crashes.
+MAKE_HOOK_OFFSETLESS(HostLobbySetupViewController_SetPlayersMissingLevelText, void, HostLobbySetupViewController* self, Il2CppString* playersMissingLevelText) {
+    getLogger().info("HostLobbySetupViewController_SetPlayersMissingLevelText");
+    if(playersMissingLevelText && !isMissingLevel) {
+        getLogger().info("Disabling start game as missing level text exists . . .");
+        isMissingLevel = true;
+        self->SetStartGameEnabled(false, HostLobbySetupViewController::CannotStartGameReason::DoNotOwnSong);
+    }   else if(!playersMissingLevelText && isMissingLevel)   {
+        getLogger().info("Enabling start game as missing level text does not exist . . .");
+        isMissingLevel = false;
+        self->SetStartGameEnabled(true, HostLobbySetupViewController::CannotStartGameReason::None);
+    }
+
+    HostLobbySetupViewController_SetPlayersMissingLevelText(self, playersMissingLevelText);
+}
+
+// Prevent the button becoming shown when we're force disabling it, as pressing it would crash
+MAKE_HOOK_OFFSETLESS(HostLobbySetupViewController_SetStartGameEnabled, void, HostLobbySetupViewController* self, bool startGameEnabled, HostLobbySetupViewController::CannotStartGameReason cannotStartGameReason) {
+    getLogger().info(string_format("HostLobbySetupViewController_SetStartGameEnabled. Enabled: %d. Reason: %d", startGameEnabled, cannotStartGameReason));
+    if(isMissingLevel && cannotStartGameReason == HostLobbySetupViewController::CannotStartGameReason::None) {
+        getLogger().info("Game attempted to enable the play button when the level was missing, stopping it!");
+        startGameEnabled = false;
+        cannotStartGameReason = HostLobbySetupViewController::CannotStartGameReason::DoNotOwnSong;
+    }
+    HostLobbySetupViewController_SetStartGameEnabled(self, startGameEnabled, cannotStartGameReason);
 }
 
 static bool isMissingLevel = false;
@@ -287,7 +320,6 @@ extern "C" void load()
     INSTALL_HOOK_OFFSETLESS(getLogger(), HostLobbySetupViewController_SetPlayersMissingLevelText,
        il2cpp_utils::FindMethodUnsafe("", "HostLobbySetupViewController", "SetPlayersMissingLevelText", 1));
     //INSTALL_HOOK_OFFSETLESS(getLogger(), MultiplayerLevelSelectionFlowCoordinator_Setup,
-    //    il2cpp_utils::FindMethodUnsafe("", "MultiplayerLevelSelectionFlowCoordinator", "Setup", 5));
     INSTALL_HOOK_OFFSETLESS(getLogger(), HostLobbySetupViewController_SetStartGameEnabled,
         il2cpp_utils::FindMethodUnsafe("", "HostLobbySetupViewController", "SetStartGameEnabled", 2));
     INSTALL_HOOK_OFFSETLESS(getLogger(), LevelSelectionNavigationController_Setup,

@@ -4,14 +4,14 @@
   "info": {
     "name": "BeatTogether",
     "id": "BeatTogether",
-    "version": "1.0.1",
+    "version": "1.2.1",
     "url": null,
     "additionalData": {}
   },
   "dependencies": [
     {
       "id": "beatsaber-hook",
-      "versionRange": "^1.0.12",
+      "versionRange": "*",
       "additionalData": {
         "extraFiles": [
           "src/inline-hook"

@@ -45,18 +45,18 @@
             }
         },
         {
-            "label": "BMBF Build",
-            "detail": "Builds a .zip to be uploaded into BMBF",
+            "label": "QMOD Build",
+            "detail": "Builds a .qmod to be loaded into BMBF or QuestPatcher",
             "type": "shell",
-            "command": "./buildBMBF.ps1",
+            "command": "./buildQMOD.ps1",
             "windows": {
-                "command": "./buildBMBF.ps1"
+                "command": "./buildQMOD.ps1"
             },
             "args": [],
             "group": "build",
             "options": {
                 "env": {}
             }
-        },
+        }
     ]
 }
