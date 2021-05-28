@@ -30,6 +30,7 @@
 #include "GlobalNamespace/LevelSelectionFlowCoordinator_State.hpp"
 #include "GlobalNamespace/SongPackMask.hpp"
 #include "GlobalNamespace/BeatmapDifficultyMask.hpp"
+#include "GlobalNamespace/UserCertificateValidator.hpp"
 
 using namespace GlobalNamespace;
 
@@ -168,7 +169,7 @@ MAKE_HOOK_OFFSETLESS(MainSystemInit_Init, void, MainSystemInit* self) {
     networkConfig->masterServerStatusUrl = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
 }
 
-MAKE_HOOK_OFFSETLESS(UserMessageHandler_ValidateCertificateChainInternal, void, Il2CppObject* self, Il2CppObject* certificate, Il2CppObject* certificateChain)
+MAKE_HOOK_OFFSETLESS(UserCertificateValidator_ValidateCertificateChainInternal, void, UserCertificateValidator* self, GlobalNamespace::MasterServerEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, ::Array<::Array<uint8_t>*>* certificateChain)
 {
     // TODO: Support disabling the mod if official multiplayer is ever fixed
     // It'd be best if we do certificate validation here...
@@ -281,8 +282,8 @@ extern "C" void load()
         il2cpp_utils::FindMethod("", "PlatformAuthenticationTokenProvider", "GetAuthenticationToken"));
     INSTALL_HOOK_OFFSETLESS(getLogger(), MainSystemInit_Init,
         il2cpp_utils::FindMethod("", "MainSystemInit", "Init"));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), UserMessageHandler_ValidateCertificateChainInternal,
-        il2cpp_utils::FindMethodUnsafe("MasterServer", "UserMessageHandler", "ValidateCertificateChainInternal", 2));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), UserCertificateValidator_ValidateCertificateChainInternal,
+        il2cpp_utils::FindMethodUnsafe("", "UserCertificateValidator", "ValidateCertificateChainInternal", 3));
     INSTALL_HOOK_OFFSETLESS(getLogger(), MultiplayerModeSelectionViewController_DidActivate,
         il2cpp_utils::FindMethodUnsafe("", "MultiplayerModeSelectionViewController", "DidActivate", 3));
     INSTALL_HOOK_OFFSETLESS(getLogger(), MainMenuViewController_DidActivate, 
