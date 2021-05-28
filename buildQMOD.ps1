@@ -1,13 +1,14 @@
 # Builds a .qmod file for loading with QuestPatcher
 $NDKPath = Get-Content $PSScriptRoot/ndkpath.txt
+$VERSION = Get-Content $PSScriptRoot/VERSION -First 1
 
 $buildScript = "$NDKPath/build/ndk-build"
 if (-not ($PSVersionTable.PSEdition -eq "Core")) {
     $buildScript += ".cmd"
 }
 
-$ArchiveName = "BeatTogether_v1.2.2.qmod"
-$TempArchiveName = "beattogether_v1.2.2.qmod.zip"
+$ArchiveName = "BeatTogether_v$VERSION.qmod"
+$TempArchiveName = "beattogether_v$VERSION.qmod.zip"
 
 & $buildScript NDK_PROJECT_PATH=$PSScriptRoot APP_BUILD_SCRIPT=$PSScriptRoot/Android.mk NDK_APPLICATION_MK=$PSScriptRoot/Application.mk
 Compress-Archive -Path "./libs/arm64-v8a/libbeattogether.so", "./libs/arm64-v8a/libbeatsaber-hook_1_3_5.so", "./mod.json", "./Cover.png" -DestinationPath $TempArchiveName -Force
