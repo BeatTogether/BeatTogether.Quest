@@ -291,23 +291,4 @@ extern "C" void load()
     INSTALL_HOOK(getLogger(), HostLobbySetupViewController_SetPlayersMissingLevelText);
     INSTALL_HOOK(getLogger(), HostLobbySetupViewController_SetStartGameEnabled);
     INSTALL_HOOK(getLogger(), LevelSelectionNavigationController_Setup);
-
-    //INSTALL_HOOK_OFFSETLESS(getLogger(), PlatformAuthenticationTokenProvider_GetAuthenticationToken,
-    //    il2cpp_utils::FindMethod("", "PlatformAuthenticationTokenProvider", "GetAuthenticationToken"));
-    //INSTALL_HOOK_OFFSETLESS(getLogger(), MainSystemInit_Init,
-    //    il2cpp_utils::FindMethod("", "MainSystemInit", "Init"));
-    //INSTALL_HOOK_OFFSETLESS(getLogger(), UserCertificateValidator_ValidateCertificateChainInternal,
-    //    il2cpp_utils::FindMethodUnsafe("", "UserCertificateValidator", "ValidateCertificateChainInternal", 3));
-    //INSTALL_HOOK_OFFSETLESS(getLogger(), MultiplayerModeSelectionViewController_DidActivate,
-    //    il2cpp_utils::FindMethodUnsafe("", "MultiplayerModeSelectionViewController", "DidActivate", 3));
-    //INSTALL_HOOK_OFFSETLESS(getLogger(), MainMenuViewController_DidActivate, 
-    //    il2cpp_utils::FindMethodUnsafe("", "MainMenuViewController", "DidActivate", 3));
-    //INSTALL_HOOK_OFFSETLESS(getLogger(), HostLobbySetupViewController_SetPlayersMissingLevelText,
-    //   il2cpp_utils::FindMethodUnsafe("", "HostLobbySetupViewController", "SetPlayersMissingLevelText", 1));
-    ////INSTALL_HOOK_OFFSETLESS(getLogger(), MultiplayerLevelSelectionFlowCoordinator_Setup,
-    //INSTALL_HOOK_OFFSETLESS(getLogger(), HostLobbySetupViewController_SetStartGameEnabled,
-    //    il2cpp_utils::FindMethodUnsafe("", "HostLobbySetupViewController", "SetStartGameEnabled", 2));
-    //INSTALL_HOOK_OFFSETLESS(getLogger(), LevelSelectionNavigationController_Setup,
-    //    il2cpp_utils::FindMethodUnsafe("", "LevelSelectionNavigationController", "Setup", 11));
-
 }
