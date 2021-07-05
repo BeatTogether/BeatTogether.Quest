@@ -8,6 +8,8 @@
 #include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
 #include "beatsaber-hook/shared/utils/logging.hpp"
 #include "beatsaber-hook/shared/utils/utils.h"
+#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/utils/il2cpp-type-check.hpp"
 #include "beatsaber-hook/shared/config/config-utils.hpp"
 
 #include "System/Threading/Tasks/Task_1.hpp"
@@ -31,6 +33,8 @@
 #include "GlobalNamespace/SongPackMask.hpp"
 #include "GlobalNamespace/BeatmapDifficultyMask.hpp"
 #include "GlobalNamespace/UserCertificateValidator.hpp"
+#include "GlobalNamespace/LevelSelectionNavigationController.hpp"
+
 
 using namespace GlobalNamespace;
 
@@ -86,14 +90,14 @@ class ModConfig {
             return port;
         }
         inline Il2CppString* get_hostname() const {
-            getLogger().info("Host name: " + to_utf8(csstrtostr(hostnameStr)));
+            getLogger().info("Host name: %s", to_utf8(csstrtostr(hostnameStr)).c_str());
             return valid ? hostnameStr : nullptr;
         }
         inline Il2CppString* get_button() const {
             return valid ? buttonStr : nullptr;
         }
         inline Il2CppString* get_statusUrl() const {
-            getLogger().info("Status URL: " + to_utf8(csstrtostr(statusUrlStr)));
+            getLogger().info("Status URL: %s", to_utf8(csstrtostr(statusUrlStr)).c_str());
             return valid ? statusUrlStr : nullptr;
         }
     private:
@@ -145,7 +149,7 @@ Il2CppString* concatHelper(Il2CppString* src, Il2CppString* dst) {
     return RET_DEFAULT_UNLESS(getLogger(), il2cpp_utils::RunMethod<Il2CppString*>((Il2CppObject*) nullptr, concatMethod, src, dst));
 }
 
-MAKE_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
+MAKE_HOOK_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationToken, &PlatformAuthenticationTokenProvider::GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
 {
     getLogger().debug("Returning custom authentication token!");
     return System::Threading::Tasks::Task_1<AuthenticationToken>::New_ctor(AuthenticationToken(
@@ -156,12 +160,12 @@ MAKE_HOOK_OFFSETLESS(PlatformAuthenticationTokenProvider_GetAuthenticationToken,
     ));
 }
 
-MAKE_HOOK_OFFSETLESS(MainSystemInit_Init, void, MainSystemInit* self) {
+MAKE_HOOK_MATCH(MainSystemInit_Init, &MainSystemInit::Init, void, MainSystemInit* self) {
     MainSystemInit_Init(self);
     auto* networkConfig = self->networkConfig;
 
     getLogger().info("Overriding master server end point . . .");
-    getLogger().info("Original status URL: " + to_utf8(csstrtostr(networkConfig->masterServerStatusUrl)));
+    getLogger().info("Original status URL: %s", to_utf8(csstrtostr(networkConfig->masterServerStatusUrl)).c_str());
     // If we fail to make the strings, we should fail silently
     // This could also be replaced with a CRASH_UNLESS call, if you want to fail verbosely.
     networkConfig->masterServerHostName = CRASH_UNLESS(/* getLogger(), */config.get_hostname());
@@ -169,7 +173,7 @@ MAKE_HOOK_OFFSETLESS(MainSystemInit_Init, void, MainSystemInit* self) {
     networkConfig->masterServerStatusUrl = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
 }
 
-MAKE_HOOK_OFFSETLESS(UserCertificateValidator_ValidateCertificateChainInternal, void, UserCertificateValidator* self, GlobalNamespace::MasterServerEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, ::Array<::Array<uint8_t>*>* certificateChain)
+MAKE_HOOK_MATCH(UserCertificateValidator_ValidateCertificateChainInternal, &UserCertificateValidator::ValidateCertificateChainInternal, void, UserCertificateValidator* self, GlobalNamespace::MasterServerEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, ::Array<::Array<uint8_t>*>* certificateChain)
 {
     // TODO: Support disabling the mod if official multiplayer is ever fixed
     // It'd be best if we do certificate validation here...
@@ -177,7 +181,7 @@ MAKE_HOOK_OFFSETLESS(UserCertificateValidator_ValidateCertificateChainInternal, 
 }
 
 // Disable the quick play button
-MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, MultiplayerModeSelectionViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
+MAKE_HOOK_MATCH(MultiplayerModeSelectionViewController_DidActivate, &MultiplayerModeSelectionViewController::DidActivate, void, MultiplayerModeSelectionViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
 {
     if (firstActivation)
     {
@@ -191,7 +195,7 @@ MAKE_HOOK_OFFSETLESS(MultiplayerModeSelectionViewController_DidActivate, void, M
 }
 
 // Change the "Online" menu text to "Modded Online"
-MAKE_HOOK_OFFSETLESS(MainMenuViewController_DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
+MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
 {   
     // Find the GameObject for the online button's text
     static auto* searchPath = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("MainContent/OnlineButton");
@@ -216,7 +220,7 @@ static bool isMissingLevel = false;
 
 // This hook makes sure to grey-out the play button so that players can't start a level that someone doesn't have.
 // This prevents crashes.
-MAKE_HOOK_OFFSETLESS(HostLobbySetupViewController_SetPlayersMissingLevelText, void, HostLobbySetupViewController* self, Il2CppString* playersMissingLevelText) {
+MAKE_HOOK_MATCH(HostLobbySetupViewController_SetPlayersMissingLevelText, &HostLobbySetupViewController::SetPlayersMissingLevelText, void, HostLobbySetupViewController* self, Il2CppString* playersMissingLevelText) {
     getLogger().info("HostLobbySetupViewController_SetPlayersMissingLevelText");
     if(playersMissingLevelText && !isMissingLevel) {
         getLogger().info("Disabling start game as missing level text exists . . .");
@@ -232,8 +236,8 @@ MAKE_HOOK_OFFSETLESS(HostLobbySetupViewController_SetPlayersMissingLevelText, vo
 }
 
 // Prevent the button becoming shown when we're force disabling it, as pressing it would crash
-MAKE_HOOK_OFFSETLESS(HostLobbySetupViewController_SetStartGameEnabled, void, HostLobbySetupViewController* self, bool startGameEnabled, HostLobbySetupViewController::CannotStartGameReason cannotStartGameReason) {
-    getLogger().info(string_format("HostLobbySetupViewController_SetStartGameEnabled. Enabled: %d. Reason: %d", startGameEnabled, cannotStartGameReason));
+MAKE_HOOK_MATCH(HostLobbySetupViewController_SetStartGameEnabled, &HostLobbySetupViewController::SetStartGameEnabled, void, HostLobbySetupViewController* self, bool startGameEnabled, HostLobbySetupViewController::CannotStartGameReason cannotStartGameReason) {
+    getLogger().info("HostLobbySetupViewController_SetStartGameEnabled. Enabled: %d. Reason: %d", startGameEnabled, (int)cannotStartGameReason);
     if(isMissingLevel && cannotStartGameReason == HostLobbySetupViewController::CannotStartGameReason::None) {
         getLogger().info("Game attempted to enable the play button when the level was missing, stopping it!");
         startGameEnabled = false;
@@ -242,19 +246,19 @@ MAKE_HOOK_OFFSETLESS(HostLobbySetupViewController_SetStartGameEnabled, void, Hos
     HostLobbySetupViewController_SetStartGameEnabled(self, startGameEnabled, cannotStartGameReason);
 }
 
-MAKE_HOOK_OFFSETLESS(MultiplayerLevelSelectionFlowCoordinator_Setup, void, MultiplayerLevelSelectionFlowCoordinator* self, LevelSelectionFlowCoordinator::State* state, SongPackMask songPackMask, BeatmapDifficultyMask allowedBeatmapDifficultyMask, Il2CppString* actionText, Il2CppString* titleText) {
+MAKE_HOOK_MATCH(MultiplayerLevelSelectionFlowCoordinator_Setup, &MultiplayerLevelSelectionFlowCoordinator::Setup, void, MultiplayerLevelSelectionFlowCoordinator* self, LevelSelectionFlowCoordinator::State* state, SongPackMask songPackMask, BeatmapDifficultyMask allowedBeatmapDifficultyMask, Il2CppString* actionText, Il2CppString* titleText) {
     getLogger().info("Enabling custom songs in multiplayer . . .");
     MultiplayerLevelSelectionFlowCoordinator_Setup(self, state, SongPackMask::get_all(), allowedBeatmapDifficultyMask, actionText, titleText);
 }
 
 // Show the custom levels tab in multiplayer
-MAKE_HOOK_OFFSETLESS(LevelSelectionNavigationController_Setup, void, LevelSelectionNavigationController* self,
-    SongPackMask songPackMask, BeatmapDifficultyMask allowedBeatmapDifficultyMask, Il2CppObject* notAllowedCharacteristics,
-    bool hidePacksIfOneOrNone, bool hidePracticeButton, bool showPlayerStatsInDetailView, Il2CppString* actionButtonText, IBeatmapLevelPack* levelPackToBeSelectedAfterPrecent,
+MAKE_HOOK_MATCH(LevelSelectionNavigationController_Setup, &LevelSelectionNavigationController::Setup, void, LevelSelectionNavigationController* self,
+    SongPackMask songPackMask, BeatmapDifficultyMask allowedBeatmapDifficultyMask, Array<GlobalNamespace::BeatmapCharacteristicSO*>* notAllowedCharacteristics, 
+    bool hidePacksIfOneOrNone, bool hidePracticeButton, bool showPlayerStatsInDetailView, Il2CppString* actionButtonText, IBeatmapLevelPack* levelPackToBeSelectedAfterPresent, 
     SelectLevelCategoryViewController::LevelCategory startLevelCategory, IPreviewBeatmapLevel* beatmapLevelToBeSelectedAfterPresent, bool enableCustomLevels) {
     getLogger().info("LevelSelectionNavigationController_Setup enabling custom songs . . .");
     LevelSelectionNavigationController_Setup(self, songPackMask, allowedBeatmapDifficultyMask, notAllowedCharacteristics, hidePacksIfOneOrNone, hidePracticeButton, showPlayerStatsInDetailView,
-                                             actionButtonText, levelPackToBeSelectedAfterPrecent, startLevelCategory, beatmapLevelToBeSelectedAfterPresent, true);
+                                             actionButtonText, levelPackToBeSelectedAfterPresent, startLevelCategory, beatmapLevelToBeSelectedAfterPresent, true);
 }
 
 extern "C" void setup(ModInfo& info)
@@ -269,7 +273,7 @@ extern "C" void load()
     std::string path = Configuration::getConfigFilePath(modInfo);
     path.replace(path.length() - 4, 4, "cfg");
 
-    getLogger().info("Config path: " + path);
+    getLogger().info("Config path: %s", path.c_str());
     config.read(path);
     // Load and create all C# strings after we attempt to read it.
     // If we failed to read it, we will have default values.
@@ -278,22 +282,12 @@ extern "C" void load()
 
     il2cpp_functions::Init();
 
-    INSTALL_HOOK_OFFSETLESS(getLogger(), PlatformAuthenticationTokenProvider_GetAuthenticationToken,
-        il2cpp_utils::FindMethod("", "PlatformAuthenticationTokenProvider", "GetAuthenticationToken"));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), MainSystemInit_Init,
-        il2cpp_utils::FindMethod("", "MainSystemInit", "Init"));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), UserCertificateValidator_ValidateCertificateChainInternal,
-        il2cpp_utils::FindMethodUnsafe("", "UserCertificateValidator", "ValidateCertificateChainInternal", 3));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), MultiplayerModeSelectionViewController_DidActivate,
-        il2cpp_utils::FindMethodUnsafe("", "MultiplayerModeSelectionViewController", "DidActivate", 3));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), MainMenuViewController_DidActivate, 
-        il2cpp_utils::FindMethodUnsafe("", "MainMenuViewController", "DidActivate", 3));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), HostLobbySetupViewController_SetPlayersMissingLevelText,
-       il2cpp_utils::FindMethodUnsafe("", "HostLobbySetupViewController", "SetPlayersMissingLevelText", 1));
-    //INSTALL_HOOK_OFFSETLESS(getLogger(), MultiplayerLevelSelectionFlowCoordinator_Setup,
-    INSTALL_HOOK_OFFSETLESS(getLogger(), HostLobbySetupViewController_SetStartGameEnabled,
-        il2cpp_utils::FindMethodUnsafe("", "HostLobbySetupViewController", "SetStartGameEnabled", 2));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), LevelSelectionNavigationController_Setup,
-        il2cpp_utils::FindMethodUnsafe("", "LevelSelectionNavigationController", "Setup", 11));
-
+    INSTALL_HOOK(getLogger(), PlatformAuthenticationTokenProvider_GetAuthenticationToken);
+    INSTALL_HOOK(getLogger(), MainSystemInit_Init);
+    INSTALL_HOOK(getLogger(), UserCertificateValidator_ValidateCertificateChainInternal);
+    INSTALL_HOOK(getLogger(), MultiplayerModeSelectionViewController_DidActivate);
+    INSTALL_HOOK(getLogger(), MainMenuViewController_DidActivate);
+    INSTALL_HOOK(getLogger(), HostLobbySetupViewController_SetPlayersMissingLevelText);
+    INSTALL_HOOK(getLogger(), HostLobbySetupViewController_SetStartGameEnabled);
+    INSTALL_HOOK(getLogger(), LevelSelectionNavigationController_Setup);
 }

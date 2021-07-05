@@ -52,4 +52,7 @@ Android.mk.backup
 
 # Logs
 *.log
+!.vs/tasks.vs.json
 /.vs
+
+/log_timestamp
