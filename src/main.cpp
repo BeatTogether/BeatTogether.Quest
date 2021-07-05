@@ -149,7 +149,6 @@ Il2CppString* concatHelper(Il2CppString* src, Il2CppString* dst) {
     return RET_DEFAULT_UNLESS(getLogger(), il2cpp_utils::RunMethod<Il2CppString*>((Il2CppObject*) nullptr, concatMethod, src, dst));
 }
 
-// TODO: Figure out MAKE_HOOK_CHECKED_FIND
 MAKE_HOOK_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationToken, &PlatformAuthenticationTokenProvider::GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
 {
     getLogger().debug("Returning custom authentication token!");
