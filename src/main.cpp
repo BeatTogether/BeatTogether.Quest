@@ -68,12 +68,12 @@ Il2CppString* getCustomSongsStateStr() {
     return customSongStateStr;
 }
 
-Il2CppString* getFreeModStateStr {
+Il2CppString* getFreeModStateStr() {
     static auto* freeModStateStr = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("freemod");
     return freeModStateStr;
 }
 
-Il2CppString* getHostPickStateStr {
+Il2CppString* getHostPickStateStr() {
     static auto* hostPickStateStr = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("hostpick");
     return hostPickStateStr;
 }
