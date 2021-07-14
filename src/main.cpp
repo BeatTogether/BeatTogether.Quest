@@ -256,22 +256,6 @@ MAKE_HOOK_MATCH(HostLobbySetupViewController_SetStartGameEnabled, &HostLobbySetu
     HostLobbySetupViewController_SetStartGameEnabled(self, startGameEnabled, cannotStartGameReason);
 }
 
-//MAKE_HOOK_MATCH(MultiplayerLevelSelectionFlowCoordinator_Setup, &MultiplayerLevelSelectionFlowCoordinator::Setup, void, MultiplayerLevelSelectionFlowCoordinator* self, LevelSelectionFlowCoordinator::State* state, SongPackMask songPackMask, BeatmapDifficultyMask allowedBeatmapDifficultyMask, Il2CppString* actionText, Il2CppString* titleText) {
-//    getLogger().info("Enabling custom songs in multiplayer . . .");
-//    MultiplayerLevelSelectionFlowCoordinator_Setup(self, state, SongPackMask::get_all(), allowedBeatmapDifficultyMask, actionText, titleText);
-//}
-
-//bool get_customSongsEnabled() {
-//    return customSongsEnabled;
-//}
-
-//void HandlePlayerStateChanged(IConnectedPlayer* player) {
-//    getLogger().debug("player is null");
-//    if (player->get_isConnectionOwner()) {
-//        customSongsEnabled = player->HasState(il2cpp_utils::newcsstr(customSongsState));
-//    }
-//}
-
 // Checks if a MPEX player has customsongs enabled or not
 MAKE_HOOK_MATCH(MultiplayerSessionManager_HandlePlayerStateChanged, &MultiplayerSessionManager::HandlePlayerStateChanged, void, MultiplayerSessionManager* self, IConnectedPlayer* player) {
     MultiplayerSessionManager_HandlePlayerStateChanged(self, player);
@@ -280,7 +264,7 @@ MAKE_HOOK_MATCH(MultiplayerSessionManager_HandlePlayerStateChanged, &Multiplayer
     }
 }
 
-// Sends MPEX players flags on our setup
+// Sends MPEX players flags about our setup
 MAKE_HOOK_MATCH(MultiplayerSessionManager_Start, &MultiplayerSessionManager::Start, void, MultiplayerSessionManager* self) {
     MultiplayerSessionManager_Start(self);
 
@@ -288,17 +272,9 @@ MAKE_HOOK_MATCH(MultiplayerSessionManager_Start, &MultiplayerSessionManager::Sta
     self->SetLocalPlayerState(il2cpp_utils::newcsstr(customSongsState), customSongsEnabled);
     self->SetLocalPlayerState(il2cpp_utils::newcsstr(freeModState), false);
     self->SetLocalPlayerState(il2cpp_utils::newcsstr(hostPickState), true);
-
-
-    //self->add_playerStateChangedEvent(
-    //    il2cpp_utils::MakeDelegate<System::Action_1<IConnectedPlayer*>*>(classof(System::Action_1<IConnectedPlayer*>*), static_cast<Il2CppObject*>(nullptr), onPlayerJoin)
-    //);
-
-    //self->add_playerStateChangedEvent(il2cpp_utils::MakeAction<System::Action_1<GlobalNamespace::IConnectedPlayer*>*>(HandlePlayerStateChanged));
-    //il2cpp_utils::MakeDelegate<System::Action_1<GlobalNamespace::IConnectedPlayer*>*>(classof(System::Action_1<GlobalNamespace::IConnectedPlayer*>*), coverSpriteTask, HandlePlayerStateChanged);
 }
 
- //Show the custom levels tab in multiplayer
+ //Sets our bool for the custom levels tab in multiplayer if MQE isn't installed
 MAKE_HOOK_MATCH(LevelSelectionNavigationController_Setup, &LevelSelectionNavigationController::Setup, void, LevelSelectionNavigationController* self,
     SongPackMask songPackMask, BeatmapDifficultyMask allowedBeatmapDifficultyMask, Array<GlobalNamespace::BeatmapCharacteristicSO*>* notAllowedCharacteristics, 
     bool hidePacksIfOneOrNone, bool hidePracticeButton, bool showPlayerStatsInDetailView, Il2CppString* actionButtonText, IBeatmapLevelPack* levelPackToBeSelectedAfterPresent, 
@@ -307,16 +283,6 @@ MAKE_HOOK_MATCH(LevelSelectionNavigationController_Setup, &LevelSelectionNavigat
     LevelSelectionNavigationController_Setup(self, songPackMask, allowedBeatmapDifficultyMask, notAllowedCharacteristics, hidePacksIfOneOrNone, hidePracticeButton, showPlayerStatsInDetailView,
                                              actionButtonText, levelPackToBeSelectedAfterPresent, startLevelCategory, beatmapLevelToBeSelectedAfterPresent, customSongsEnabled);
 }
-
-//MAKE_HOOK_MATCH(MultiplayerLevelSelectionFlowCoordinator__get_enableCustomLevels, &MultiplayerLevelSelectionFlowCoordinator::get_enableCustomLevels, bool, MultiplayerLevelSelectionFlowCoordinator* self) {
-//    getLogger().info("MultiplayerLevelSelectionFlowCoordinator__get_enableCustomLevels setting custom songs . . .");
-//
-//    //MultiplayerLevelSelectionFlowCoordinator__get_enableCustomLevels(self);
-//    //if (customSongsEnabled) return true;
-//    //else return false;
-//    return get_customSongsEnabled();
-//}
-
 
 extern "C" void setup(ModInfo& info)
 {
@@ -345,20 +311,18 @@ extern "C" void load()
     INSTALL_HOOK(getLogger(), UserCertificateValidator_ValidateCertificateChainInternal);
     INSTALL_HOOK(getLogger(), MultiplayerModeSelectionViewController_DidActivate);
     INSTALL_HOOK(getLogger(), MainMenuViewController_DidActivate);
-    // Checks if MQE is installed and if it is, skip our entitlement checks
+    // Checks if MQE is installed and if it is, skip installing our custom songs and our entitlement check hooks
     auto ModList = Modloader::getMods();
     if (ModList.find("multiquestensions") != ModList.end()) {
         getLogger().info("Hello MQE!");
         getLogger().debug("MQE detected, skipping some hooks!");
     }
     else {
-        getLogger().info("MQE not found installing safety hooks");
+        getLogger().info("MQE not found installing our safety hooks");
         INSTALL_HOOK(getLogger(), HostLobbySetupViewController_SetPlayersMissingLevelText);
         INSTALL_HOOK(getLogger(), HostLobbySetupViewController_SetStartGameEnabled);
         INSTALL_HOOK(getLogger(), LevelSelectionNavigationController_Setup);
         INSTALL_HOOK(getLogger(), MultiplayerSessionManager_Start);
         INSTALL_HOOK(getLogger(), MultiplayerSessionManager_HandlePlayerStateChanged);
-        //INSTALL_HOOK(getLogger(), MultiplayerLevelSelectionFlowCoordinator__get_enableCustomLevels);
     }
-
 }
