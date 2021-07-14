@@ -63,9 +63,24 @@ using namespace GlobalNamespace;
 #endif
 
 // Needed for MPEX support
-std::string customSongsState = "customsongs";
-std::string freeModState = "freemod";
-std::string hostPickState = "hostpick";
+Il2CppString* getCustomSongsStateStr() {
+    static auto* customSongStateStr = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("customsongs");
+    return customSongStateStr;
+}
+
+Il2CppString* getFreeModStateStr {
+    static auto* freeModStateStr = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("freemod");
+    return freeModStateStr;
+}
+
+Il2CppString* getHostPickStateStr {
+    static auto* hostPickStateStr = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("hostpick");
+    return hostPickStateStr;
+}
+
+// std::string customSongsState = "customsongs";
+// std::string freeModState = "freemod";
+// std::string hostPickState = "hostpick";
 bool customSongsEnabled = true;
 
 
@@ -260,7 +275,7 @@ MAKE_HOOK_MATCH(HostLobbySetupViewController_SetStartGameEnabled, &HostLobbySetu
 MAKE_HOOK_MATCH(MultiplayerSessionManager_HandlePlayerStateChanged, &MultiplayerSessionManager::HandlePlayerStateChanged, void, MultiplayerSessionManager* self, IConnectedPlayer* player) {
     MultiplayerSessionManager_HandlePlayerStateChanged(self, player);
     if (player->get_isConnectionOwner()) {
-        customSongsEnabled = player->HasState(il2cpp_utils::newcsstr(customSongsState));
+        customSongsEnabled = player->HasState(getCustomSongsStateStr());
     }
 }
 
@@ -269,9 +284,9 @@ MAKE_HOOK_MATCH(MultiplayerSessionManager_Start, &MultiplayerSessionManager::Sta
     MultiplayerSessionManager_Start(self);
 
     // Added for compatability with MPEX
-    self->SetLocalPlayerState(il2cpp_utils::newcsstr(customSongsState), customSongsEnabled);
-    self->SetLocalPlayerState(il2cpp_utils::newcsstr(freeModState), false);
-    self->SetLocalPlayerState(il2cpp_utils::newcsstr(hostPickState), true);
+    self->SetLocalPlayerState(getCustomSongsStateStr(), customSongsEnabled);
+    self->SetLocalPlayerState(getFreeModStateStr(), false);
+    self->SetLocalPlayerState(getHostPickStateStr(), true);
 }
 
  //Sets our bool for the custom levels tab in multiplayer if MQE isn't installed
