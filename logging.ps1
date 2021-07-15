@@ -47,7 +47,7 @@ adb logcat -T "$timestamp" main-modloader:W AndroidRuntime:E *:S $YourModsToLog 
             $timestamp > log_timestamp
             $logger = Start-Job -Arg "$timestamp", $PSScriptRoot -scriptblock {
                 param($timestamp, $Path)
-                adb logcat -v color -T "$timestamp" main-modloader:W libmodloader:W libmain:W AndroidRuntime:E QuestHook[`|v]:* QuestHook[streamer-tools`|v0.1.0]:* QuestHook[QuestSounds`|v0.3.0]:* QuestHook[QuestSounds`|v1.0.0]:* QuestHook[clockmod`|v1.4.0]:* *:S | Tee-Object -FilePath "$Path/logcat.log"
+                adb logcat -v color -T "$timestamp" main-modloader:W libmodloader:W libmain:W AndroidRuntime:E QuestHook[`|v]:*  QuestHook[BeatTogether`|v1.2.5]:* *:S | Tee-Object -FilePath "$Path/logcat.log"
             }
             [console]::TreatControlCAsInput = $true
             while ($true)
