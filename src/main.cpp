@@ -17,25 +17,11 @@
 #include "GlobalNamespace/PlatformAuthenticationTokenProvider.hpp"
 #include "GlobalNamespace/AuthenticationToken.hpp"
 #include "GlobalNamespace/MasterServerEndPoint.hpp"
-#include "GlobalNamespace/MenuRpcManager.hpp"
-#include "GlobalNamespace/BeatmapIdentifierNetSerializable.hpp"
-#include "GlobalNamespace/MultiplayerLevelLoader.hpp"
-#include "GlobalNamespace/IPreviewBeatmapLevel.hpp"
 #include "GlobalNamespace/MultiplayerModeSelectionViewController.hpp"
 #include "GlobalNamespace/MainMenuViewController.hpp"
 #include "GlobalNamespace/MainSystemInit.hpp"
 #include "GlobalNamespace/NetworkConfigSO.hpp"
-#include "GlobalNamespace/HostLobbySetupViewController.hpp"
-#include "GlobalNamespace/HostLobbySetupViewController_CannotStartGameReason.hpp"
-#include "GlobalNamespace/AdditionalContentModel.hpp"
-#include "GlobalNamespace/MultiplayerLevelSelectionFlowCoordinator.hpp"
-#include "GlobalNamespace/LevelSelectionFlowCoordinator_State.hpp"
-#include "GlobalNamespace/SongPackMask.hpp"
-#include "GlobalNamespace/BeatmapDifficultyMask.hpp"
 #include "GlobalNamespace/UserCertificateValidator.hpp"
-#include "GlobalNamespace/LevelSelectionNavigationController.hpp"
-#include "GlobalNamespace/MultiplayerSessionManager.hpp"
-#include "GlobalNamespace/IConnectedPlayer.hpp"
 using namespace GlobalNamespace;
 
 #include "System/Action_1.hpp"
@@ -61,28 +47,6 @@ using namespace GlobalNamespace;
 #ifndef STATUS_URL
 #error "Define STATUS_URL!"
 #endif
-
-// Needed for MPEX support
-Il2CppString* getCustomSongsStateStr() {
-    static auto* customSongStateStr = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("customsongs");
-    return customSongStateStr;
-}
-
-Il2CppString* getFreeModStateStr() {
-    static auto* freeModStateStr = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("freemod");
-    return freeModStateStr;
-}
-
-Il2CppString* getHostPickStateStr() {
-    static auto* hostPickStateStr = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("hostpick");
-    return hostPickStateStr;
-}
-
-// std::string customSongsState = "customsongs";
-// std::string freeModState = "freemod";
-// std::string hostPickState = "hostpick";
-bool customSongsEnabled = true;
-
 
 Logger& getLogger();
 
@@ -168,12 +132,6 @@ Il2CppString* concatHelper(Il2CppString* src, Il2CppString* dst) {
     return RET_DEFAULT_UNLESS(getLogger(), il2cpp_utils::RunMethod<Il2CppString*>((Il2CppObject*) nullptr, concatMethod, src, dst));
 }
 
-
-Il2CppString* getCustomLevelStr() {
-    static auto* customStr = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("custom_level_");
-    return customStr;
-}
-
 MAKE_HOOK_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationToken, &PlatformAuthenticationTokenProvider::GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
 {
     getLogger().debug("Returning custom authentication token!");
@@ -205,20 +163,6 @@ MAKE_HOOK_MATCH(UserCertificateValidator_ValidateCertificateChainInternal, &User
     // but for now we'll just skip it.
 }
 
-// Disable the quick play button
-MAKE_HOOK_MATCH(MultiplayerModeSelectionViewController_DidActivate, &MultiplayerModeSelectionViewController::DidActivate, void, MultiplayerModeSelectionViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
-{
-    if (firstActivation)
-    {
-        static auto* searchPath = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("Buttons/QuickPlayButton");
-        UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
-        UnityEngine::GameObject* quickPlayButton = transform->Find(searchPath)->get_gameObject();
-        quickPlayButton->SetActive(false);
-    }
-
-    MultiplayerModeSelectionViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
-}
-
 // Change the "Online" menu text to "Modded Online"
 MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
 {   
@@ -241,63 +185,6 @@ MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::Did
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
 
-static bool isMissingLevel = false;
-
-// This hook makes sure to grey-out the play button so that players can't start a level that someone doesn't have.
-// This prevents crashes.
-MAKE_HOOK_MATCH(HostLobbySetupViewController_SetPlayersMissingLevelText, &HostLobbySetupViewController::SetPlayersMissingLevelText, void, HostLobbySetupViewController* self, Il2CppString* playersMissingLevelText) {
-    getLogger().info("HostLobbySetupViewController_SetPlayersMissingLevelText");
-    if(playersMissingLevelText && !isMissingLevel) {
-        getLogger().info("Disabling start game as missing level text exists . . .");
-        isMissingLevel = true;
-        self->SetStartGameEnabled(false, HostLobbySetupViewController::CannotStartGameReason::DoNotOwnSong);
-    }   else if(!playersMissingLevelText && isMissingLevel)   {
-        getLogger().info("Enabling start game as missing level text does not exist . . .");
-        isMissingLevel = false;
-        self->SetStartGameEnabled(true, HostLobbySetupViewController::CannotStartGameReason::None);
-    }
-
-    HostLobbySetupViewController_SetPlayersMissingLevelText(self, playersMissingLevelText);
-}
-
-// Prevent the button becoming shown when we're force disabling it, as pressing it would crash
-MAKE_HOOK_MATCH(HostLobbySetupViewController_SetStartGameEnabled, &HostLobbySetupViewController::SetStartGameEnabled, void, HostLobbySetupViewController* self, bool startGameEnabled, HostLobbySetupViewController::CannotStartGameReason cannotStartGameReason) {
-    getLogger().info("HostLobbySetupViewController_SetStartGameEnabled. Enabled: %d. Reason: %d", startGameEnabled, (int)cannotStartGameReason);
-    if(isMissingLevel && cannotStartGameReason == HostLobbySetupViewController::CannotStartGameReason::None) {
-        getLogger().info("Game attempted to enable the play button when the level was missing, stopping it!");
-        startGameEnabled = false;
-        cannotStartGameReason = HostLobbySetupViewController::CannotStartGameReason::DoNotOwnSong;
-    }
-    HostLobbySetupViewController_SetStartGameEnabled(self, startGameEnabled, cannotStartGameReason);
-}
-
-// Checks if a MPEX player has customsongs enabled or not
-MAKE_HOOK_MATCH(MultiplayerSessionManager_HandlePlayerStateChanged, &MultiplayerSessionManager::HandlePlayerStateChanged, void, MultiplayerSessionManager* self, IConnectedPlayer* player) {
-    MultiplayerSessionManager_HandlePlayerStateChanged(self, player);
-    if (player->get_isConnectionOwner()) {
-        customSongsEnabled = player->HasState(getCustomSongsStateStr());
-    }
-}
-
-// Sends MPEX players flags about our setup
-MAKE_HOOK_MATCH(MultiplayerSessionManager_Start, &MultiplayerSessionManager::Start, void, MultiplayerSessionManager* self) {
-    MultiplayerSessionManager_Start(self);
-
-    // Added for compatability with MPEX
-    self->SetLocalPlayerState(getCustomSongsStateStr(), customSongsEnabled);
-    self->SetLocalPlayerState(getFreeModStateStr(), false);
-    self->SetLocalPlayerState(getHostPickStateStr(), true);
-}
-
- //Sets our bool for the custom levels tab in multiplayer if MQE isn't installed
-MAKE_HOOK_MATCH(LevelSelectionNavigationController_Setup, &LevelSelectionNavigationController::Setup, void, LevelSelectionNavigationController* self,
-    SongPackMask songPackMask, BeatmapDifficultyMask allowedBeatmapDifficultyMask, Array<GlobalNamespace::BeatmapCharacteristicSO*>* notAllowedCharacteristics, 
-    bool hidePacksIfOneOrNone, bool hidePracticeButton, bool showPlayerStatsInDetailView, Il2CppString* actionButtonText, IBeatmapLevelPack* levelPackToBeSelectedAfterPresent, 
-    SelectLevelCategoryViewController::LevelCategory startLevelCategory, IPreviewBeatmapLevel* beatmapLevelToBeSelectedAfterPresent, bool enableCustomLevels) {
-    getLogger().info("LevelSelectionNavigationController_Setup enabling custom songs . . .");
-    LevelSelectionNavigationController_Setup(self, songPackMask, allowedBeatmapDifficultyMask, notAllowedCharacteristics, hidePacksIfOneOrNone, hidePracticeButton, showPlayerStatsInDetailView,
-                                             actionButtonText, levelPackToBeSelectedAfterPresent, startLevelCategory, beatmapLevelToBeSelectedAfterPresent, customSongsEnabled);
-}
 
 extern "C" void setup(ModInfo& info)
 {
@@ -324,20 +211,14 @@ extern "C" void load()
     INSTALL_HOOK(getLogger(), PlatformAuthenticationTokenProvider_GetAuthenticationToken);
     INSTALL_HOOK(getLogger(), MainSystemInit_Init);
     INSTALL_HOOK(getLogger(), UserCertificateValidator_ValidateCertificateChainInternal);
-    INSTALL_HOOK(getLogger(), MultiplayerModeSelectionViewController_DidActivate);
     INSTALL_HOOK(getLogger(), MainMenuViewController_DidActivate);
-    // Checks if MQE is installed and if it is, skip installing our custom songs and our entitlement check hooks
+    // Checks if MQE is installed
     auto ModList = Modloader::getMods();
     if (ModList.find("multiquestensions") != ModList.end()) {
         getLogger().info("Hello MQE!");
-        getLogger().debug("MQE detected, skipping some hooks!");
+        getLogger().debug("MQE detected!");
     }
     else {
-        getLogger().info("MQE not found installing our safety hooks");
-        INSTALL_HOOK(getLogger(), HostLobbySetupViewController_SetPlayersMissingLevelText);
-        INSTALL_HOOK(getLogger(), HostLobbySetupViewController_SetStartGameEnabled);
-        INSTALL_HOOK(getLogger(), LevelSelectionNavigationController_Setup);
-        INSTALL_HOOK(getLogger(), MultiplayerSessionManager_Start);
-        INSTALL_HOOK(getLogger(), MultiplayerSessionManager_HandlePlayerStateChanged);
+        getLogger().info("MQE not found, CustomSongs will not work!");
     }
 }

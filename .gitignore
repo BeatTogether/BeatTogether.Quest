@@ -56,3 +56,6 @@ Android.mk.backup
 /.vs
 
 /log_timestamp
+
+TestBuild.ps1
+TestQMOD.ps1
