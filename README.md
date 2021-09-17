@@ -31,7 +31,7 @@ To install, Download the latest mod from our releases. [Click Here](https://gith
 After downloading, upload the .zip to BMBF on the upload tab of the web interface.
 
 ## Custom Song Support
-Customs in Multiplayer requires [MultiQuestensions](https://github.com/Goobwabber/MultiQuestensions)
+Customs in multiplayer requires [MultiQuestensions](https://github.com/Goobwabber/MultiQuestensions)
 
 ## Special Thanks
 Special thanks to [Sc2ad](https://github.com/Sc2ad) for helping me debug this.
