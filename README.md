@@ -31,7 +31,7 @@ To install, Download the latest mod from our releases. [Click Here](https://gith
 After downloading, upload the .zip to BMBF on the upload tab of the web interface.
 
 ## Custom Song Support
-Customs are built-in with this plugin. If you have the matching beatmap with other players inside your lobby prior to a session you can freely play with them with that custom song! In the future, this will definitely change and include a SongLoader. Thus skipping the requirement of needing to download the beatmap prior to the session.
+Customs in Multiplayer requires [MultiQuestensions](https://github.com/Goobwabber/MultiQuestensions)
 
 ## Special Thanks
 Special thanks to [Sc2ad](https://github.com/Sc2ad) for helping me debug this.
