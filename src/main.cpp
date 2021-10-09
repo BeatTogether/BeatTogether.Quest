@@ -124,39 +124,39 @@ Logger& getLogger()
     return *logger;
 }
 
-static auto customLevelPrefixLength = 13;
-
-// Helper method for concatenating two strings using the Concat(System.Object) method.
-Il2CppString* concatHelper(Il2CppString* src, Il2CppString* dst) {
-    static auto* concatMethod = il2cpp_utils::FindMethod(il2cpp_functions::defaults->string_class, "Concat", il2cpp_functions::defaults->string_class, il2cpp_functions::defaults->string_class);
-    return RET_DEFAULT_UNLESS(getLogger(), il2cpp_utils::RunMethod<Il2CppString*>((Il2CppObject*) nullptr, concatMethod, src, dst));
-}
+//static auto customLevelPrefixLength = 13;
+//
+//// Helper method for concatenating two strings using the Concat(System.Object) method.
+//Il2CppString* concatHelper(Il2CppString* src, Il2CppString* dst) {
+//    static auto* concatMethod = il2cpp_utils::FindMethod(il2cpp_functions::defaults->string_class, "Concat", il2cpp_functions::defaults->string_class, il2cpp_functions::defaults->string_class);
+//    return RET_DEFAULT_UNLESS(getLogger(), il2cpp_utils::RunMethod<Il2CppString*>((Il2CppObject*) nullptr, concatMethod, src, dst));
+//}
 
 MAKE_HOOK_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationToken, &PlatformAuthenticationTokenProvider::GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
 {
     getLogger().debug("Returning custom authentication token!");
     return System::Threading::Tasks::Task_1<AuthenticationToken>::New_ctor(AuthenticationToken(
         AuthenticationToken::Platform::OculusQuest,
-        self->userId,
-        self->userName,
+        self->dyn__userId(),
+        self->dyn__userName(),
         Array<uint8_t>::NewLength(0)
     ));
 }
 
 MAKE_HOOK_MATCH(MainSystemInit_Init, &MainSystemInit::Init, void, MainSystemInit* self) {
     MainSystemInit_Init(self);
-    auto* networkConfig = self->networkConfig;
+    auto* networkConfig = self->dyn__networkConfig();
 
     getLogger().info("Overriding master server end point . . .");
-    getLogger().info("Original status URL: %s", to_utf8(csstrtostr(networkConfig->masterServerStatusUrl)).c_str());
+    getLogger().info("Original status URL: %s", to_utf8(csstrtostr(networkConfig->dyn__masterServerStatusUrl())).c_str());
     // If we fail to make the strings, we should fail silently
     // This could also be replaced with a CRASH_UNLESS call, if you want to fail verbosely.
-    networkConfig->masterServerHostName = CRASH_UNLESS(/* getLogger(), */config.get_hostname());
-    networkConfig->masterServerPort = CRASH_UNLESS(/* getLogger(), */config.get_port());
-    networkConfig->masterServerStatusUrl = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
+    networkConfig->dyn__masterServerHostName() = CRASH_UNLESS(/* getLogger(), */config.get_hostname());
+    networkConfig->dyn__masterServerPort() = CRASH_UNLESS(/* getLogger(), */config.get_port());
+    networkConfig->dyn__masterServerStatusUrl() = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
 }
 
-MAKE_HOOK_MATCH(UserCertificateValidator_ValidateCertificateChainInternal, &UserCertificateValidator::ValidateCertificateChainInternal, void, UserCertificateValidator* self, GlobalNamespace::MasterServerEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, ::Array<::Array<uint8_t>*>* certificateChain)
+MAKE_HOOK_MATCH(UserCertificateValidator_ValidateCertificateChainInternal, &UserCertificateValidator::ValidateCertificateChainInternal, void, UserCertificateValidator* self, GlobalNamespace::MasterServerEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, ArrayW<::ArrayW<uint8_t>> certificateChain)
 {
     // TODO: Support disabling the mod if official multiplayer is ever fixed
     // It'd be best if we do certificate validation here...
@@ -219,6 +219,6 @@ extern "C" void load()
         getLogger().debug("MQE detected!");
     }
     else {
-        getLogger().info("MQE not found, CustomSongs will not work!");
+        getLogger().warning("MQE not found, CustomSongs will not work!");
     }
 }
