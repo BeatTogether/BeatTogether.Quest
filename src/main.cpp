@@ -1,39 +1,50 @@
+/*
+
+██████╗ ███████╗ █████╗ ████████╗                                   
+██╔══██╗██╔════╝██╔══██╗╚══██╔══╝                                   
+██████╔╝█████╗  ███████║   ██║                                      
+██╔══██╗██╔══╝  ██╔══██║   ██║                                      
+██████╔╝███████╗██║  ██║   ██║                                      
+╚═════╝ ╚══════╝╚═╝  ╚═╝   ╚═╝                                      
+                                                                    
+████████╗ ██████╗  ██████╗ ███████╗████████╗██╗  ██╗███████╗██████╗ 
+╚══██╔══╝██╔═══██╗██╔════╝ ██╔════╝╚══██╔══╝██║  ██║██╔════╝██╔══██╗
+   ██║   ██║   ██║██║  ███╗█████╗     ██║   ███████║█████╗  ██████╔╝
+   ██║   ██║   ██║██║   ██║██╔══╝     ██║   ██╔══██║██╔══╝  ██╔══██╗
+   ██║   ╚██████╔╝╚██████╔╝███████╗   ██║   ██║  ██║███████╗██║  ██║
+   ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
+
+*/
+
+#include <random>
 #include <iostream>
-#include <fstream>
-#include <string_view>
 
 #include "modloader/shared/modloader.hpp"
 
-#include "beatsaber-hook/shared/utils/typedefs.h"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/logging.hpp"
-#include "beatsaber-hook/shared/utils/utils.h"
 #include "beatsaber-hook/shared/utils/hooking.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-type-check.hpp"
 #include "beatsaber-hook/shared/config/config-utils.hpp"
-
-#include "System/Threading/Tasks/Task_1.hpp"
 
 #include "GlobalNamespace/PlatformAuthenticationTokenProvider.hpp"
 #include "GlobalNamespace/AuthenticationToken.hpp"
 #include "GlobalNamespace/MasterServerEndPoint.hpp"
-#include "GlobalNamespace/MultiplayerModeSelectionViewController.hpp"
 #include "GlobalNamespace/MainMenuViewController.hpp"
 #include "GlobalNamespace/MainSystemInit.hpp"
 #include "GlobalNamespace/NetworkConfigSO.hpp"
 #include "GlobalNamespace/UserCertificateValidator.hpp"
 using namespace GlobalNamespace;
 
+#include "System/Threading/Tasks/Task_1.hpp"
+
 #include "System/Action_1.hpp"
 
 #include "UnityEngine/GameObject.hpp"
 #include "UnityEngine/Transform.hpp"
 #include "UnityEngine/Resources.hpp"
+
 #include "TMPro/TextMeshProUGUI.hpp"
 
 //#include "Polyglot/LocalizedTextMeshProUGUI.hpp"
 //#include "Polyglot/LanguageDirection.hpp"
-
 //using namespace Polyglot;
 
 #ifndef HOST_NAME
@@ -48,177 +59,175 @@ using namespace GlobalNamespace;
 #error "Define STATUS_URL!"
 #endif
 
-Logger& getLogger();
+#define BUTTON "Beat\nTogether"
+
+#define SAVE(doc, key, type, value) \
+    if (doc.HasMember(key))         \
+    {                               \
+        doc.RemoveMember(key);      \
+    };                              \
+    doc.AddMember(key, value, doc.GetAllocator());
+
+#define LOAD(doc, name, type, default)          \
+    doc.HasMember(name) && doc[name].Is##type() \
+        ? doc[name].Get##type()                 \
+        : (default)
 
 static ModInfo modInfo;
 
-class ModConfig {
-    public:
-        ModConfig() : hostname(HOST_NAME), port(PORT), statusUrl(STATUS_URL), button("Modded\nOnline") {}
-        // Should be called after modification of the fields has already taken place.
-        // Creates the C# strings for the configuration.
-        void load() {
-            createStrings();
-        }
-        // Read MUST be called after load.
-        void read(std::string_view filename) {
-            // Each time we read, we must start by cleaning up our old strings.
-            // TODO: This may not be necessary if we only ever plan to load our configuration once.
-            invalidateStrings();
-            std::ifstream file(filename.data());
-            if (!file) {
-                getLogger().debug("No readable configuration at %s.", filename.data());
-            } else {
-                file >> hostname >> port >> statusUrl;
-                button = hostname;
-            }
-            file.close();
-        }
-        inline int get_port() const {
-            return port;
-        }
-        inline Il2CppString* get_hostname() const {
-            getLogger().info("Host name: %s", to_utf8(csstrtostr(hostnameStr)).c_str());
-            return valid ? hostnameStr : nullptr;
-        }
-        inline Il2CppString* get_button() const {
-            return valid ? buttonStr : nullptr;
-        }
-        inline Il2CppString* get_statusUrl() const {
-            getLogger().info("Status URL: %s", to_utf8(csstrtostr(statusUrlStr)).c_str());
-            return valid ? statusUrlStr : nullptr;
-        }
-    private:
-        // Invalidates all Il2CppString* pointers we have
-        void invalidateStrings() {
-            free(hostnameStr);
-            free(buttonStr);
-            free(statusUrlStr);
-            valid = false;
-        }
-        // Creates all Il2CppString* pointers we need
-        void createStrings() {
-            hostnameStr = RET_V_UNLESS(getLogger(), il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>(hostname));
-            buttonStr = RET_V_UNLESS(getLogger(), il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>(button));
-            statusUrlStr = RET_V_UNLESS(getLogger(), il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>(statusUrl));
-            // If we can make the strings okay, we are valid.
-            valid = true;
-        }
-        bool valid;
-        int port;
-        std::string hostname;
-        std::string button;
-        std::string statusUrl;
-        // C# strings of the configuration strings.
-        // TODO: Consider replacing the C++ string fields entirely, as they serve no purpose outside of debugging.
-        Il2CppString* hostnameStr = nullptr;
-        Il2CppString* buttonStr = nullptr;
-        Il2CppString* statusUrlStr = nullptr;
-};
-
-static ModConfig config;
-
-Logger& getLogger()
+Logger &logger()
 {
-    static Logger* logger = new Logger(modInfo, LoggerOptions(false, true));
-    return *logger;
+    static auto _logger = new Logger(modInfo, LoggerOptions(false, true));
+    return *_logger;
 }
 
-static auto customLevelPrefixLength = 13;
-
-// Helper method for concatenating two strings using the Concat(System.Object) method.
-Il2CppString* concatHelper(Il2CppString* src, Il2CppString* dst) {
-    static auto* concatMethod = il2cpp_utils::FindMethod(il2cpp_functions::defaults->string_class, "Concat", il2cpp_functions::defaults->string_class, il2cpp_functions::defaults->string_class);
-    return RET_DEFAULT_UNLESS(getLogger(), il2cpp_utils::RunMethod<Il2CppString*>((Il2CppObject*) nullptr, concatMethod, src, dst));
+extern "C" void setup(ModInfo &info)
+{
+    info.id = ID;
+    info.version = VERSION;
+    modInfo = info;
+    logger().info("Setup Completed!");
 }
 
-MAKE_HOOK_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationToken, &PlatformAuthenticationTokenProvider::GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
+Configuration &getConfig()
 {
-    getLogger().debug("Returning custom authentication token!");
+    static Configuration _config((ModInfo){ID, VERSION});
+    _config.Load();
+    return _config;
+}
+
+MAKE_HOOK_MATCH(MainSystemInit_Init, &MainSystemInit::Init, void, MainSystemInit *self)
+{
+    MainSystemInit_Init(self);
+    auto *networkConfig = self->networkConfig;
+
+    logger().info("Overriding master server end point . . .");
+    logger().info("Original status URL: %s", to_utf8(csstrtostr(networkConfig->masterServerStatusUrl)).c_str());
+    logger().info("Original host: %s:%i", to_utf8(csstrtostr(networkConfig->masterServerHostName)).c_str(), networkConfig->masterServerPort);
+
+    // Loads configuration from JSON config file managed by BS-Hook lib
+    auto cfgRepo = getConfig();
+    auto &cfgValue = cfgRepo.config; //load value array from config repo
+
+    // Replaces the online game server data
+    networkConfig->masterServerHostName = il2cpp_utils::newcsstr(LOAD(cfgValue, "hostname", String, HOST_NAME));
+    networkConfig->masterServerPort = LOAD(cfgValue, "port", Int, PORT);
+    networkConfig->masterServerStatusUrl = il2cpp_utils::newcsstr(LOAD(cfgValue, "status_url", String, STATUS_URL));
+
+    logger().info("BeatTogether status URL: %s", to_utf8(csstrtostr(networkConfig->masterServerStatusUrl)).c_str());
+    logger().info("BeatTogether host: %s:%i", to_utf8(csstrtostr(networkConfig->masterServerHostName)).c_str(), networkConfig->masterServerPort);
+
+    // If config file or keys are missing, creates all the configurable keys
+    SAVE(cfgValue, "hostname", String, to_utf8(csstrtostr(networkConfig->masterServerHostName)));
+    SAVE(cfgValue, "port", Int, networkConfig->masterServerPort);
+    SAVE(cfgValue, "status_url", String, to_utf8(csstrtostr(networkConfig->masterServerStatusUrl)));
+    if (!cfgValue["replace_username"].IsBool())
+    {
+        SAVE(cfgValue, "replace_username", Bool, false);
+    }
+    if (!cfgValue["random_id"].IsBool())
+    {
+        SAVE(cfgValue, "random_id", Bool, false);
+    }
+    if (!cfgValue["username"].IsString())
+    {
+        SAVE(cfgValue, "username", String, "");
+    }
+    cfgRepo.Write();
+    logger().info("Host configuration updated.");
+}
+
+MAKE_HOOK_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationToken, &PlatformAuthenticationTokenProvider::GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken> *, PlatformAuthenticationTokenProvider *self)
+{
+    logger().info("Current Username: %s", to_utf8(csstrtostr(self->userName)).c_str());
+    logger().info("Current User ID : %s", to_utf8(csstrtostr(self->userId)).c_str());
+
+    auto cfgRepo = getConfig();
+    auto &cfgValue = cfgRepo.config; //load config from config file in config storage
+
+    if (cfgValue["replace_username"].GetBool() && // The replace username switch is activated
+        cfgValue.HasMember("username") &&         // and There is a username entry
+        cfgValue["username"].IsString() &&        // and username's value is a string
+        cfgValue["username"].GetStringLength())   // and it is not an empty string
+    {
+        logger().info("Overriding username...");
+        self->userName = il2cpp_utils::newcsstr(cfgValue["username"].GetString());
+        logger().info("New username: %s", to_utf8(csstrtostr(self->userName)).c_str());
+    }
+
+    if (cfgValue["random_id"].GetBool())
+    {
+        logger().info("Generating random user ID...");
+        std::mt19937_64 gen(std::random_device{}());
+        std::uint64_t randomNumber = gen();
+        auto newId = std::to_string(randomNumber);
+        self->userId = il2cpp_utils::newcsstr(newId);
+        logger().info("New user ID: %s", to_utf8(csstrtostr(self->userId)).c_str());
+    }
+
+    //SAVE(cfgValue, "username", String, to_utf8(csstrtostr(self->userName)));
+    //SAVE(cfgValue, "userId", String, to_utf8(csstrtostr(self->userId)));
+    //cfgRepo.Write();
+    //logger().info("User configuration updated.");
+
+    logger().info("Returning custom authentication token!");
     return System::Threading::Tasks::Task_1<AuthenticationToken>::New_ctor(AuthenticationToken(
         AuthenticationToken::Platform::OculusQuest,
         self->userId,
         self->userName,
-        Array<uint8_t>::NewLength(0)
-    ));
+        Array<uint8_t>::NewLength(0)));
 }
 
-MAKE_HOOK_MATCH(MainSystemInit_Init, &MainSystemInit::Init, void, MainSystemInit* self) {
-    MainSystemInit_Init(self);
-    auto* networkConfig = self->networkConfig;
-
-    getLogger().info("Overriding master server end point . . .");
-    getLogger().info("Original status URL: %s", to_utf8(csstrtostr(networkConfig->masterServerStatusUrl)).c_str());
-    // If we fail to make the strings, we should fail silently
-    // This could also be replaced with a CRASH_UNLESS call, if you want to fail verbosely.
-    networkConfig->masterServerHostName = CRASH_UNLESS(/* getLogger(), */config.get_hostname());
-    networkConfig->masterServerPort = CRASH_UNLESS(/* getLogger(), */config.get_port());
-    networkConfig->masterServerStatusUrl = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
-}
-
-MAKE_HOOK_MATCH(UserCertificateValidator_ValidateCertificateChainInternal, &UserCertificateValidator::ValidateCertificateChainInternal, void, UserCertificateValidator* self, GlobalNamespace::MasterServerEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, ::Array<::Array<uint8_t>*>* certificateChain)
+MAKE_HOOK_MATCH(UserCertificateValidator_ValidateCertificateChainInternal, &UserCertificateValidator::ValidateCertificateChainInternal, void, UserCertificateValidator *self, GlobalNamespace::MasterServerEndPoint *endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2 *certificate, ::Array<::Array<uint8_t> *> *certificateChain)
 {
     // TODO: Support disabling the mod if official multiplayer is ever fixed
     // It'd be best if we do certificate validation here...
     // but for now we'll just skip it.
 }
 
-// Change the "Online" menu text to "Modded Online"
-MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
-{   
+// Change the "Online" menu text to "Beat Together"
+MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::DidActivate, void, MainMenuViewController *self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
+{
     // Find the GameObject for the online button's text
-    static auto* searchPath = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("MainContent/OnlineButton");
-    static auto* textName = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("Text");
-    UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
-    UnityEngine::GameObject* onlineButton = transform->Find(searchPath)->get_gameObject();
-    UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(textName)->get_gameObject();
+    static auto *searchPath = il2cpp_utils::newcsstr("MainContent/OnlineButton");
+    static auto *textName = il2cpp_utils::newcsstr("Text");
+    UnityEngine::Transform *transform = self->get_gameObject()->get_transform();
+    UnityEngine::GameObject *onlineButton = transform->Find(searchPath)->get_gameObject();
+    UnityEngine::GameObject *onlineButtonTextObj = onlineButton->get_transform()->Find(textName)->get_gameObject();
+    // Set the "Beat Together" text every time so that it doesn't change back
+    TMPro::TextMeshProUGUI *onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI *>();
 
-    // Set the "Modded Online" text every time so that it doesn't change back
-    TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
     // If we fail to get any valid button text, crash verbosely.
     // TODO: This could be replaced with a non-intense crash, if we can ensure that DidActivate also works as intended.
-    onlineButtonText->set_text(CRASH_UNLESS(config.get_button()));
-    
+    onlineButtonText->set_text(il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>(BUTTON));
+
     // Align the Text in the Center
     onlineButtonText->set_alignment(TMPro::TextAlignmentOptions::Center);
 
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
 
-
-extern "C" void setup(ModInfo& info)
-{
-    info.id = ID;
-    info.version = VERSION;
-    modInfo = info;
-}
-
-
 extern "C" void load()
 {
-    std::string path = Configuration::getConfigFilePath(modInfo);
-    path.replace(path.length() - 4, 4, "cfg");
-
-    getLogger().info("Config path: %s", path.c_str());
-    config.read(path);
-    // Load and create all C# strings after we attempt to read it.
-    // If we failed to read it, we will have default values.
-    // If we fail to create the strings, valid will be false.
-    config.load();
-
+    logger().info("Loading BeatTogether...");
     il2cpp_functions::Init();
 
-    INSTALL_HOOK(getLogger(), PlatformAuthenticationTokenProvider_GetAuthenticationToken);
-    INSTALL_HOOK(getLogger(), MainSystemInit_Init);
-    INSTALL_HOOK(getLogger(), UserCertificateValidator_ValidateCertificateChainInternal);
-    INSTALL_HOOK(getLogger(), MainMenuViewController_DidActivate);
+    INSTALL_HOOK(logger(), PlatformAuthenticationTokenProvider_GetAuthenticationToken);
+    INSTALL_HOOK(logger(), MainSystemInit_Init);
+    INSTALL_HOOK(logger(), UserCertificateValidator_ValidateCertificateChainInternal);
+    INSTALL_HOOK(logger(), MainMenuViewController_DidActivate);
     // Checks if MQE is installed
+    /*
     auto ModList = Modloader::getMods();
-    if (ModList.find("multiquestensions") != ModList.end()) {
-        getLogger().info("Hello MQE!");
-        getLogger().debug("MQE detected!");
+    if (ModList.find("multiquestensions") != ModList.end())
+    {
+        logger().info("Hello MQE!");
+        logger().debug("MQE detected!");
     }
-    else {
-        getLogger().info("MQE not found, CustomSongs will not work!");
+    else
+    {
+        logger().info("MQE not found, CustomSongs will not work!");
     }
+    */
+    logger().info("Finished loading BeatTogether.");
 }
