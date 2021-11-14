@@ -9,7 +9,7 @@ if (-not ($PSVersionTable.PSEdition -eq "Core")) {
 
 $ArchiveName = "BeatTogether_v$VERSION.qmod"
 $TempArchiveName = "beattogether_v$VERSION.qmod.zip"
-$BS_HOOK_VERSION = "3_1_2"
+$BS_HOOK_VERSION = "2_3_0"
 
 echo "Compiling BeatTogether version: $VERSION, BS-Hook: $BS_HOOK_VERSION"
 

@@ -8,7 +8,6 @@
     "packageVersion":  "1.17.1",
     "description":  "A multiplayer private server for the modding community. Supports crossplay between PC and Quest.",
     "coverImage":  "Cover.png",
-    "type":  "Gameplay",
     "modFiles":  [
                      "libbeattogether.so"
                  ],
