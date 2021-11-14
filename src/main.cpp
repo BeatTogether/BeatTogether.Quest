@@ -22,6 +22,7 @@
 #include "GlobalNamespace/MainSystemInit.hpp"
 #include "GlobalNamespace/NetworkConfigSO.hpp"
 #include "GlobalNamespace/UserCertificateValidator.hpp"
+#include "GlobalNamespace/QuickPlaySongPacksDropdown.hpp"
 using namespace GlobalNamespace;
 
 #include "System/Action_1.hpp"
@@ -124,39 +125,39 @@ Logger& getLogger()
     return *logger;
 }
 
-static auto customLevelPrefixLength = 13;
-
-// Helper method for concatenating two strings using the Concat(System.Object) method.
-Il2CppString* concatHelper(Il2CppString* src, Il2CppString* dst) {
-    static auto* concatMethod = il2cpp_utils::FindMethod(il2cpp_functions::defaults->string_class, "Concat", il2cpp_functions::defaults->string_class, il2cpp_functions::defaults->string_class);
-    return RET_DEFAULT_UNLESS(getLogger(), il2cpp_utils::RunMethod<Il2CppString*>((Il2CppObject*) nullptr, concatMethod, src, dst));
-}
+//static auto customLevelPrefixLength = 13;
+//
+//// Helper method for concatenating two strings using the Concat(System.Object) method.
+//Il2CppString* concatHelper(Il2CppString* src, Il2CppString* dst) {
+//    static auto* concatMethod = il2cpp_utils::FindMethod(il2cpp_functions::defaults->string_class, "Concat", il2cpp_functions::defaults->string_class, il2cpp_functions::defaults->string_class);
+//    return RET_DEFAULT_UNLESS(getLogger(), il2cpp_utils::RunMethod<Il2CppString*>((Il2CppObject*) nullptr, concatMethod, src, dst));
+//}
 
 MAKE_HOOK_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationToken, &PlatformAuthenticationTokenProvider::GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, PlatformAuthenticationTokenProvider* self)
 {
     getLogger().debug("Returning custom authentication token!");
     return System::Threading::Tasks::Task_1<AuthenticationToken>::New_ctor(AuthenticationToken(
         AuthenticationToken::Platform::OculusQuest,
-        self->userId,
-        self->userName,
+        self->dyn__userId(), // Important for server and client to keep track of things, should not be modified
+        self->dyn__userName(),
         Array<uint8_t>::NewLength(0)
     ));
 }
 
 MAKE_HOOK_MATCH(MainSystemInit_Init, &MainSystemInit::Init, void, MainSystemInit* self) {
     MainSystemInit_Init(self);
-    auto* networkConfig = self->networkConfig;
+    auto* networkConfig = self->dyn__networkConfig();
 
     getLogger().info("Overriding master server end point . . .");
-    getLogger().info("Original status URL: %s", to_utf8(csstrtostr(networkConfig->masterServerStatusUrl)).c_str());
+    getLogger().info("Original status URL: %s", to_utf8(csstrtostr(networkConfig->dyn__masterServerStatusUrl())).c_str());
     // If we fail to make the strings, we should fail silently
     // This could also be replaced with a CRASH_UNLESS call, if you want to fail verbosely.
-    networkConfig->masterServerHostName = CRASH_UNLESS(/* getLogger(), */config.get_hostname());
-    networkConfig->masterServerPort = CRASH_UNLESS(/* getLogger(), */config.get_port());
-    networkConfig->masterServerStatusUrl = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
+    networkConfig->dyn__masterServerHostName() = CRASH_UNLESS(/* getLogger(), */config.get_hostname());
+    networkConfig->dyn__masterServerPort() = CRASH_UNLESS(/* getLogger(), */config.get_port());
+    networkConfig->dyn__masterServerStatusUrl() = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
 }
 
-MAKE_HOOK_MATCH(UserCertificateValidator_ValidateCertificateChainInternal, &UserCertificateValidator::ValidateCertificateChainInternal, void, UserCertificateValidator* self, GlobalNamespace::MasterServerEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, ::Array<::Array<uint8_t>*>* certificateChain)
+MAKE_HOOK_MATCH(UserCertificateValidator_ValidateCertificateChainInternal, &UserCertificateValidator::ValidateCertificateChainInternal, void, UserCertificateValidator* self, GlobalNamespace::MasterServerEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, Array<::Array<uint8_t>*>* certificateChain)
 {
     // TODO: Support disabling the mod if official multiplayer is ever fixed
     // It'd be best if we do certificate validation here...
@@ -167,22 +168,33 @@ MAKE_HOOK_MATCH(UserCertificateValidator_ValidateCertificateChainInternal, &User
 MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
 {   
     // Find the GameObject for the online button's text
-    static auto* searchPath = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("MainContent/OnlineButton");
-    static auto* textName = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("Text");
-    UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
-    UnityEngine::GameObject* onlineButton = transform->Find(searchPath)->get_gameObject();
-    UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(textName)->get_gameObject();
+    //static auto* searchPath = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("MainContent/OnlineButton");
+    //static auto* textName = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("Text");
 
-    // Set the "Modded Online" text every time so that it doesn't change back
-    TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
+    //UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
+    //UnityEngine::GameObject* onlineButton = transform->Find(searchPath)->get_gameObject();
+    //UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(textName)->get_gameObject();
+    
+    // Find the GameObject and get the component for the online button's text
+    static auto* searchPath = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("MainContent/OnlineButton/Text");
+    TMPro::TextMeshProUGUI* onlineButtonText = self->get_gameObject()->get_transform()->Find(searchPath)->get_gameObject()->GetComponent<TMPro::TextMeshProUGUI*>();
+
+    //// Set the "Modded Online" text every time so that it doesn't change back
+    //TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
     // If we fail to get any valid button text, crash verbosely.
     // TODO: This could be replaced with a non-intense crash, if we can ensure that DidActivate also works as intended.
     onlineButtonText->set_text(CRASH_UNLESS(config.get_button()));
     
-    // Align the Text in the Center
-    onlineButtonText->set_alignment(TMPro::TextAlignmentOptions::Center);
+    //// Align the Text in the Center
+    //onlineButtonText->set_alignment(TMPro::TextAlignmentOptions::Center);
 
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
+}
+
+// Disable QuickplaySongPacksOverrides if MQE is missing
+MAKE_HOOK_MATCH(QuickPlaySongPacksDropdown_LazyInit, &QuickPlaySongPacksDropdown::LazyInit, void, QuickPlaySongPacksDropdown* self) {
+    self->dyn__quickPlaySongPacksOverride() = nullptr;
+    QuickPlaySongPacksDropdown_LazyInit(self);
 }
 
 
@@ -219,6 +231,7 @@ extern "C" void load()
         getLogger().debug("MQE detected!");
     }
     else {
-        getLogger().info("MQE not found, CustomSongs will not work!");
+        getLogger().warning("MQE not found, CustomSongs will not work!");
+        INSTALL_HOOK(getLogger(), QuickPlaySongPacksDropdown_LazyInit);
     }
 }

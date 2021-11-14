@@ -1,6 +1,6 @@
 HOST_NAME ?= master.beattogether.systems
 PORT ?= 2328
-STATUS_URL ?= "http://master.beattogether.systems/status"
+STATUS_URL ?= http://master.beattogether.systems/status
 LOCAL_PATH := $(call my-dir)
 
 TARGET_ARCH_ABI := arm64-v8a
@@ -21,7 +21,7 @@ LOCAL_MODULE := modloader
 LOCAL_EXPORT_C_INCLUDES := extern/modloader
 LOCAL_SRC_FILES := extern/libmodloader.so
 include $(PREBUILT_SHARED_LIBRARY)
-# Creating prebuilt for dependency: codegen - version: 0.14.0
+# Creating prebuilt for dependency: codegen - version: 0.17.0
 include $(CLEAR_VARS)
 LOCAL_MODULE := codegen
 LOCAL_EXPORT_C_INCLUDES := extern/codegen
@@ -37,7 +37,7 @@ LOCAL_SHARED_LIBRARIES += modloader
 LOCAL_SHARED_LIBRARIES += beatsaber-hook_2_3_0
 LOCAL_SHARED_LIBRARIES += codegen
 LOCAL_LDLIBS += -llog
-LOCAL_CFLAGS += -I'extern/libil2cpp/il2cpp/libil2cpp' -DID='"BeatTogether"' -DVERSION='"$(VERSION)"' -DHOST_NAME='"$(HOST_NAME)"' -DPORT='$(PORT)' -DSTATUS_URL='$(STATUS_URL)' -I'./shared' -I'./extern' -isystem'./extern/codegen/include'
+LOCAL_CFLAGS += -I'extern/libil2cpp/il2cpp/libil2cpp' -DID='"BeatTogether"' -DVERSION='"$(VERSION)"' -DHOST_NAME='"$(HOST_NAME)"' -DPORT='$(PORT)' -DSTATUS_URL='"$(STATUS_URL)"' -I'./shared' -I'./extern' -isystem'./extern/codegen/include'
 LOCAL_CPPFLAGS += -std=c++2a
 LOCAL_C_INCLUDES += ./include ./src
 include $(BUILD_SHARED_LIBRARY)

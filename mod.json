@@ -1,19 +1,17 @@
-
 {
-    "_QPVersion": "0.1.1",
-    "name": "Beat Together",
-    "id": "BeatTogether",
-    "author": "BeatTogether Team",
-    "version": "1.3.0",
-    "packageId": "com.beatgames.beatsaber",
-    "packageVersion": "1.17.1",
-	"description": "A multiplayer private server for the modding community. Supports crossplay between PC and Quest.",
-	"coverImage": "Cover.png",
-    "type": "Gameplay",
-    "modFiles": [
-        "libbeattogether.so"
-    ],
-    "libraryFiles": [
-        "libbeatsaber-hook_2_3_0.so"
-    ]
+    "_QPVersion":  "0.1.1",
+    "name":  "Beat Together",
+    "id":  "BeatTogether",
+    "author":  "BeatTogether Team",
+    "version":  "1.3.0",
+    "packageId":  "com.beatgames.beatsaber",
+    "packageVersion":  "1.17.1",
+    "description":  "A multiplayer private server for the modding community. Supports crossplay between PC and Quest.",
+    "coverImage":  "Cover.png",
+    "modFiles":  [
+                     "libbeattogether.so"
+                 ],
+    "libraryFiles":  [
+                         "libbeatsaber-hook_2_3_0.so"
+                     ]
 }
