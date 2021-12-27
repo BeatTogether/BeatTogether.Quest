@@ -15,6 +15,8 @@ Want to support development and server costs? [Click Here](https://www.patreon.c
 
 **Recommended Install:**
 
+**PLEASE USE MANUAL INSTALL FOR NOW. THE MOD IS IN BETA AND ISN"T LISTED TILL IT IS STABLE. THIS WILL BE REMOVED WHEN ITS AVAILABLE.**
+
 Here is how to install the mod in headset:
 - Go to the Browser section of the BMBF app.
 - Click the small globe icon in the top right-hand corner and click QuestBoard
