@@ -28,7 +28,7 @@ You are now ready to play!
 
 To install, Download the latest mod from our releases. [Click Here](https://github.com/pythonology/BeatTogether.Quest/releases)
 
-After downloading, upload the .zip to BMBF on the upload tab of the web interface.
+After downloading, upload the .qmod to BMBF on the upload tab of the web interface.
 
 ## Custom Song Support
 Customs in multiplayer requires [MultiQuestensions](https://github.com/Goobwabber/MultiQuestensions)
