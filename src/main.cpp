@@ -157,7 +157,7 @@ MAKE_HOOK_MATCH(MainSystemInit_Init, &MainSystemInit::Init, void, MainSystemInit
     networkConfig->dyn__masterServerStatusUrl() = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
 }
 
-MAKE_HOOK_MATCH(UserCertificateValidator_ValidateCertificateChainInternal, &UserCertificateValidator::ValidateCertificateChainInternal, void, UserCertificateValidator* self, GlobalNamespace::MasterServerEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, Array<::Array<uint8_t>*>* certificateChain)
+MAKE_HOOK_MATCH(UserCertificateValidator_ValidateCertificateChainInternal, &UserCertificateValidator::ValidateCertificateChainInternal, void, UserCertificateValidator* self, GlobalNamespace::MasterServerEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, ::ArrayW<::ArrayW<uint8_t>> certificateChain)
 {
     // TODO: Support disabling the mod if official multiplayer is ever fixed
     // It'd be best if we do certificate validation here...
