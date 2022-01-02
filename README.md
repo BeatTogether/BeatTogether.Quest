@@ -32,7 +32,11 @@ Here is how to install the mod in headset:
 
 To install, Download the latest mod from our releases. [Click Here](https://github.com/pythonology/BeatTogether.Quest/releases)
 
-After downloading, upload the .qmod to BMBF on the upload tab of the web interface.
+You need to access BMBF from a computer. Open BMBF and go to the "Tools" tab. YOu should see a web address and a version number.
+
+On your PC, type in that web address that is shown. You will be greated with a upload interface.
+
+Upload the .qmod you got from the download above. To be sure it downloaded correctly, check the "mods" tab and see if its enabled and active.
 
 ## Custom Song Support
 Customs in multiplayer requires [MultiQuestensions](https://github.com/Goobwabber/MultiQuestensions)
