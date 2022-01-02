@@ -32,7 +32,7 @@ Here is how to install the mod in headset:
 
 To install, Download the latest mod from our releases. [Click Here](https://github.com/pythonology/BeatTogether.Quest/releases)
 
-You need to access BMBF from a computer. Open BMBF and go to the "Tools" tab. YOu should see a web address and a version number.
+You need to access BMBF from a computer. Open BMBF and go to the "Tools" tab. You should see a web address and a version number.
 
 On your PC, type in that web address that is shown. You will be greated with a upload interface.
 
