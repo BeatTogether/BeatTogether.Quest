@@ -1,31 +1,102 @@
-# Builds a .qmod file for loading with QuestPatcher
-$NDKPath = Get-Content $PSScriptRoot/ndkpath.txt
-$VERSION = Get-Content $PSScriptRoot/VERSION -First 1
+Param(
+    [Parameter(Mandatory=$false, HelpMessage="The name the output qmod file should have")][String] $qmodname="BeatTogether",
 
-$buildScript = "$NDKPath/build/ndk-build"
-if (-not ($PSVersionTable.PSEdition -eq "Core")) {
-    $buildScript += ".cmd"
+    [Parameter(Mandatory=$false, HelpMessage="Switch to create a clean compilation")]
+    [Alias("rebuild")]
+    [Switch] $clean,
+
+    [Parameter(Mandatory=$false, HelpMessage="Prints the help instructions")]
+    [Switch] $help,
+
+    [Parameter(Mandatory=$false, HelpMessage="Tells the script to not compile and only package the existing files")]
+    [Alias("actions", "pack")]
+    [Switch] $package
+)
+
+# Builds a .qmod file for loading with QP or BMBF
+
+
+if ($help -eq $true) {
+    echo "`"BuildQmod <qmodName>`" - Copiles your mod into a `".so`" or a `".a`" library"
+    echo "`n-- Parameters --`n"
+    echo "qmodName `t The file name of your qmod"
+
+    echo "`n-- Arguments --`n"
+
+    echo "-clean `t`t Performs a clean build on both your library and the qmod"
+    echo "-help `t`t Prints this"
+    echo "-package `t Only packages existing files, without recompiling`n"
+
+    exit
 }
 
-$ArchiveName = "BeatTogether_v$VERSION.qmod"
-$TempArchiveName = "beattogether_v$VERSION.qmod.zip"
-$BS_HOOK_VERSION = "3_4_4"
+if ($qmodName -eq "")
+{
+    echo "Give a proper qmod name and try again"
+    exit
+}
 
-echo "Compiling BeatTogether version: $VERSION, BS-Hook: $BS_HOOK_VERSION"
+if ($package -eq $true) {
+    $qmodName = "$($env:module_id)_$($env:version)"
+    echo "Actions: Packaging QMod $qmodName"
+}
+if (($args.Count -eq 0) -And $package -eq $false) {
+echo "Creating QMod $qmodName"
+    & $PSScriptRoot/build.ps1 -clean:$clean
 
-& $buildScript -B NDK_PROJECT_PATH=$PSScriptRoot APP_BUILD_SCRIPT=$PSScriptRoot/Android.mk NDK_APPLICATION_MK=$PSScriptRoot/Application.mk VERSION=$VERSION
+    if ($LASTEXITCODE -ne 0) {
+        echo "Failed to build, exiting..."
+        exit $LASTEXITCODE
+    }
 
-echo "Compile Finished"
+    qpm-rust qmod build
+}
 
-$json = Get-Content $PSScriptRoot/mod.json -raw | ConvertFrom-Json
-$json.version="$VERSION"
-$json.libraryFiles=@("libbeatsaber-hook_$BS_HOOK_VERSION.so")
+echo "Creating qmod from mod.json"
 
-$json | ConvertTo-Json -depth 32| Set-Content $PSScriptRoot/mod.json
+$mod = "./mod.json"
+$modJson = Get-Content $mod -Raw | ConvertFrom-Json
 
-echo "mod.json updated"
+$filelist = @($mod)
 
-Compress-Archive -Path "./libs/arm64-v8a/libbeattogether.so", "./libs/arm64-v8a/libbeatsaber-hook_$BS_HOOK_VERSION.so", "./mod.json", "./Cover.png" -DestinationPath $TempArchiveName -Force
-Move-Item $TempArchiveName $ArchiveName -Force
+$cover = "./" + $modJson.coverImage
+if ((-not ($cover -eq "./")) -and (Test-Path $cover))
+{ 
+    $filelist += ,$cover
+} else {
+    echo "No cover Image found"
+}
 
-echo "qmod generated, Done"
+foreach ($mod in $modJson.modFiles)
+{
+    $path = "./build/" + $mod
+    if (-not (Test-Path $path))
+    {
+        $path = "./extern/libs/" + $mod
+    }
+    $filelist += $path
+}
+
+foreach ($lib in $modJson.libraryFiles)
+{
+    $path = "./extern/libs/" + $lib
+    if (-not (Test-Path $path))
+    {
+        $path = "./build/" + $lib
+    }
+    $filelist += $path
+}
+
+$zip = $qmodName + ".zip"
+$qmod = $qmodName + ".qmod"
+
+if ((-not ($clean.IsPresent)) -and (Test-Path $qmod))
+{
+    echo "Making Clean Qmod"
+    Move-Item $qmod $zip -Force
+}
+
+Compress-Archive -Path $filelist -DestinationPath $zip -Update
+Move-Item $zip $qmod -Force
+
+echo "Task Completed"

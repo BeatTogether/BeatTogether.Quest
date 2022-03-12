@@ -16,12 +16,12 @@
 
 #include "GlobalNamespace/PlatformAuthenticationTokenProvider.hpp"
 #include "GlobalNamespace/AuthenticationToken.hpp"
-#include "GlobalNamespace/MasterServerEndPoint.hpp"
+#include "GlobalNamespace/DnsEndPoint.hpp"
 #include "GlobalNamespace/MultiplayerModeSelectionViewController.hpp"
 #include "GlobalNamespace/MainMenuViewController.hpp"
 #include "GlobalNamespace/MainSystemInit.hpp"
 #include "GlobalNamespace/NetworkConfigSO.hpp"
-#include "GlobalNamespace/UserCertificateValidator.hpp"
+#include "GlobalNamespace/ClientCertificateValidator.hpp"
 #include "GlobalNamespace/QuickPlaySongPacksDropdown.hpp"
 using namespace GlobalNamespace;
 
@@ -149,15 +149,16 @@ MAKE_HOOK_MATCH(MainSystemInit_Init, &MainSystemInit::Init, void, MainSystemInit
     auto* networkConfig = self->dyn__networkConfig();
 
     getLogger().info("Overriding master server end point . . .");
-    getLogger().info("Original status URL: %s", to_utf8(csstrtostr(networkConfig->dyn__masterServerStatusUrl())).c_str());
+    getLogger().info("Original status URL: %s", static_cast<std::string>(networkConfig->dyn__multiplayerStatusUrl()).c_str());
     // If we fail to make the strings, we should fail silently
     // This could also be replaced with a CRASH_UNLESS call, if you want to fail verbosely.
     networkConfig->dyn__masterServerHostName() = CRASH_UNLESS(/* getLogger(), */config.get_hostname());
     networkConfig->dyn__masterServerPort() = CRASH_UNLESS(/* getLogger(), */config.get_port());
-    networkConfig->dyn__masterServerStatusUrl() = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
+    networkConfig->dyn__multiplayerStatusUrl() = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
+    networkConfig->dyn__forceGameLift() = false;
 }
 
-MAKE_HOOK_MATCH(UserCertificateValidator_ValidateCertificateChainInternal, &UserCertificateValidator::ValidateCertificateChainInternal, void, UserCertificateValidator* self, GlobalNamespace::MasterServerEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, ::ArrayW<::ArrayW<uint8_t>> certificateChain)
+MAKE_HOOK_MATCH(ClientCertificateValidator_ValidateCertificateChainInternal, &ClientCertificateValidator::ValidateCertificateChainInternal, void, ClientCertificateValidator* self, GlobalNamespace::DnsEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, ::ArrayW<::ArrayW<uint8_t>> certificateChain)
 {
     // TODO: Support disabling the mod if official multiplayer is ever fixed
     // It'd be best if we do certificate validation here...
@@ -176,8 +177,8 @@ MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::Did
     //UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(textName)->get_gameObject();
     
     // Find the GameObject and get the component for the online button's text
-    static auto* searchPath = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("MainContent/OnlineButton/Text");
-    TMPro::TextMeshProUGUI* onlineButtonText = self->get_gameObject()->get_transform()->Find(searchPath)->get_gameObject()->GetComponent<TMPro::TextMeshProUGUI*>();
+    //static auto* searchPath = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("MainContent/OnlineButton/Text");
+    TMPro::TextMeshProUGUI* onlineButtonText = self->get_gameObject()->get_transform()->Find("MainContent/OnlineButton/Text")->get_gameObject()->GetComponent<TMPro::TextMeshProUGUI*>();
 
     //// Set the "Modded Online" text every time so that it doesn't change back
     //TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
@@ -222,13 +223,17 @@ extern "C" void load()
 
     INSTALL_HOOK(getLogger(), PlatformAuthenticationTokenProvider_GetAuthenticationToken);
     INSTALL_HOOK(getLogger(), MainSystemInit_Init);
-    INSTALL_HOOK(getLogger(), UserCertificateValidator_ValidateCertificateChainInternal);
+    INSTALL_HOOK(getLogger(), ClientCertificateValidator_ValidateCertificateChainInternal);
     INSTALL_HOOK(getLogger(), MainMenuViewController_DidActivate);
     // Checks if MQE is installed
     auto ModList = Modloader::getMods();
-    if (ModList.find("multiquestensions") != ModList.end()) {
-        getLogger().info("Hello MQE!");
-        getLogger().debug("MQE detected!");
+    if (ModList.find("MultiplayerCore") != ModList.end()) {
+        getLogger().info("Hello MultiplayerCore!");
+        getLogger().debug("MultiplayerCore detected!");
+        if (ModList.find("multiquestensions") != ModList.end()) {
+            getLogger().info("Hello MQE!");
+            getLogger().debug("MQE detected!");
+        }
     }
     else {
         getLogger().warning("MQE not found, CustomSongs will not work!");

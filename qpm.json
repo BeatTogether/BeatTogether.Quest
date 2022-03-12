@@ -4,9 +4,11 @@
   "info": {
     "name": "BeatTogether",
     "id": "BeatTogether",
-    "version": "1.4.0",
-    "url": null,
-    "additionalData": {}
+    "version": "1.4.0-Test",
+    "url": "https://github.com/pythonology/BeatTogether.Quest",
+    "additionalData": {
+      "overrideSoName": "libBeatTogether.so"
+    }
   },
   "dependencies": [
     {
@@ -24,8 +26,8 @@
       "additionalData": {}
     },
     {
-      "id": "libil2cpp",
-      "versionRange": "*",
+      "id": "modloader",
+      "versionRange": "^1.2.3",
       "additionalData": {}
     }
   ],

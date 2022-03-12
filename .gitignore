@@ -59,3 +59,5 @@ Android.mk.backup
 
 TestBuild.ps1
 TestQMOD.ps1
+/build
+*.cmake

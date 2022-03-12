@@ -1,17 +1,26 @@
 {
-    "_QPVersion":  "0.1.1",
-    "name":  "Beat Together",
-    "id":  "BeatTogether",
-    "author":  "BeatTogether Team",
-    "version":  "1.4.0",
-    "packageId":  "com.beatgames.beatsaber",
-    "packageVersion":  "1.19.0",
-    "description":  "A multiplayer private server for the modding community. Supports crossplay between PC and Quest.",
-    "coverImage":  "Cover.png",
-    "modFiles":  [
-                     "libbeattogether.so"
-                 ],
-    "libraryFiles":  [
-                         "libbeatsaber-hook_3_4_4.so"
-                     ]
+  "_QPVersion": "0.1.1",
+  "name": "BeatTogether",
+  "id": "BeatTogether",
+  "author": "BeatTogether Team",
+  "version": "1.4.0-Test",
+  "packageId": "com.beatgames.beatsaber",
+  "packageVersion": "1.20.0",
+  "description": "A multiplayer private server for the modding community. Supports crossplay between PC and Quest.",
+  "coverImage": "Cover.png",
+  "dependencies": [
+    {
+      "version": "*",
+      "id": "codegen",
+      "downloadIfMissing": "https://github.com/sc2ad/BeatSaber-Quest-Codegen/releases/download/v0.21.0/Codegen.qmod"
+    }
+  ],
+  "modFiles": [
+    "libBeatTogether.so"
+  ],
+  "libraryFiles": [
+    "libbeatsaber-hook_3_6_8.so"
+  ],
+  "fileCopies": [],
+  "copyExtensions": []
 }
