@@ -8,30 +8,34 @@ Want to support development and server costs? [Click Here](https://www.patreon.c
 ## Features
 * Private server free from Beat Saber official; allowing Quest to play freely on modded installs
 * Crossplay between all compatible platforms
-* Custom songs between platforms
+* Custom songs between platforms (With MultiQuestensions installed)
 * 10 Player lobbies (If a PC players hosts the lobby and has MultiplayerExtensions plugin installed which is PC only) **This Feature is EXPERIMENTAL. For optimal experience its recommended to stick with 5 players.**
 
 ## Installation
 
 **Recommended Install:**
 
+**PLEASE USE MANUAL INSTALL FOR NOW. THE MOD IS IN BETA AND ISN'T LISTED TILL IT IS STABLE. THIS WILL BE REMOVED WHEN ITS AVAILABLE.**
+
+<strike>
+  
 Here is how to install the mod in headset:
 - Go to the Browser section of the BMBF app.
 - Click the small globe icon in the top right-hand corner and click QuestBoard
 - Hit "Download Mods"
 - Scroll down till you find "BeatTogether" and hit the blue download button on the right hand side.
-- It will say its downloaded. Make sure to hit "Sync to Beat Saber" to apply changes
+- It will say its downloaded. Make sure to hit "Sync to Beat Saber" to apply changes</strike>
 
-You are now ready to play!
+~~You are now ready to play!~~
 
 **Manual Install:**
 
 To install, Download the latest mod from our releases. [Click Here](https://github.com/pythonology/BeatTogether.Quest/releases)
 
-After downloading, upload the .zip to BMBF on the upload tab of the web interface.
+After downloading, upload the .qmod to BMBF on the upload tab of the web interface.
 
 ## Custom Song Support
-Customs are built-in with this plugin. If you have the matching beatmap with other players inside your lobby prior to a session you can freely play with them with that custom song! In the future, this will definitely change and include a SongLoader. Thus skipping the requirement of needing to download the beatmap prior to the session.
+Customs in multiplayer requires [MultiQuestensions](https://github.com/Goobwabber/MultiQuestensions)
 
 ## Special Thanks
 Special thanks to [Sc2ad](https://github.com/Sc2ad) for helping me debug this.
