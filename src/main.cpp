@@ -149,12 +149,15 @@ MAKE_HOOK_MATCH(MainSystemInit_Init, &MainSystemInit::Init, void, MainSystemInit
     auto* networkConfig = self->dyn__networkConfig();
 
     getLogger().info("Overriding master server end point . . .");
-    getLogger().info("Original status URL: %s", static_cast<std::string>(networkConfig->dyn__multiplayerStatusUrl()).c_str());
+    getLogger().info("Original status URL: %s", static_cast<std::string>(networkConfig->get_multiplayerStatusUrl()).c_str());
+    getLogger().info("Original QuickPlay Setup URL: %s", static_cast<std::string>(networkConfig->get_quickPlaySetupUrl()).c_str());
+    getLogger().info("ServiceEnvironment: %d", networkConfig->get_serviceEnvironment().value);
     // If we fail to make the strings, we should fail silently
     // This could also be replaced with a CRASH_UNLESS call, if you want to fail verbosely.
     networkConfig->dyn__masterServerHostName() = CRASH_UNLESS(/* getLogger(), */config.get_hostname());
     networkConfig->dyn__masterServerPort() = CRASH_UNLESS(/* getLogger(), */config.get_port());
     networkConfig->dyn__multiplayerStatusUrl() = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
+    networkConfig->dyn__quickPlaySetupUrl() = CRASH_UNLESS(StringW(config.get_statusUrl()) + "/mp_override.json");
     networkConfig->dyn__forceGameLift() = false;
 }
 
@@ -236,7 +239,7 @@ extern "C" void load()
         }
     }
     else {
-        getLogger().warning("MQE not found, CustomSongs will not work!");
+        getLogger().warning("MultiplayerCore not found, CustomSongs will not work!");
         INSTALL_HOOK(getLogger(), QuickPlaySongPacksDropdown_LazyInit);
     }
 }
