@@ -170,27 +170,15 @@ MAKE_HOOK_MATCH(ClientCertificateValidator_ValidateCertificateChainInternal, &Cl
 
 // Change the "Online" menu text to "Modded Online"
 MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
-{   
-    // Find the GameObject for the online button's text
-    //static auto* searchPath = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("MainContent/OnlineButton");
-    //static auto* textName = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("Text");
-
-    //UnityEngine::Transform* transform = self->get_gameObject()->get_transform();
-    //UnityEngine::GameObject* onlineButton = transform->Find(searchPath)->get_gameObject();
-    //UnityEngine::GameObject* onlineButtonTextObj = onlineButton->get_transform()->Find(textName)->get_gameObject();
-    
+{  
     // Find the GameObject and get the component for the online button's text
-    //static auto* searchPath = il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>("MainContent/OnlineButton/Text");
-    TMPro::TextMeshProUGUI* onlineButtonText = self->get_gameObject()->get_transform()->Find("MainContent/OnlineButton/Text")->get_gameObject()->GetComponent<TMPro::TextMeshProUGUI*>();
+    static ConstString searchPath = "MainContent/OnlineButton/Text";
+    TMPro::TextMeshProUGUI* onlineButtonText = self->get_gameObject()->get_transform()->Find(searchPath)->get_gameObject()->GetComponent<TMPro::TextMeshProUGUI*>();
 
-    //// Set the "Modded Online" text every time so that it doesn't change back
-    //TMPro::TextMeshProUGUI* onlineButtonText = onlineButtonTextObj->GetComponent<TMPro::TextMeshProUGUI*>();
+    // Set the "Modded Online" text every time so that it doesn't change back
     // If we fail to get any valid button text, crash verbosely.
     // TODO: This could be replaced with a non-intense crash, if we can ensure that DidActivate also works as intended.
     onlineButtonText->set_text(CRASH_UNLESS(config.get_button()));
-    
-    //// Align the Text in the Center
-    //onlineButtonText->set_alignment(TMPro::TextAlignmentOptions::Center);
 
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
@@ -229,7 +217,7 @@ extern "C" void load()
     INSTALL_HOOK(getLogger(), ClientCertificateValidator_ValidateCertificateChainInternal);
     INSTALL_HOOK(getLogger(), MainMenuViewController_DidActivate);
     // Checks if MQE is installed
-    auto ModList = Modloader::getMods();
+    const std::unordered_map<std::string, const Mod>& ModList = Modloader::getMods();
     if (ModList.find("MultiplayerCore") != ModList.end()) {
         getLogger().info("Hello MultiplayerCore!");
         getLogger().debug("MultiplayerCore detected!");
