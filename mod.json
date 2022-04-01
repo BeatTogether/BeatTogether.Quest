@@ -5,21 +5,21 @@
   "author": "BeatTogether Team",
   "version": "1.4.0-Test",
   "packageId": "com.beatgames.beatsaber",
-  "packageVersion": "1.20.0",
+  "packageVersion": "1.21.0",
   "description": "A multiplayer private server for the modding community. Supports crossplay between PC and Quest.",
   "coverImage": "Cover.png",
   "dependencies": [
     {
       "version": "*",
       "id": "codegen",
-      "downloadIfMissing": "https://github.com/sc2ad/BeatSaber-Quest-Codegen/releases/download/v0.21.0/Codegen.qmod"
+      "downloadIfMissing": "https://github.com/sc2ad/BeatSaber-Quest-Codegen/releases/download/v0.22.0/Codegen.qmod"
     }
   ],
   "modFiles": [
     "libBeatTogether.so"
   ],
   "libraryFiles": [
-    "libbeatsaber-hook_3_6_8.so"
+    "libbeatsaber-hook_3_7_4.so"
   ],
   "fileCopies": [],
   "copyExtensions": []
