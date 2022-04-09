@@ -10,7 +10,12 @@ Param(
 
     [Parameter(Mandatory=$false, HelpMessage="Tells the script to not compile and only package the existing files")]
     [Alias("actions", "pack")]
-    [Switch] $package
+    [Switch] $package,
+
+    [Parameter(Mandatory=$false, HelpMessage="Overwrite default HOST_NAME")][Alias("host")][string]$HOST_NAME,
+    [Parameter(Mandatory=$false, HelpMessage="Overwrite default PORT")][string]$PORT,
+    [Parameter(Mandatory=$false, HelpMessage="Overwrite default STATUS_URL")][string]$STATUS_URL
+
 )
 
 # Builds a .qmod file for loading with QP or BMBF
@@ -42,7 +47,7 @@ if ($package -eq $true) {
 }
 if (($args.Count -eq 0) -And $package -eq $false) {
 echo "Creating QMod $qmodName"
-    & $PSScriptRoot/build.ps1 -clean:$clean
+    & $PSScriptRoot/build.ps1 -clean:$clean -HOST_NAME $HOST_NAME -STATUS_URL $STATUS_URL -PORT $PORT
 
     if ($LASTEXITCODE -ne 0) {
         echo "Failed to build, exiting..."

@@ -221,7 +221,7 @@ extern "C" void load()
     if (ModList.find("MultiplayerCore") != ModList.end()) {
         getLogger().info("Hello MultiplayerCore!");
         getLogger().debug("MultiplayerCore detected!");
-        if (ModList.find("multiquestensions") != ModList.end()) {
+        if (ModList.find("MultiQuestensions") != ModList.end()) {
             getLogger().info("Hello MQE!");
             getLogger().debug("MQE detected!");
         }
