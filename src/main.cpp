@@ -138,15 +138,15 @@ MAKE_HOOK_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationToken, &Pla
     getLogger().debug("Returning custom authentication token!");
     return System::Threading::Tasks::Task_1<AuthenticationToken>::New_ctor(AuthenticationToken(
         AuthenticationToken::Platform::OculusQuest,
-        self->dyn__userId(), // Important for server and client to keep track of things, should not be modified
-        self->dyn__userName(),
+        self->userId, // Important for server and client to keep track of things, should not be modified
+        self->userName,
         Array<uint8_t>::NewLength(0)
     ));
 }
 
 MAKE_HOOK_MATCH(MainSystemInit_Init, &MainSystemInit::Init, void, MainSystemInit* self) {
     MainSystemInit_Init(self);
-    auto* networkConfig = self->dyn__networkConfig();
+    auto* networkConfig = self->networkConfig;
 
     getLogger().info("Overriding master server end point . . .");
     getLogger().info("Original status URL: %s", static_cast<std::string>(networkConfig->get_multiplayerStatusUrl()).c_str());
@@ -154,11 +154,11 @@ MAKE_HOOK_MATCH(MainSystemInit_Init, &MainSystemInit::Init, void, MainSystemInit
     getLogger().info("ServiceEnvironment: %d", networkConfig->get_serviceEnvironment().value);
     // If we fail to make the strings, we should fail silently
     // This could also be replaced with a CRASH_UNLESS call, if you want to fail verbosely.
-    networkConfig->dyn__masterServerHostName() = CRASH_UNLESS(/* getLogger(), */config.get_hostname());
-    networkConfig->dyn__masterServerPort() = CRASH_UNLESS(/* getLogger(), */config.get_port());
-    networkConfig->dyn__multiplayerStatusUrl() = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
-    networkConfig->dyn__quickPlaySetupUrl() = CRASH_UNLESS(StringW(config.get_statusUrl()) + "/mp_override.json");
-    networkConfig->dyn__forceGameLift() = false;
+    networkConfig->masterServerHostName = CRASH_UNLESS(/* getLogger(), */config.get_hostname());
+    networkConfig->masterServerPort = CRASH_UNLESS(/* getLogger(), */config.get_port());
+    networkConfig->multiplayerStatusUrl = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
+    networkConfig->quickPlaySetupUrl = CRASH_UNLESS(StringW(config.get_statusUrl()) + "/mp_override.json");
+    networkConfig->forceGameLift = false;
 }
 
 MAKE_HOOK_MATCH(ClientCertificateValidator_ValidateCertificateChainInternal, &ClientCertificateValidator::ValidateCertificateChainInternal, void, ClientCertificateValidator* self, GlobalNamespace::DnsEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, ::ArrayW<::ArrayW<uint8_t>> certificateChain)
@@ -185,7 +185,7 @@ MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::Did
 
 // Disable QuickplaySongPacksOverrides if MQE is missing
 MAKE_HOOK_MATCH(QuickPlaySongPacksDropdown_LazyInit, &QuickPlaySongPacksDropdown::LazyInit, void, QuickPlaySongPacksDropdown* self) {
-    self->dyn__quickPlaySongPacksOverride() = nullptr;
+    self->quickPlaySongPacksOverride = nullptr;
     QuickPlaySongPacksDropdown_LazyInit(self);
 }
 
