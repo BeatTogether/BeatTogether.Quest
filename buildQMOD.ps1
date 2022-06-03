@@ -47,7 +47,8 @@ if ($package -eq $true) {
 }
 if (($args.Count -eq 0) -And $package -eq $false) {
 echo "Creating QMod $qmodName"
-    & $PSScriptRoot/build.ps1 -clean:$clean -HOST_NAME $HOST_NAME -STATUS_URL $STATUS_URL -PORT $PORT
+echo "Server ${$HOST_NAME}:$PORT with statusUrl $STATUS_URL"
+    & $PSScriptRoot/build.ps1 -clean:$clean -HOST_NAME:$HOST_NAME -STATUS_URL:$STATUS_URL -PORT:$PORT -release:$true
 
     if ($LASTEXITCODE -ne 0) {
         echo "Failed to build, exiting..."
@@ -90,6 +91,12 @@ foreach ($lib in $modJson.libraryFiles)
         $path = "./build/" + $lib
     }
     $filelist += $path
+}
+
+if ([string]::IsNullOrEmpty($env:version)) {
+    $qmodVersion = $modJson.version
+    $qmodName += "_v$qmodVersion"
+    echo "qmodName set to $qmodName"
 }
 
 $zip = $qmodName + ".zip"
