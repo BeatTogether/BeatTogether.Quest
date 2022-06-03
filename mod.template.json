@@ -5,7 +5,7 @@
   "author": "BeatTogether Team",
   "version": "${version}",
   "packageId": "com.beatgames.beatsaber",
-  "packageVersion": "1.22.0",
+  "packageVersion": "1.21.0",
   "description": "A multiplayer private server for the modding community. Supports crossplay between PC and Quest.",
   "coverImage": "Cover.png",
   "dependencies": [],
