@@ -15,10 +15,6 @@ Want to support development and server costs? [Click Here](https://www.patreon.c
 
 **Recommended Install:**
 
-**PLEASE USE MANUAL INSTALL FOR NOW. THE MOD IS IN BETA AND ISN'T LISTED TILL IT IS STABLE. THIS WILL BE REMOVED WHEN ITS AVAILABLE.**
-
-<strike>
-  
 Here is how to install the mod in headset:
 - Go to the Browser section of the BMBF app.
 - Click the small globe icon in the top right-hand corner and click QuestBoard
@@ -26,7 +22,7 @@ Here is how to install the mod in headset:
 - Scroll down till you find "BeatTogether" and hit the blue download button on the right hand side.
 - It will say its downloaded. Make sure to hit "Sync to Beat Saber" to apply changes</strike>
 
-~~You are now ready to play!~~
+You are now ready to play!
 
 **Manual Install:**
 
@@ -39,7 +35,7 @@ On your PC, type in that web address that is shown. You will be greeted with a u
 Upload the .qmod you got from the download above. To be sure it downloaded correctly, check the "mods" tab and see if its enabled and active.
 
 ## Custom Song Support
-Customs in multiplayer requires [MultiQuestensions](https://github.com/Goobwabber/MultiQuestensions)
+Customs in multiplayer require [MultiplayerCore](https://github.com/EnderdracheLP/MultiplayerCore.Quest)
 
 ## Special Thanks
 Special thanks to [Sc2ad](https://github.com/Sc2ad) for helping me debug this.

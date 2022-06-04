@@ -1,5 +1,5 @@
 Param(
-    [Parameter(Mandatory=$false, HelpMessage="The name the output qmod file should have")][String] $qmodname="BeatTogether",
+    [Parameter(Mandatory=$false, HelpMessage="The name the output qmod file should have")][String] $qmodname="",
 
     [Parameter(Mandatory=$false, HelpMessage="Switch to create a clean compilation")]
     [Alias("rebuild")]
@@ -10,16 +10,13 @@ Param(
 
     [Parameter(Mandatory=$false, HelpMessage="Tells the script to not compile and only package the existing files")]
     [Alias("actions", "pack")]
-    [Switch] $package,
-
-    [Parameter(Mandatory=$false, HelpMessage="Overwrite default HOST_NAME")][Alias("host")][string]$HOST_NAME,
-    [Parameter(Mandatory=$false, HelpMessage="Overwrite default PORT")][string]$PORT,
-    [Parameter(Mandatory=$false, HelpMessage="Overwrite default STATUS_URL")][string]$STATUS_URL
-
+    [Switch] $package
 )
 
 # Builds a .qmod file for loading with QP or BMBF
 
+# This is an example qmod script that will build a qmod using our ExampleBuild.ps1 script
+# Replace line 37 with the name of the script you want to use
 
 if ($help -eq $true) {
     echo "`"BuildQmod <qmodName>`" - Copiles your mod into a `".so`" or a `".a`" library"
@@ -35,33 +32,26 @@ if ($help -eq $true) {
     exit
 }
 
-if ($qmodName -eq "")
-{
-    echo "Give a proper qmod name and try again"
-    exit
+echo "Creating QMod"
+# Replace ExampleBuild.ps1 with the name of your build script
+& $PSScriptRoot/ExampleBuild.ps1 -clean:$clean
+
+if ($LASTEXITCODE -ne 0) {
+    echo "Failed to build, exiting..."
+    exit $LASTEXITCODE
 }
 
-if ($package -eq $true) {
-    $qmodName = "$($env:module_id)_$($env:version)"
-    echo "Actions: Packaging QMod $qmodName"
-}
-if (($args.Count -eq 0) -And $package -eq $false) {
-echo "Creating QMod $qmodName"
-echo "Server ${$HOST_NAME}:$PORT with statusUrl $STATUS_URL"
-    & $PSScriptRoot/build.ps1 -clean:$clean -HOST_NAME:$HOST_NAME -STATUS_URL:$STATUS_URL -PORT:$PORT -release:$true
-
-    if ($LASTEXITCODE -ne 0) {
-        echo "Failed to build, exiting..."
-        exit $LASTEXITCODE
-    }
-
-    qpm-rust qmod build
-}
+qpm-rust qmod build
 
 echo "Creating qmod from mod.json"
 
 $mod = "./mod.json"
 $modJson = Get-Content $mod -Raw | ConvertFrom-Json
+
+if ($qmodName -eq "")
+{
+    $qmodName = "$($modJson.name)_$($modJson.version)"
+}
 
 $filelist = @($mod)
 
@@ -91,12 +81,6 @@ foreach ($lib in $modJson.libraryFiles)
         $path = "./build/" + $lib
     }
     $filelist += $path
-}
-
-if ([string]::IsNullOrEmpty($env:version)) {
-    $qmodVersion = $modJson.version
-    $qmodName += "_v$qmodVersion"
-    echo "qmodName set to $qmodName"
 }
 
 $zip = $qmodName + ".zip"
