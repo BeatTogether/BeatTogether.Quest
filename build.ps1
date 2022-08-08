@@ -16,7 +16,7 @@ if (-not $Version) {
 } else {
     $VERSION = $Version
 }
-if ($release -ne $true -and -not $VERSION.Contains('-Dev')) {
+if ($release -ne $true -and -not $VERSION.Contains('-Dev') -or -not $VERSION.Contains('-Test')) {
     $VERSION += "-Dev"
 }
 
@@ -44,13 +44,13 @@ if ($clean.IsPresent)
 {
     if (Test-Path -Path "build")
     {
-        remove-item build -R
+        remove-item build -R | Out-Null
     }
 }
 
 if (($clean.IsPresent) -or (-not (Test-Path -Path "build")))
 {
-    new-item -Path build -ItemType Directory
+    new-item -Path build -ItemType Directory | Out-Null
 }
 
 Set-Location build

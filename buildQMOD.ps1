@@ -1,6 +1,6 @@
 Param(
     [Parameter(Mandatory=$false, HelpMessage="The name the output qmod file should have")][String] $qmodname="BeatTogether",
-
+    [Parameter(Mandatory=$false, HelpMessage="The version the mod should be compiled with")][Alias("ver")][string]$Version,
     [Parameter(Mandatory=$false, HelpMessage="Switch to create a clean compilation")]
     [Alias("rebuild")]
     [Switch] $clean,
@@ -37,21 +37,26 @@ if ($help -eq $true) {
 
 if ($qmodName -eq "")
 {
-    echo "Give a proper qmod name and try again"
+    Write-Output "Give a proper qmod name and try again"
     exit
+}
+
+if (-not [string]::IsNullOrEmpty($Version)) {
+    $clean = $true
+    & qpm-rust package edit --version $VERSION
 }
 
 if ($package -eq $true) {
     $qmodName = "$($env:module_id)_$($env:version)"
-    echo "Actions: Packaging QMod $qmodName"
+    Write-Output "Actions: Packaging QMod $qmodName"
 }
 if (($args.Count -eq 0) -And $package -eq $false) {
-echo "Creating QMod $qmodName"
-echo "Server ${$HOST_NAME}:$PORT with statusUrl $STATUS_URL"
-    & $PSScriptRoot/build.ps1 -clean:$clean -HOST_NAME:$HOST_NAME -STATUS_URL:$STATUS_URL -PORT:$PORT -release:$true
+Write-Output "Creating QMod $qmodName"
+Write-Output "Server ${$HOST_NAME}:$PORT with statusUrl $STATUS_URL"
+    & $PSScriptRoot/build.ps1 -clean:$clean -HOST_NAME:$HOST_NAME -STATUS_URL:$STATUS_URL -PORT:$PORT -Version:$Version -release:$true
 
     if ($LASTEXITCODE -ne 0) {
-        echo "Failed to build, exiting..."
+        Write-Output "Failed to build, exiting..."
         exit $LASTEXITCODE
     }
 
