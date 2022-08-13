@@ -17,8 +17,6 @@ Want to support development and server costs? [Click Here](https://www.patreon.c
 
 This mod is already installed automatically as a core mod as of 1.24.0. You shouldn't need to follow any steps on the github. Just go play! If your facing issues, join our Discord.
 
-You are now ready to play!
-
 **Manual Install:**
 
 To install, Download the latest mod from our releases. [Click Here](https://github.com/pythonology/BeatTogether.Quest/releases)
