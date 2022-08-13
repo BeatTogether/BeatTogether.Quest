@@ -15,12 +15,7 @@ Want to support development and server costs? [Click Here](https://www.patreon.c
 
 **Recommended Install:**
 
-Here is how to install the mod in headset:
-- Go to the Browser section of the BMBF app.
-- Click the small globe icon in the top right-hand corner and click QuestBoard
-- Hit "Download Mods"
-- Scroll down till you find "BeatTogether" and hit the blue download button on the right hand side.
-- It will say its downloaded. Make sure to hit "Sync to Beat Saber" to apply changes</strike>
+This mod is already installed automatically as a core mod as of 1.24.0. You shouldn't need to follow any steps on the github. Just go play! If your facing issues, join our Discord.
 
 You are now ready to play!
 
