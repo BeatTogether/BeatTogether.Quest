@@ -4,7 +4,7 @@
   "info": {
     "name": "BeatTogether",
     "id": "BeatTogether",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "url": "https://github.com/pythonology/BeatTogether.Quest",
     "additionalData": {
       "overrideSoName": "libBeatTogether.so"
@@ -13,7 +13,7 @@
   "dependencies": [
     {
       "id": "beatsaber-hook",
-      "versionRange": "*",
+      "versionRange": "^3.14.0",
       "additionalData": {
         "extraFiles": [
           "src/inline-hook"
@@ -22,7 +22,7 @@
     },
     {
       "id": "codegen",
-      "versionRange": "*",
+      "versionRange": "^0.28.0",
       "additionalData": {}
     },
     {
