@@ -16,7 +16,7 @@ if (-not $Version) {
 } else {
     $VERSION = $Version
 }
-if ($release -ne $true -and -not $VERSION.Contains('-Dev') -or -not $VERSION.Contains('-Test')) {
+if ($release -ne $true -and (-not $VERSION.Contains('-Dev') -or -not $VERSION.Contains('-Test'))) {
     $VERSION += "-Dev"
 }
 

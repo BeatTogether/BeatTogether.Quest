@@ -4,8 +4,8 @@
   "info": {
     "name": "BeatTogether",
     "id": "BeatTogether",
-    "version": "1.7.1",
-    "url": "https://github.com/pythonology/BeatTogether.Quest",
+    "version": "1.7.2",
+    "url": "https://github.com/BeatTogether/BeatTogether.Quest",
     "additionalData": {
       "overrideSoName": "libBeatTogether.so"
     }
@@ -22,7 +22,7 @@
     },
     {
       "id": "codegen",
-      "versionRange": "^0.31.0",
+      "versionRange": "^0.32.0",
       "additionalData": {}
     },
     {
@@ -30,6 +30,5 @@
       "versionRange": "^1.2.3",
       "additionalData": {}
     }
-  ],
-  "additionalData": {}
+  ]
 }
