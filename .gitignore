@@ -35,6 +35,9 @@
 !.vscode/c_cpp_properties.json
 !.vscode/tasks.json
 
+# CLion/Jetbrains Stuff
+.idea/
+
 # NDK stuff
 out/
 [Ll]ib/
