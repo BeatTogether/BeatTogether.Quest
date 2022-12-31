@@ -10,20 +10,17 @@
 #include "beatsaber-hook/shared/utils/il2cpp-type-check.hpp"
 #include "beatsaber-hook/shared/config/config-utils.hpp"
 
-#include "BeatTogether.hpp"
+#include "paper/shared/logger.hpp"
+
+#include "custom-types/shared/macros.hpp"
+#include "lapiz/shared/macros.hpp"
+
+#include "BTConfig.hpp"
+#include "BTMacros.hpp"
 
 static ModInfo modInfo;
 
-Logger& getLogger();
-
-#ifndef HOST_NAME
-#error "Define HOST_NAME!"
-#endif
-
-#ifndef PORT
-#error "Define PORT!"
-#endif
-
-#ifndef STATUS_URL
-#error "Define STATUS_URL!"
-#endif
+#define INFO(...) Paper::Logger::fmtLog<Paper::LogLevel::INF>(__VA_ARGS__)
+#define ERROR(...) Paper::Logger::fmtLog<Paper::LogLevel::ERR>(__VA_ARGS__)
+#define CRITICAL(...) Paper::Logger::fmtLog<Paper::LogLevel::ERR>(__VA_ARGS__)
+#define DEBUG(...) Paper::Logger::fmtLog<Paper::LogLevel::DBG>(__VA_ARGS__)

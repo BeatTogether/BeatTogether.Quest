@@ -41,7 +41,7 @@ foreach(NameAndValue ${ConfigContents})
     # Find the value
     string(REPLACE "${Name}=" "" Value ${NameAndValue})
     # Set the variable
-    add_compile_definitions(${Name}=\"${Value}\")
+    add_compile_definitions(${Name}=${Value})
 endforeach()
 
 # recursively get all src files

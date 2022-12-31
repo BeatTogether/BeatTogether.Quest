@@ -40,6 +40,11 @@
         "id": "paper",
         "versionRange": "^1.2.9",
         "additionalData": {}
+      },
+      {
+        "id": "config-utils",
+        "versionRange": "^1.0.1",
+        "additionalData": {}
       }
     ]
   },
@@ -72,13 +77,28 @@
     },
     {
       "dependency": {
-        "id": "libil2cpp",
-        "versionRange": "=0.2.3",
+        "id": "rapidjson-macros",
+        "versionRange": "=0.4.4",
         "additionalData": {
-          "headersOnly": true
+          "headersOnly": true,
+          "branchName": "version-v0.4.4"
         }
       },
-      "version": "0.2.3"
+      "version": "0.4.4"
+    },
+    {
+      "dependency": {
+        "id": "config-utils",
+        "versionRange": "=1.0.1",
+        "additionalData": {
+          "headersOnly": true,
+          "soLink": "https://github.com/darknight1050/config-utils/releases/download/v1.0.1/libconfig-utils_test.so",
+          "debugSoLink": "https://github.com/darknight1050/config-utils/releases/download/v1.0.1/debug_libconfig-utils_test.so",
+          "overrideSoName": "libconfig-utils_test.so",
+          "branchName": "version-v1.0.1"
+        }
+      },
+      "version": "1.0.1"
     },
     {
       "dependency": {
@@ -104,6 +124,16 @@
         }
       },
       "version": "0.1.37"
+    },
+    {
+      "dependency": {
+        "id": "libil2cpp",
+        "versionRange": "=0.2.3",
+        "additionalData": {
+          "headersOnly": true
+        }
+      },
+      "version": "0.2.3"
     },
     {
       "dependency": {

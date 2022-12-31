@@ -39,6 +39,11 @@
       "id": "paper",
       "versionRange": "^1.2.9",
       "additionalData": {}
+    },
+    {
+      "id": "config-utils",
+      "versionRange": "^1.0.1",
+      "additionalData": {}
     }
   ]
 }
