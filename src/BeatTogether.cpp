@@ -17,12 +17,8 @@ extern "C" void load()
 
     INFO("Loading Config...");
     getBeatTogetherConfig().Init(modInfo);
-
-    INFO("Loaded Config!");
-    INFO("HOST_NAME: %s", getBeatTogetherConfig().hostName.GetValue());
-    INFO("PORT: %i", getBeatTogetherConfig().port.GetValue());
-    INFO("STATUS_URL: %s", getBeatTogetherConfig().status_url.GetValue());
-
+    CheckConfig();
+    INFO("Loaded Config.");
 
     INFO("Preparing Zenject...");
     auto zenjector = Lapiz::Zenject::Zenjector::Get();

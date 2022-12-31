@@ -14,21 +14,15 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a3247b3f-fc8b-4839-9cbf-c13bdca3b5e6" name="Changes" comment="Fix merge issue.">
-      <change afterPath="$PROJECT_DIR$/include/BTConfig.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/BTMacros.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/Installers/BTAppInstaller.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/Models/ServerDetails.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/Registries/ServerDetailsRegistry.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Installers/BTAppInstaller.cpp" afterDir="false" />
+    <list default="true" id="a3247b3f-fc8b-4839-9cbf-c13bdca3b5e6" name="Changes" comment="Zenject impl">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BeatTogether.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/BeatTogether.cfg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeatTogether.cfg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/BTConfig.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/BTConfig.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/BeatTogether.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/BeatTogether.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/BeatTogetherConfig.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/qpm.json" beforeDir="false" afterPath="$PROJECT_DIR$/qpm.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/qpm.shared.json" beforeDir="false" afterPath="$PROJECT_DIR$/qpm.shared.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/BeatTogether.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Models/ServerDetails.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/Models/ServerDetails.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Registries/ServerDetailsRegistry.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/Registries/ServerDetailsRegistry.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BeatTogether.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/BeatTogether.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,12 +81,12 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration name="BeatTogether" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="BeatTogether" TARGET_NAME="BeatTogether" CONFIG_NAME="RelWithDebInfo">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="BeatTogether" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="BeatTogether" TARGET_NAME="BeatTogether" CONFIG_NAME="RelWithDebInfo">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -107,7 +101,9 @@
       <option name="presentableId" value="Default" />
       <updated>1672422482920</updated>
       <workItem from="1672422484654" duration="1073000" />
-      <workItem from="1672487907124" duration="3062000" />
+      <workItem from="1672487907124" duration="3434000" />
+      <workItem from="1672494093317" duration="2000" />
+      <workItem from="1672494580231" duration="1743000" />
     </task>
     <task id="LOCAL-00001" summary="Remove Makefile&#10;&#10;No clue why that still exists, it isn't even used - pre 1.13 stuff in it.">
       <created>1672422888294</created>
@@ -158,7 +154,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672488691895</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Zenject impl">
+      <created>1672491823019</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1672491823019</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -184,6 +187,7 @@
     <MESSAGE value="Prepare for rewrite." />
     <MESSAGE value="Add dependencies and fix build scripts." />
     <MESSAGE value="Fix merge issue." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix merge issue." />
+    <MESSAGE value="Zenject impl" />
+    <option name="LAST_COMMIT_MESSAGE" value="Zenject impl" />
   </component>
 </project>

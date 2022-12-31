@@ -9,6 +9,9 @@
 #include "beatsaber-hook/shared/utils/hooking.hpp"
 #include "beatsaber-hook/shared/utils/il2cpp-type-check.hpp"
 #include "beatsaber-hook/shared/config/config-utils.hpp"
+#include "beatsaber-hook/shared/config/rapidjson-utils.hpp"
+
+#include "config-utils/shared/config-utils.hpp"
 
 #include "paper/shared/logger.hpp"
 
