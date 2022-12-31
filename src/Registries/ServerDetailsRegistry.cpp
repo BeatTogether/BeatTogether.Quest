@@ -21,3 +21,24 @@ void ServerDetailsRegistry::ctor() {
 
     this->selectedServer = (this->_temporarySelectedServer.has_value() ? _temporarySelectedServer.value() : *iter);
 }
+
+void ServerDetailsRegistry::AddServer(ServerDetails server) {
+    auto iter = std::find_if(servers.begin(), servers.end(), [&server](const ServerDetails& details) {
+        return details.serverName == server.serverName;
+    });
+
+    if(iter != servers.end()) {
+        throw std::invalid_argument(string_format("A server already exists with the name %s!", server.serverName.c_str()));
+    } else {
+        servers.emplace_back(server);
+    }
+}
+
+void ServerDetailsRegistry::SetSelectedServer(const ServerDetails& server) {
+    if(server.isTemporary) {
+        this->_temporarySelectedServer = server;
+    } else {
+        getBeatTogetherConfig().selectedServer.SetValue(server.serverName);
+        this->_temporarySelectedServer = std::nullopt;
+    }
+}
