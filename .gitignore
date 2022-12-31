@@ -35,9 +35,6 @@
 !.vscode/c_cpp_properties.json
 !.vscode/tasks.json
 
-# CLion/Jetbrains Stuff
-.idea/
-
 # NDK stuff
 out/
 [Ll]ib/
@@ -47,8 +44,6 @@ out/
 ndkpath.txt
 *.zip
 extern/
-qpm.shared.json
-mod.json
 Android.mk.backup
 
 # QuestPatcher mods

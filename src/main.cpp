@@ -2,16 +2,6 @@
 #include <fstream>
 #include <string_view>
 
-#include "modloader/shared/modloader.hpp"
-
-#include "beatsaber-hook/shared/utils/typedefs.h"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/logging.hpp"
-#include "beatsaber-hook/shared/utils/utils.h"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-type-check.hpp"
-#include "beatsaber-hook/shared/config/config-utils.hpp"
-
 #include "System/Threading/Tasks/Task_1.hpp"
 
 #include "GlobalNamespace/PlatformAuthenticationTokenProvider.hpp"
@@ -32,26 +22,12 @@ using namespace GlobalNamespace;
 #include "UnityEngine/Resources.hpp"
 #include "TMPro/TextMeshProUGUI.hpp"
 
+#include "BeatTogether.hpp"
+
 //#include "Polyglot/LocalizedTextMeshProUGUI.hpp"
 //#include "Polyglot/LanguageDirection.hpp"
 
 //using namespace Polyglot;
-
-#ifndef HOST_NAME
-#error "Define HOST_NAME!"
-#endif
-
-#ifndef PORT
-#error "Define PORT!"
-#endif
-
-#ifndef STATUS_URL
-#error "Define STATUS_URL!"
-#endif
-
-Logger& getLogger();
-
-static ModInfo modInfo;
 
 class ModConfig {
     public:
@@ -205,9 +181,6 @@ extern "C" void load()
 
     getLogger().info("Config path: %s", path.c_str());
     config.read(path);
-    // Load and create all C# strings after we attempt to read it.
-    // If we failed to read it, we will have default values.
-    // If we fail to create the strings, valid will be false.
     config.load();
 
     il2cpp_functions::Init();

@@ -1,0 +1,167 @@
+{
+  "config": {
+    "sharedDir": "shared",
+    "dependenciesDir": "extern",
+    "info": {
+      "name": "BeatTogether",
+      "id": "BeatTogether",
+      "version": "1.7.2",
+      "url": "https://github.com/BeatTogether/BeatTogether.Quest",
+      "additionalData": {
+        "overrideSoName": "libBeatTogether.so"
+      }
+    },
+    "dependencies": [
+      {
+        "id": "beatsaber-hook",
+        "versionRange": "^3.14.0",
+        "additionalData": {
+          "extraFiles": [
+            "src/inline-hook"
+          ]
+        }
+      },
+      {
+        "id": "codegen",
+        "versionRange": "^0.32.0",
+        "additionalData": {}
+      },
+      {
+        "id": "modloader",
+        "versionRange": "^1.2.3",
+        "additionalData": {}
+      },
+      {
+        "id": "lapiz",
+        "versionRange": "^0.1.9",
+        "additionalData": {}
+      },
+      {
+        "id": "paper",
+        "versionRange": "^1.2.9",
+        "additionalData": {}
+      }
+    ]
+  },
+  "restoredDependencies": [
+    {
+      "dependency": {
+        "id": "paper",
+        "versionRange": "=1.2.9",
+        "additionalData": {
+          "soLink": "https://github.com/Fernthedev/paperlog/releases/download/v1.2.9/libpaperlog.so",
+          "debugSoLink": "https://github.com/Fernthedev/paperlog/releases/download/v1.2.9/debug_libpaperlog.so",
+          "overrideSoName": "libpaperlog.so",
+          "modLink": "https://github.com/Fernthedev/paperlog/releases/download/v1.2.9/paperlog.qmod",
+          "branchName": "version-v1.2.9"
+        }
+      },
+      "version": "1.2.9"
+    },
+    {
+      "dependency": {
+        "id": "modloader",
+        "versionRange": "=1.2.3",
+        "additionalData": {
+          "soLink": "https://github.com/sc2ad/QuestLoader/releases/download/v1.2.3/libmodloader64.so",
+          "overrideSoName": "libmodloader.so",
+          "branchName": "version-v1.2.3"
+        }
+      },
+      "version": "1.2.3"
+    },
+    {
+      "dependency": {
+        "id": "libil2cpp",
+        "versionRange": "=0.2.3",
+        "additionalData": {
+          "headersOnly": true
+        }
+      },
+      "version": "0.2.3"
+    },
+    {
+      "dependency": {
+        "id": "custom-types",
+        "versionRange": "=0.15.22",
+        "additionalData": {
+          "soLink": "https://github.com/sc2ad/Il2CppQuestTypePatching/releases/download/v0.15.22/libcustom-types.so",
+          "debugSoLink": "https://github.com/sc2ad/Il2CppQuestTypePatching/releases/download/v0.15.22/debug_libcustom-types.so",
+          "overrideSoName": "libcustom-types.so",
+          "modLink": "https://github.com/sc2ad/Il2CppQuestTypePatching/releases/download/v0.15.22/CustomTypes.qmod",
+          "branchName": "version-v0.15.22"
+        }
+      },
+      "version": "0.15.22"
+    },
+    {
+      "dependency": {
+        "id": "sombrero",
+        "versionRange": "=0.1.37",
+        "additionalData": {
+          "headersOnly": true,
+          "branchName": "version-v0.1.37"
+        }
+      },
+      "version": "0.1.37"
+    },
+    {
+      "dependency": {
+        "id": "lapiz",
+        "versionRange": "=0.1.9",
+        "additionalData": {
+          "soLink": "https://github.com/raineio/Lapiz/releases/download/v0.1.9/liblapiz.so",
+          "debugSoLink": "https://github.com/raineio/Lapiz/releases/download/v0.1.9/debug_liblapiz.so",
+          "overrideSoName": "liblapiz.so",
+          "modLink": "https://github.com/raineio/Lapiz/releases/download/v0.1.9/Lapiz.qmod",
+          "branchName": "version-v0.1.9"
+        }
+      },
+      "version": "0.1.9"
+    },
+    {
+      "dependency": {
+        "id": "codegen",
+        "versionRange": "=0.32.0",
+        "additionalData": {
+          "soLink": "https://github.com/sc2ad/BeatSaber-Quest-Codegen/releases/download/v0.32.0/libcodegen.so",
+          "overrideSoName": "libcodegen.so",
+          "modLink": "https://github.com/sc2ad/BeatSaber-Quest-Codegen/releases/download/v0.32.0/Codegen.qmod",
+          "branchName": "version-v0.32.0"
+        }
+      },
+      "version": "0.32.0"
+    },
+    {
+      "dependency": {
+        "id": "beatsaber-hook",
+        "versionRange": "=3.14.0",
+        "additionalData": {
+          "soLink": "https://github.com/sc2ad/beatsaber-hook/releases/download/v3.14.0/libbeatsaber-hook_3_14_0.so",
+          "debugSoLink": "https://github.com/sc2ad/beatsaber-hook/releases/download/v3.14.0/debug_libbeatsaber-hook_3_14_0.so",
+          "branchName": "version-v3.14.0"
+        }
+      },
+      "version": "3.14.0"
+    },
+    {
+      "dependency": {
+        "id": "fmt",
+        "versionRange": "=9.0.0",
+        "additionalData": {
+          "headersOnly": true,
+          "branchName": "version-v9.0.0",
+          "compileOptions": {
+            "systemIncludes": [
+              "fmt/include/"
+            ],
+            "cppFlags": [
+              "-DFMT_HEADER_ONLY"
+            ]
+          }
+        }
+      },
+      "version": "9.0.0"
+    }
+  ]
+}

@@ -1,37 +1,70 @@
-& $PSScriptRoot/TestBuild.ps1 -clean
-if ($?) {
-    qpm-rust qmod build
-    $modJson = Get-Content "./mod.json" -Raw | ConvertFrom-Json
-    foreach ($mod in $modJson.modFiles)
-    {
-        $path = "./build/" + $mod
-        if (-not (Test-Path $path))
-        {
-            $path = "./extern/libs/" + $mod
-        }
-        adb push $path /sdcard/Android/data/com.beatgames.beatsaber/files/mods/$mod
-    }
+Param(
+    [Parameter(Mandatory=$false)]
+    [Switch] $clean,
 
-    foreach ($lib in $modJson.libraryFiles)
-    {
-        $path = "./extern/libs/" + $lib
-        if (-not (Test-Path $path))
-        {
-            $path = "./build/" + $lib
-        }
-        adb push $path /sdcard/Android/data/com.beatgames.beatsaber/files/libs/$lib
-    }
+    [Parameter(Mandatory=$false)]
+    [Switch] $log,
 
-    if ($?) {
-        adb shell am force-stop com.beatgames.beatsaber
-        adb shell am start com.beatgames.beatsaber/com.unity3d.player.UnityPlayerActivity
-        if ($args[0] -eq "--log") {
-            & Start-Process PowerShell -ArgumentList "./logging.ps1 --file"
-        }
-        if ($args[0] -eq "--debug") {
-            $timestamp = Get-Date -Format "MM-dd HH:mm:ss.fff"
-            adb logcat -T "$timestamp" main-modloader:W QuestHook[QuestSounds`|v0.3.0]:* AndroidRuntime:E *:S QuestHook[UtilsLogger`|v1.2.3]:*
-        }
+    [Parameter(Mandatory=$false)]
+    [Switch] $useDebug,
+
+    [Parameter(Mandatory=$false)]
+    [Switch] $self,
+
+    [Parameter(Mandatory=$false)]
+    [Switch] $all,
+
+    [Parameter(Mandatory=$false)]
+    [String] $custom="",
+
+    [Parameter(Mandatory=$false)]
+    [String] $file="",
+
+    [Parameter(Mandatory=$false)]
+    [Switch] $help
+)
+
+if ($help -eq $true) {
+    Write-Output "`"Copy`" - Builds and copies your mod to your quest, and also starts Beat Saber with optional logging"
+    Write-Output "`n-- Arguments --`n"
+
+    Write-Output "-Clean `t`t Performs a clean build (equvilant to running `"build -clean`")"
+    Write-Output "-UseDebug `t Copies the debug version of the mod to your quest"
+    Write-Output "-Log `t`t Logs Beat Saber using the `"Start-Logging`" command"
+
+    Write-Output "`n-- Logging Arguments --`n"
+
+    & $PSScriptRoot/start-logging.ps1 -help -excludeHeader
+
+    exit
+}
+
+& $PSScriptRoot/build.ps1 -clean:$clean
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Output "Failed to build, exiting..."
+    exit $LASTEXITCODE
+}
+
+& $PSScriptRoot/validate-modjson.ps1
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
+$modJson = Get-Content "./mod.json" -Raw | ConvertFrom-Json
+
+$modFiles = $modJson.modFiles
+
+foreach ($fileName in $modFiles) {
+    if ($useDebug -eq $true) {
+        & adb push build/debug/$fileName /sdcard/Android/data/com.beatgames.beatsaber/files/mods/$fileName
+    } else {
+        & adb push build/$fileName /sdcard/Android/data/com.beatgames.beatsaber/files/mods/$fileName
     }
 }
-echo "Exiting Copy.ps1"
+
+& $PSScriptRoot/restart-game.ps1
+
+if ($log -eq $true) {
+    & adb logcat -c
+    & $PSScriptRoot/start-logging.ps1 -self:$self -all:$all -custom:$custom -file:$file
+}
