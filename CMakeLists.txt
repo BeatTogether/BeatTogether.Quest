@@ -32,23 +32,17 @@ add_compile_definitions(MOD_ID=\"${MOD_ID}\")
 add_compile_definitions(USE_CODEGEN_FIELDS)
 
 # BeatTogether compile definitions
-if (NOT DEFINED HOST_NAME OR NOT DEFINED STATUS_URL)
-    add_compile_definitions(HOST_NAME=\"master.beattogether.systems\")
-    add_compile_definitions(PORT=2328)
-    add_compile_definitions(STATUS_URL=\"http://master.beattogether.systems/status\")
-	message(STATUS "Using Server master.beattogether.systems:2328 with StatusUrl \"http://master.beattogether.systems/status\"")
-elseif (NOT DEFINED PORT)
-    add_compile_definitions(HOST_NAME=\"${HOST_NAME}\")
-    add_compile_definitions(STATUS_URL=\"${STATUS_URL}\")
-    add_compile_definitions(PORT=2328)
-    message(AUTHOR_WARNING "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nOverriding default Server to ${HOST_NAME}:2328 with StatusUrl ${STATUS_URL}\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-else()
-    add_compile_definitions(HOST_NAME=\"${HOST_NAME}\")
-    add_compile_definitions(STATUS_URL=\"${STATUS_URL}\")
-    add_compile_definitions(PORT=${PORT})
-    message(AUTHOR_WARNING "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nOverriding default Server to  ${HOST_NAME}:${PORT} with StatusUrl ${STATUS_URL}\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-endif()
-
+file(STRINGS BeatTogether.cfg ConfigContents)
+foreach(NameAndValue ${ConfigContents})
+    # Strip leading spaces
+    string(REGEX REPLACE "^[ ]+" "" NameAndValue ${NameAndValue})
+    # Find variable name
+    string(REGEX MATCH "^[^=]+" Name ${NameAndValue})
+    # Find the value
+    string(REPLACE "${Name}=" "" Value ${NameAndValue})
+    # Set the variable
+    add_compile_definitions(${Name}=\"${Value}\")
+endforeach()
 
 # recursively get all src files
 RECURSE_FILES(cpp_file_list ${SOURCE_DIR}/*.cpp)

@@ -8,17 +8,16 @@
       <config projectName="BeatTogether" targetName="BeatTogether" />
     </generated>
   </component>
-  <component name="CMakeSettings">
+  <component name="CMakeSettings" AUTO_RELOAD="true">
     <configurations>
       <configuration PROFILE_NAME="RelWithDebInfo" ENABLED="true" GENERATION_DIR="build" CONFIG_NAME="RelWithDebInfo" />
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a3247b3f-fc8b-4839-9cbf-c13bdca3b5e6" name="Changes" comment="Prepare for rewrite.">
-      <change afterPath="$PROJECT_DIR$/include/BeatTogether.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/BeatTogetherConfig.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/qpm.json" beforeDir="false" afterPath="$PROJECT_DIR$/qpm.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+    <list default="true" id="a3247b3f-fc8b-4839-9cbf-c13bdca3b5e6" name="Changes" comment="Add dependencies and fix build scripts.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeatTogether.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/BeatTogether.cfg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +96,7 @@
       <option name="presentableId" value="Default" />
       <updated>1672422482920</updated>
       <workItem from="1672422484654" duration="1073000" />
-      <workItem from="1672487907124" duration="11000" />
+      <workItem from="1672487907124" duration="599000" />
     </task>
     <task id="LOCAL-00001" summary="Remove Makefile&#10;&#10;No clue why that still exists, it isn't even used - pre 1.13 stuff in it.">
       <created>1672422888294</created>
@@ -127,13 +126,21 @@
       <option name="project" value="LOCAL" />
       <updated>1672423127983</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Add dependencies and fix build scripts.">
+      <created>1672488213890</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1672488213890</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.cfg" />
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.ps1" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -150,6 +157,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Remove Makefile&#10;&#10;No clue why that still exists, it isn't even used - pre 1.13 stuff in it." />
     <MESSAGE value="Prepare for rewrite." />
-    <option name="LAST_COMMIT_MESSAGE" value="Prepare for rewrite." />
+    <MESSAGE value="Add dependencies and fix build scripts." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add dependencies and fix build scripts." />
   </component>
 </project>
