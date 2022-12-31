@@ -14,9 +14,12 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a3247b3f-fc8b-4839-9cbf-c13bdca3b5e6" name="Changes" comment="Start on ServerDetailsRegistry">
+    <list default="true" id="a3247b3f-fc8b-4839-9cbf-c13bdca3b5e6" name="Changes" comment="Finish ServerDetailsRegistry">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Registries/ServerDetailsRegistry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Registries/ServerDetailsRegistry.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/BeatTogether.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/BeatTogether.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Registries/ServerDetailsRegistry.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/Registries/ServerDetailsRegistry.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BeatTogether.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/BeatTogether.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Installers/BTAppInstaller.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Installers/BTAppInstaller.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +100,7 @@
       <workItem from="1672422484654" duration="1073000" />
       <workItem from="1672487907124" duration="3434000" />
       <workItem from="1672494093317" duration="2000" />
-      <workItem from="1672494580231" duration="4560000" />
+      <workItem from="1672494580231" duration="5496000" />
     </task>
     <task id="LOCAL-00001" summary="Remove Makefile&#10;&#10;No clue why that still exists, it isn't even used - pre 1.13 stuff in it.">
       <created>1672422888294</created>
@@ -169,7 +172,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672499212174</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Finish ServerDetailsRegistry">
+      <created>1672503554368</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1672503554368</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -198,6 +208,7 @@
     <MESSAGE value="Zenject impl" />
     <MESSAGE value="Complete ServerDetails.hpp and Temporary impl." />
     <MESSAGE value="Start on ServerDetailsRegistry" />
-    <option name="LAST_COMMIT_MESSAGE" value="Start on ServerDetailsRegistry" />
+    <MESSAGE value="Finish ServerDetailsRegistry" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finish ServerDetailsRegistry" />
   </component>
 </project>

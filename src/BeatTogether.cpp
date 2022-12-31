@@ -12,6 +12,8 @@ extern "C" void setup(ModInfo& info)
 
 extern "C" void load()
 {
+    static auto *hookLogger = new Logger(modInfo);
+
     il2cpp_functions::Init();
     custom_types::Register::AutoRegister();
 
@@ -25,4 +27,8 @@ extern "C" void load()
 
     zenjector->Install<BeatTogether::Installers::BTAppInstaller*>(Lapiz::Zenject::Location::App);
     INFO("Finished setting up installers.");
+
+    INFO("Installing Hooks...");
+    BeatTogether::Hooks::InstallHooks(*hookLogger);
+    INFO("Finished installing hooks.")
 }

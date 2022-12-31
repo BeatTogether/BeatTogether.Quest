@@ -5,7 +5,7 @@
 
 extern const std::string OfficialServerName;
 
-DECLARE_CLASS_CODEGEN&(BeatTogether::Registries, ServerDetailsRegistry, Il2CppObject,
+DECLARE_CLASS_CODEGEN(BeatTogether::Registries, ServerDetailsRegistry, Il2CppObject,
                     DECLARE_CTOR(ctor);
                     public:
                         ServerDetails selectedServer;

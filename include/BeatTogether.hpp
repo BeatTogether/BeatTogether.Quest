@@ -27,3 +27,27 @@ static ModInfo modInfo;
 #define ERROR(...) Paper::Logger::fmtLog<Paper::LogLevel::ERR>(__VA_ARGS__)
 #define CRITICAL(...) Paper::Logger::fmtLog<Paper::LogLevel::ERR>(__VA_ARGS__)
 #define DEBUG(...) Paper::Logger::fmtLog<Paper::LogLevel::DBG>(__VA_ARGS__)
+
+namespace BeatTogether {
+    class Hooks {
+    private:
+        inline static std::vector<void (*)(Logger &logger)> installFuncs;
+
+    public:
+        static void AddInstallFunc(void (*installFunc)(Logger &logger)) {
+            installFuncs.push_back(installFunc);
+        }
+
+        static void InstallHooks(Logger &logger) {
+            for (auto installFunc : installFuncs) {
+                installFunc(logger);
+            }
+        }
+    };
+}
+
+#define BeatTogetherInstallHooks(func)                                             \
+    struct __BeatTogetherRegister##func {                                          \
+        __BeatTogetherRegister##func() { BeatTogether::Hooks::AddInstallFunc(func); }  \
+    };                                                                         \
+    static __BeatTogetherRegister##func __BeatTogetherRegisterInstance##func;
