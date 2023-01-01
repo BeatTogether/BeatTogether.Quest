@@ -60,3 +60,4 @@ TestBuild.ps1
 TestQMOD.ps1
 /build
 *.cmake
+!assets-include.cmake

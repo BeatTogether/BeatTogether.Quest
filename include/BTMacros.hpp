@@ -6,13 +6,10 @@
 #include "Zenject/IInitializable.hpp"
 #include "Zenject/Installer.hpp"
 
-#define ZENJECT_INTERFACES \
-  { classof(::Zenject::IInitializable *), classof(::System::IDisposable *) }
-
-#define DECLARE_CLASS_CODEGEN_ZENJECT(namespaze, klassname, baseT, ...) \
+#define DECLARE_CLASS_CODEGEN_IINITIALIZABLE(namespaze, klassname, baseT, ...) \
   ___DECLARE_TYPE_WRAPPER_INHERITANCE(                                  \
       namespaze, klassname, Il2CppTypeEnum::IL2CPP_TYPE_CLASS, baseT,   \
-      #namespaze, ZENJECT_INTERFACES, 0, nullptr, __VA_ARGS__)
+      #namespaze, classof(::Zenject::IInitializable*), 0, nullptr, __VA_ARGS__)
 
 #define DECLARE_OVERRIDE_METHOD_MATCH(retval, name, mptr, ...)      \
   DECLARE_OVERRIDE_METHOD(                                          \

@@ -44,6 +44,11 @@
       "id": "config-utils",
       "versionRange": "^1.0.1",
       "additionalData": {}
+    },
+    {
+      "id": "bsml",
+      "versionRange": "^0.2.10",
+      "additionalData": {}
     }
   ]
 }
