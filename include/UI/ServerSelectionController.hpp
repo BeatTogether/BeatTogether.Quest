@@ -19,7 +19,7 @@ static const std::vector<std::function<void(bool, bool, bool)>> DidActivate_Affi
 static const std::vector<std::function<void(bool, bool)>> DidDeactivate_AffinityHooks = {};
 static const std::vector<std::function<bool(HMUI::ViewController*, HMUI::ViewController, HMUI::ViewController::AnimationType*)>> TopViewControllerWillChange_AffinityHooks = {};
 static const std::vector<std::function<HMUI::ViewController::AnimationDirection*(HMUI::ViewController*, HMUI::ViewController*)>> DoPresentTransition_AffinityHooks = {};
-static const std::vector<std::function<void(StringW, StringW)>> SetTitle_AffinityHooks = {};
+static const std::vector<std::function<void(StringW&, StringW&)>> SetTitle_AffinityHooks = {};
 static const std::vector<std::function<void(bool)>> SetGlobalUserInteraction_AffinityHooks = {};
 
 ___DECLARE_TYPE_WRAPPER_INHERITANCE(BeatTogether::UI, ServerSelectionController, Il2CppTypeEnum::IL2CPP_TYPE_CLASS, Il2CppObject, "BeatTogether::UI",

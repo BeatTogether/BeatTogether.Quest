@@ -1,7 +1,9 @@
 #include "BeatTogether.hpp"
-#include "Installers/BTAppInstaller.hpp"
 
 #include "lapiz/shared/zenject/Zenjector.hpp"
+
+#include "Installers/BTMenuInstaller.hpp"
+#include "Installers/BTAppInstaller.hpp"
 
 extern "C" void setup(ModInfo& info)
 {
@@ -26,6 +28,7 @@ extern "C" void load()
     auto zenjector = Lapiz::Zenject::Zenjector::Get();
 
     zenjector->Install<BeatTogether::Installers::BTAppInstaller*>(Lapiz::Zenject::Location::App);
+    zenjector->Install<BeatTogether::Installers::BTMenuInstaller*>(Lapiz::Zenject::Location::Menu);
     INFO("Finished setting up installers.");
 
     INFO("Installing Hooks...");

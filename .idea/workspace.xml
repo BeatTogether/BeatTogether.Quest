@@ -14,9 +14,12 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a3247b3f-fc8b-4839-9cbf-c13bdca3b5e6" name="Changes" comment="Start on ServerSelectionController">
+    <list default="true" id="a3247b3f-fc8b-4839-9cbf-c13bdca3b5e6" name="Changes" comment="Prepare crude Affinity impl.">
+      <change afterPath="$PROJECT_DIR$/include/Installers/BTMenuInstaller.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Installers/BTMenuInstaller.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/UI/ServerSelectionController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/UI/ServerSelectionController.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/UI/ServerSelectionController.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BeatTogether.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/BeatTogether.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +105,7 @@
       <workItem from="1672597009651" duration="3725000" />
       <workItem from="1672605746585" duration="926000" />
       <workItem from="1672756749752" duration="159000" />
-      <workItem from="1673194923189" duration="719000" />
+      <workItem from="1673194923189" duration="1625000" />
     </task>
     <task id="LOCAL-00001" summary="Remove Makefile&#10;&#10;No clue why that still exists, it isn't even used - pre 1.13 stuff in it.">
       <created>1672422888294</created>
@@ -195,7 +198,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672600965555</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Prepare crude Affinity impl.">
+      <created>1673195805904</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1673195805904</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -228,6 +238,7 @@
     <MESSAGE value="Finish ServerDetailsRegistry" />
     <MESSAGE value="Complete BTAppInstaller" />
     <MESSAGE value="Start on ServerSelectionController" />
-    <option name="LAST_COMMIT_MESSAGE" value="Start on ServerSelectionController" />
+    <MESSAGE value="Prepare crude Affinity impl." />
+    <option name="LAST_COMMIT_MESSAGE" value="Prepare crude Affinity impl." />
   </component>
 </project>
