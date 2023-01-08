@@ -14,14 +14,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a3247b3f-fc8b-4839-9cbf-c13bdca3b5e6" name="Changes" comment="Complete BTAppInstaller">
-      <change afterPath="$PROJECT_DIR$/assets/ServerSelectionController.bsml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/UI/ServerSelectionController.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="a3247b3f-fc8b-4839-9cbf-c13bdca3b5e6" name="Changes" comment="Start on ServerSelectionController">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/BTMacros.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/BTMacros.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/qpm.json" beforeDir="false" afterPath="$PROJECT_DIR$/qpm.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/qpm.shared.json" beforeDir="false" afterPath="$PROJECT_DIR$/qpm.shared.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/UI/ServerSelectionController.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/UI/ServerSelectionController.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,26 +55,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "cmake.loaded.for.project": "true",
-    "last_opened_file_path": "D:/Dev/QuestModding/BeatSaber/BeatTogether.Quest/src/Installers",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;cmake.loaded.for.project&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Dev/QuestModding/BeatSaber/BeatTogether.Quest/src/Installers&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Dev\QuestModding\BeatSaber\BeatTogether.Quest\src\Installers" />
@@ -87,11 +82,6 @@
   </component>
   <component name="RunManager">
     <configuration name="BeatTogether" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="BeatTogether" TARGET_NAME="BeatTogether" CONFIG_NAME="RelWithDebInfo">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -109,7 +99,10 @@
       <workItem from="1672487907124" duration="3434000" />
       <workItem from="1672494093317" duration="2000" />
       <workItem from="1672494580231" duration="5662000" />
-      <workItem from="1672597009651" duration="2485000" />
+      <workItem from="1672597009651" duration="3725000" />
+      <workItem from="1672605746585" duration="926000" />
+      <workItem from="1672756749752" duration="159000" />
+      <workItem from="1673194923189" duration="719000" />
     </task>
     <task id="LOCAL-00001" summary="Remove Makefile&#10;&#10;No clue why that still exists, it isn't even used - pre 1.13 stuff in it.">
       <created>1672422888294</created>
@@ -195,7 +188,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672504193736</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Start on ServerSelectionController">
+      <created>1672600965555</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1672600965555</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -227,6 +227,7 @@
     <MESSAGE value="Start on ServerDetailsRegistry" />
     <MESSAGE value="Finish ServerDetailsRegistry" />
     <MESSAGE value="Complete BTAppInstaller" />
-    <option name="LAST_COMMIT_MESSAGE" value="Complete BTAppInstaller" />
+    <MESSAGE value="Start on ServerSelectionController" />
+    <option name="LAST_COMMIT_MESSAGE" value="Start on ServerSelectionController" />
   </component>
 </project>
