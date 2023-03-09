@@ -32,6 +32,8 @@ using namespace GlobalNamespace;
 #include "UnityEngine/Resources.hpp"
 #include "TMPro/TextMeshProUGUI.hpp"
 
+#include "multiplayer-core/shared/ServerConfigManager.hpp"
+
 //#include "Polyglot/LocalizedTextMeshProUGUI.hpp"
 //#include "Polyglot/LanguageDirection.hpp"
 
@@ -56,16 +58,8 @@ static ModInfo modInfo;
 class ModConfig {
     public:
         ModConfig() : hostname(HOST_NAME), port(PORT), statusUrl(STATUS_URL), button("Modded\nOnline") {}
-        // Should be called after modification of the fields has already taken place.
-        // Creates the C# strings for the configuration.
-        void load() {
-            createStrings();
-        }
         // Read MUST be called after load.
         void read(std::string_view filename) {
-            // Each time we read, we must start by cleaning up our old strings.
-            // TODO: This may not be necessary if we only ever plan to load our configuration once.
-            invalidateStrings();
             std::ifstream file(filename.data());
             if (!file) {
                 getLogger().debug("No readable configuration at %s.", filename.data());
@@ -78,43 +72,22 @@ class ModConfig {
         inline int get_port() const {
             return port;
         }
-        inline Il2CppString* get_hostname() const {
-            getLogger().info("Host name: %s", to_utf8(csstrtostr(hostnameStr)).c_str());
-            return valid ? hostnameStr : nullptr;
+        inline std::string get_hostname() const {
+            getLogger().info("Host name: %s", hostname.c_str());
+            return hostname;
         }
-        inline Il2CppString* get_button() const {
-            return valid ? buttonStr : nullptr;
+        inline std::string get_button() const {
+            return button;
         }
-        inline Il2CppString* get_statusUrl() const {
-            getLogger().info("Status URL: %s", to_utf8(csstrtostr(statusUrlStr)).c_str());
-            return valid ? statusUrlStr : nullptr;
+        inline std::string get_statusUrl() const {
+            getLogger().info("Status URL: %s", statusUrl.c_str());
+            return statusUrl;
         }
     private:
-        // Invalidates all Il2CppString* pointers we have
-        void invalidateStrings() {
-            free(hostnameStr);
-            free(buttonStr);
-            free(statusUrlStr);
-            valid = false;
-        }
-        // Creates all Il2CppString* pointers we need
-        void createStrings() {
-            hostnameStr = RET_V_UNLESS(getLogger(), il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>(hostname));
-            buttonStr = RET_V_UNLESS(getLogger(), il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>(button));
-            statusUrlStr = RET_V_UNLESS(getLogger(), il2cpp_utils::newcsstr<il2cpp_utils::CreationType::Manual>(statusUrl));
-            // If we can make the strings okay, we are valid.
-            valid = true;
-        }
-        bool valid;
         int port;
         std::string hostname;
         std::string button;
         std::string statusUrl;
-        // C# strings of the configuration strings.
-        // TODO: Consider replacing the C++ string fields entirely, as they serve no purpose outside of debugging.
-        Il2CppString* hostnameStr = nullptr;
-        Il2CppString* buttonStr = nullptr;
-        Il2CppString* statusUrlStr = nullptr;
 };
 
 static ModConfig config;
@@ -144,30 +117,6 @@ MAKE_HOOK_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationToken, &Pla
     ));
 }
 
-MAKE_HOOK_MATCH(MainSystemInit_Init, &MainSystemInit::Init, void, MainSystemInit* self) {
-    MainSystemInit_Init(self);
-    auto* networkConfig = self->networkConfig;
-
-    getLogger().info("Overriding master server end point . . .");
-    getLogger().info("Original status URL: %s", static_cast<std::string>(networkConfig->get_multiplayerStatusUrl()).c_str());
-    getLogger().info("Original QuickPlay Setup URL: %s", static_cast<std::string>(networkConfig->get_quickPlaySetupUrl()).c_str());
-    getLogger().info("ServiceEnvironment: %d", networkConfig->get_serviceEnvironment().value);
-    // If we fail to make the strings, we should fail silently
-    // This could also be replaced with a CRASH_UNLESS call, if you want to fail verbosely.
-    networkConfig->masterServerHostName = CRASH_UNLESS(/* getLogger(), */config.get_hostname());
-    networkConfig->masterServerPort = CRASH_UNLESS(/* getLogger(), */config.get_port());
-    networkConfig->multiplayerStatusUrl = CRASH_UNLESS(/* getLogger(), */config.get_statusUrl());
-    networkConfig->quickPlaySetupUrl = CRASH_UNLESS(StringW(config.get_statusUrl()) + "/mp_override.json");
-    networkConfig->forceGameLift = false;
-}
-
-MAKE_HOOK_MATCH(ClientCertificateValidator_ValidateCertificateChainInternal, &ClientCertificateValidator::ValidateCertificateChainInternal, void, ClientCertificateValidator* self, GlobalNamespace::DnsEndPoint* endPoint, System::Security::Cryptography::X509Certificates::X509Certificate2* certificate, ::ArrayW<::ArrayW<uint8_t>> certificateChain)
-{
-    // TODO: Support disabling the mod if official multiplayer is ever fixed
-    // It'd be best if we do certificate validation here...
-    // but for now we'll just skip it.
-}
-
 // Change the "Online" menu text to "Modded Online"
 MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool systemScreenEnabling)
 {  
@@ -178,16 +127,18 @@ MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::Did
     // Set the "Modded Online" text every time so that it doesn't change back
     // If we fail to get any valid button text, crash verbosely.
     // TODO: This could be replaced with a non-intense crash, if we can ensure that DidActivate also works as intended.
-    onlineButtonText->set_text(CRASH_UNLESS(config.get_button()));
+    onlineButtonText->set_text(CRASH_UNLESS(StringW(config.get_button())));
+
+    // MultiplayerCore::NetworkConfigHooks::UseMasterServer("master.beattogether.systems", config.port, "http://master.beattogether.systems/status");
 
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, systemScreenEnabling);
 }
 
-// Disable QuickplaySongPacksOverrides if MQE is missing
-MAKE_HOOK_MATCH(QuickPlaySongPacksDropdown_LazyInit, &QuickPlaySongPacksDropdown::LazyInit, void, QuickPlaySongPacksDropdown* self) {
-    self->quickPlaySongPacksOverride = nullptr;
-    QuickPlaySongPacksDropdown_LazyInit(self);
-}
+// // Disable QuickplaySongPacksOverrides if MQE is missing
+// MAKE_HOOK_MATCH(QuickPlaySongPacksDropdown_LazyInit, &QuickPlaySongPacksDropdown::LazyInit, void, QuickPlaySongPacksDropdown* self) {
+//     self->quickPlaySongPacksOverride = nullptr;
+//     QuickPlaySongPacksDropdown_LazyInit(self);
+// }
 
 
 extern "C" void setup(ModInfo& info)
@@ -208,13 +159,14 @@ extern "C" void load()
     // Load and create all C# strings after we attempt to read it.
     // If we failed to read it, we will have default values.
     // If we fail to create the strings, valid will be false.
-    config.load();
 
     il2cpp_functions::Init();
 
+    MultiplayerCore::ServerConfigManager::UseMasterServer(config.get_hostname(), config.get_port(), config.get_statusUrl());
+
     INSTALL_HOOK(getLogger(), PlatformAuthenticationTokenProvider_GetAuthenticationToken);
-    INSTALL_HOOK(getLogger(), MainSystemInit_Init);
-    INSTALL_HOOK(getLogger(), ClientCertificateValidator_ValidateCertificateChainInternal);
+    // INSTALL_HOOK(getLogger(), MainSystemInit_Init);
+    // INSTALL_HOOK(getLogger(), ClientCertificateValidator_ValidateCertificateChainInternal);
     INSTALL_HOOK(getLogger(), MainMenuViewController_DidActivate);
     // Checks if MQE is installed
     const std::unordered_map<std::string, const Mod>& ModList = Modloader::getMods();
@@ -226,8 +178,8 @@ extern "C" void load()
             getLogger().debug("MQE detected!");
         }
     }
-    else {
-        getLogger().warning("MultiplayerCore not found, CustomSongs will not work!");
-        INSTALL_HOOK(getLogger(), QuickPlaySongPacksDropdown_LazyInit);
-    }
+    // else {
+    //     getLogger().warning("MultiplayerCore not found, CustomSongs will not work!");
+    //     INSTALL_HOOK(getLogger(), QuickPlaySongPacksDropdown_LazyInit);
+    // }
 }
