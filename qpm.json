@@ -4,7 +4,7 @@
   "info": {
     "name": "BeatTogether",
     "id": "BeatTogether",
-    "version": "1.7.2",
+    "version": "1.8.0",
     "url": "https://github.com/BeatTogether/BeatTogether.Quest",
     "additionalData": {
       "overrideSoName": "libBeatTogether.so"
@@ -22,7 +22,12 @@
     },
     {
       "id": "codegen",
-      "versionRange": "^0.32.0",
+      "versionRange": "^0.33.0",
+      "additionalData": {}
+    },
+    {
+      "id": "multiplayer-core",
+      "versionRange": "^1.4.0",
       "additionalData": {}
     },
     {
