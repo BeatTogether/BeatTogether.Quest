@@ -34,6 +34,12 @@
       "id": "modloader",
       "versionRange": "^1.2.3",
       "additionalData": {}
+    },
+    {
+      "id": "paper",
+      "versionRange": "^1.2.9",
+      "additionalData": {}
     }
-  ]
+  ],
+  "workspace": null
 }
