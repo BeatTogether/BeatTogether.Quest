@@ -3,8 +3,7 @@ Param (
 [Parameter(Mandatory=$false, HelpMessage="Switch to create a clean compilation")][Alias("rebuild")][Switch]$clean,
 [Parameter(Mandatory=$false, HelpMessage="To create a release build")][Alias("publish")][Switch]$release,
 [Parameter(Mandatory=$false, HelpMessage="To create a github actions build, assumes specific Environment variables are set")][Alias("github-build")][Switch]$actions,
-[Parameter(Mandatory=$false, HelpMessage="Overwrite default HOST_NAME")][Alias("host")][string]$HOST_NAME,
-[Parameter(Mandatory=$false, HelpMessage="Overwrite default PORT")][string]$PORT,
+[Parameter(Mandatory=$false, HelpMessage="Overwrite default GRAPH_URL")][Alias("host")][string]$GRAPH_URL,
 [Parameter(Mandatory=$false, HelpMessage="Overwrite default STATUS_URL")][string]$STATUS_URL
 )
 # $NDKPath = Get-Content $PSScriptRoot/ndkpath.txt
@@ -54,37 +53,21 @@ if (($clean.IsPresent) -or (-not (Test-Path -Path "build")))
 }
 
 Set-Location build
-if ($null -ne $HOST_NAME -and $null -eq $STATUS_URL) {
-    $STATUS_URL = "status.$HOST_NAME"
+if ($null -ne $GRAPH_URL -and $null -eq $STATUS_URL) {
+    $STATUS_URL = "$GRAPH_URL/status"
     Write-Output $STATUS_URL
 }
 $argumentList = @()
-if ($PORT.Length -gt 0) {
-    $argumentList += "-DPORT=$PORT"
-}
 if ($STATUS_URL.Length -gt 0) {
     $argumentList += "-DSTATUS_URL=$STATUS_URL"
 }
-if ($HOST_NAME.Length -gt 0) {
+if ($GRAPH_URL.Length -gt 0) {
     if ($STATUS_URL.Length -eq 0) {
-        $argumentList += "-DSTATUS_URL=http://$HOST_NAME/status"
+        $argumentList += "-DSTATUS_URL=http://$GRAPH_URL/status"
     }
-    $argumentList += "-DHOST_NAME=$HOST_NAME"
+    $argumentList += "-DGRAPH_URL=$GRAPH_URL"
 }
 
-# if ($null -ne $HOST_NAME -and $null -ne $PORT) {
-#     & cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DHOST_NAME=$HOST_NAME -DPORT=$PORT -DSTATUS_URL=$STATUS_URL ../
-# } elseif ($null -ne $HOST_NAME) {
-#     & cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DHOST_NAME=$HOST_NAME  -DSTATUS_URL=$STATUS_URL ../
-# } elseif ($null -ne $PORT) {
-#     & cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DPORT=$PORT ../
-# } elseif ($null -ne $PORT -and $null -ne $STATUS_URL) {
-#     & cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DPORT=$PORT -DSTATUS_URL=$STATUS_URL ../
-# } elseif ($null -ne $STATUS_URL) {
-#     & cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DSTATUS_URL=$STATUS_URL ../
-# } else {
-# & cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" ../
-# }
 Write-Host "Building with arguments: $argumentList"
 if ($argumentList.Count -gt 0) {
     & cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" $argumentList ../

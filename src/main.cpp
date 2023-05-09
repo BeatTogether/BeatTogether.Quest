@@ -4,7 +4,7 @@
 
 #include "multiplayer-core/shared/MultiplayerCore.hpp"
 
-static ModInfo modInfo{MOD_ID, VERSION};
+ModInfo modInfo{MOD_ID, VERSION};
 
 Logger& getLogger() {
     static auto logger = new Logger(modInfo, LoggerOptions(false, true));

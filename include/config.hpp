@@ -2,12 +2,8 @@
 
 #include "multiplayer-core/shared/ServerConfig.hpp"
 
-#ifndef HOST_NAME
-#error "Define HOST_NAME!"
-#endif
-
-#ifndef PORT
-#error "Define PORT!"
+#ifndef GRAPH_URL
+#error "Define GRAPH_URL!"
 #endif
 
 #ifndef STATUS_URL
@@ -16,10 +12,10 @@
 
 struct Config {
     MultiplayerCore::ServerConfig serverConfig = MultiplayerCore::ServerConfig(
-        HOST_NAME, PORT, STATUS_URL
+        GRAPH_URL, STATUS_URL
     );
 
-    std::string button;
+    std::string button = "Modded\nOnline";
 };
 
 extern Config config;

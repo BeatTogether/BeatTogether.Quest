@@ -12,8 +12,7 @@ Param(
     [Alias("actions", "pack")]
     [Switch] $package,
 
-    [Parameter(Mandatory=$false, HelpMessage="Overwrite default HOST_NAME")][Alias("host")][string]$HOST_NAME,
-    [Parameter(Mandatory=$false, HelpMessage="Overwrite default PORT")][string]$PORT,
+    [Parameter(Mandatory=$false, HelpMessage="Overwrite default GRAPH_URL")][Alias("host")][string]$GRAPH_URL,
     [Parameter(Mandatory=$false, HelpMessage="Overwrite default STATUS_URL")][string]$STATUS_URL
 
 )
@@ -52,8 +51,8 @@ if ($package -eq $true) {
 }
 if (($args.Count -eq 0) -And $package -eq $false) {
 Write-Output "Creating QMod $qmodName"
-Write-Output "Server ${$HOST_NAME}:$PORT with statusUrl $STATUS_URL"
-    & $PSScriptRoot/build.ps1 -clean:$clean -HOST_NAME:$HOST_NAME -STATUS_URL:$STATUS_URL -PORT:$PORT -Version:$Version -release:$true
+Write-Output "Server ${$GRAPH_URL} with statusUrl $STATUS_URL"
+    & $PSScriptRoot/build.ps1 -clean:$clean -GRAPH_URL:$GRAPH_URL -STATUS_URL:$STATUS_URL -Version:$Version -release:$true
 
     if ($LASTEXITCODE -ne 0) {
         Write-Output "Failed to build, exiting..."
@@ -72,7 +71,7 @@ $filelist = @($mod)
 
 $cover = "./" + $modJson.coverImage
 if ((-not ($cover -eq "./")) -and (Test-Path $cover))
-{ 
+{
     $filelist += ,$cover
 } else {
     echo "No cover Image found"

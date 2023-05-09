@@ -49,9 +49,9 @@ if (($clean.IsPresent) -or (-not (Test-Path -Path "build")))
 
 cd build
 # For overwriting the hostname and status url
-& cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DHOST_NAME="YOUR_SERVER_HOSTNAME" -DSTATUS_URL="http://YOUR_STATUS_URL" ../
+& cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DGRAPH_URL="YOUR_SERVER_GRAPH_URL" -DSTATUS_URL="http://YOUR_STATUS_URL" ../
 # If you also need to overwrite the port use the following line instead
-# & cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DHOST_NAME="YOUR_SERVER_HOSTNAME" -DSTATUS_URL="http://YOUR_STATUS_URL" -DPORT=2328 ../
+# & cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DGRAPH_URL="YOUR_SERVER_GRAPH_URL" -DSTATUS_URL="http://YOUR_STATUS_URL" ../
 & cmake --build . -j 6
 $ExitCode = $LastExitCode
 cd ..
