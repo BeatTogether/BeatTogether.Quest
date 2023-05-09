@@ -5,6 +5,8 @@
 #include "GlobalNamespace/AuthenticationToken.hpp"
 #include "GlobalNamespace/PlatformAuthenticationTokenProvider.hpp"
 
+static ConstString empty("");
+
 // does not call orig!
 MAKE_AUTO_HOOK_ORIG_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationToken, &GlobalNamespace::PlatformAuthenticationTokenProvider::GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, GlobalNamespace::PlatformAuthenticationTokenProvider* self) {
     DEBUG("Returning custom authentication token!");
@@ -12,6 +14,6 @@ MAKE_AUTO_HOOK_ORIG_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationT
         GlobalNamespace::AuthenticationToken::Platform::OculusQuest,
         self->userId, // Important for server and client to keep track of things, should not be modified
         self->userName,
-        Array<uint8_t>::NewLength(0)
+        empty
     ));
 }
