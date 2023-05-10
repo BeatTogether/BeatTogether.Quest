@@ -5,7 +5,7 @@
 #include "GlobalNamespace/AuthenticationToken.hpp"
 #include "GlobalNamespace/PlatformAuthenticationTokenProvider.hpp"
 
-static ConstString empty("");
+static ConstString dummy_auth("who_is_rem_?");
 
 // does not call orig!
 MAKE_AUTO_HOOK_ORIG_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationToken, &GlobalNamespace::PlatformAuthenticationTokenProvider::GetAuthenticationToken, System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, GlobalNamespace::PlatformAuthenticationTokenProvider* self) {
@@ -14,6 +14,6 @@ MAKE_AUTO_HOOK_ORIG_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationT
         GlobalNamespace::AuthenticationToken::Platform::OculusQuest,
         self->userId, // Important for server and client to keep track of things, should not be modified
         self->userName,
-        empty
+        dummy_auth
     ));
 }
