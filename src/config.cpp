@@ -45,6 +45,9 @@ bool LoadConfig() {
     } else {
         foundEverything = false;
     }
+
+    config.serverConfig.maxPartySize = std::clamp(config.serverConfig.maxPartySize, 0, 25);
+
     if (foundEverything) INFO("Config loaded!");
     return foundEverything;
 }
