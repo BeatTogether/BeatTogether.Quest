@@ -5,33 +5,49 @@
 extern ModInfo modInfo;
 Config config;
 
-Configuration& get_config() {
-    static Configuration config(modInfo);
-    config.Load();
-    return config;
+std::string get_configPath() {
+    auto path = Configuration::getConfigFilePath(modInfo);
+    return path.replace(path.length() - 4, 4, "cfg");
 }
 
 void SaveConfig() {
-    // TODO: save config to configpath.cfg instead of configpath.json, like the mod used to do
     INFO("Saving config...");
-    auto& cfg = get_config().config;
-    cfg.RemoveAllMembers();
+
+    rapidjson::Document cfg;
+
     cfg.SetObject();
     auto& allocator = cfg.GetAllocator();
 
     cfg.AddMember("button", config.button, allocator);
     cfg.AddMember("serverConfig", config.serverConfig.toJson(allocator), allocator);
 
-    get_config().Write();
+    // doc to json string
+    rapidjson::StringBuffer buff;
+    rapidjson::Writer writer(buff);
+    cfg.Accept(writer);
+
+    writefile(get_configPath(), std::string_view(buff.GetString(), buff.GetSize()));
+
     INFO("Config saved!");
 }
 
 bool LoadConfig() {
-    // TODO: load config from configpath.cfg instead of configpath.json, like the mod used to do
     INFO("Loading config...");
+    auto filePath = get_configPath();
+    if (!fileexists(filePath)) {
+        ERROR("Config file did not exist!");
+        return false;
+    }
+
     bool foundEverything = true;
 
-    auto& cfg = get_config().config;
+    rapidjson::Document cfg;
+    cfg.Parse(readfile(filePath));
+    if (cfg.HasParseError() || !cfg.IsObject()) {
+        ERROR("Failed to parse config as json document");
+        return false;
+    }
+
     auto buttonItr = cfg.FindMember("button");
     if (buttonItr != cfg.MemberEnd() && buttonItr->value.IsString()) {
         config.button = {buttonItr->value.GetString(), buttonItr->value.GetStringLength()};
