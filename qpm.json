@@ -39,6 +39,21 @@
       "id": "paper",
       "versionRange": "^1.2.9",
       "additionalData": {}
+    },
+    {
+      "id": "lapiz",
+      "versionRange": "^0.1.11",
+      "additionalData": {}
+    },
+    {
+      "id": "bsml",
+      "versionRange": "^0.3.2",
+      "additionalData": {}
+    },
+    {
+      "id": "custom-types",
+      "versionRange": "^0.15.24",
+      "additionalData": {}
     }
   ],
   "workspace": null

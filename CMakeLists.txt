@@ -90,3 +90,5 @@ add_custom_command(TARGET ${COMPILE_ID} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E rename stripped_lib${COMPILE_ID}.so lib${COMPILE_ID}.so
         COMMENT "Rename the stripped lib to regular"
         )
+
+include (assets_include.cmake)

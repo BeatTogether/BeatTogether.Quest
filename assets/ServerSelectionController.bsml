@@ -1,0 +1,12 @@
+<horizontal>
+    <list-setting
+        text='Playing on'
+        id='serverList'
+        options='serverOptions'
+        value='server'
+        apply-on-change='true'
+        rich-text='true'
+        overflow-mode='Ellipsis'
+        size-delta-x='-75'
+        anchor-pos-y='0'/>
+</horizontal>
