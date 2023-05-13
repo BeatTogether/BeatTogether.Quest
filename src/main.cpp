@@ -24,7 +24,7 @@ extern "C" void load() {
     auto& logger = getLogger();
     Hooks::InstallHooks(logger);
 
-    MultiplayerCore::API::UseServer(&config.serverConfig);
+    MultiplayerCore::API::UseServer(config.GetSelectedConfig());
 
     // Checks if MQE is installed
     const std::unordered_map<std::string, const Mod>& ModList = Modloader::getMods();
