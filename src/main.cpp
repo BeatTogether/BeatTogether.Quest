@@ -4,6 +4,11 @@
 
 #include "multiplayer-core/shared/MultiplayerCore.hpp"
 
+#include "UI/ServerSelectionController.hpp"
+#include "Zenject/FromBinderNonGeneric.hpp"
+
+#include "lapiz/shared/zenject/Zenjector.hpp"
+
 ModInfo modInfo{MOD_ID, VERSION};
 
 Logger& getLogger() {
@@ -20,6 +25,7 @@ extern "C" void load() {
 
     if (!LoadConfig())
         SaveConfig();
+    custom_types::Register::AutoRegister();
 
     auto& logger = getLogger();
     Hooks::InstallHooks(logger);
@@ -33,4 +39,9 @@ extern "C" void load() {
         getLogger().info("Hello MQE!");
         getLogger().debug("MQE detected!");
     }
+
+    auto zenjector = Lapiz::Zenject::Zenjector::Get();
+    zenjector->Install(Lapiz::Zenject::Location::Menu, [](Zenject::DiContainer* container){
+        container->BindInterfacesAndSelfTo<BeatTogether::UI::ServerSelectionController*>()->AsSingle();
+    });
 }

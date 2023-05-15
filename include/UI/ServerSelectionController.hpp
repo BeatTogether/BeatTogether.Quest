@@ -38,6 +38,7 @@ DECLARE_CLASS_CODEGEN_INTERFACES(BeatTogether::UI, ServerSelectionController, Il
         void SetInteraction(bool value);
         void SetGlobalUserInteraction(bool value);
         void SetTitle(StringW& value, StringW title);
+        void Activate(bool firstActivation);
         void Deactivate();
         bool TopViewControllerWillChange(HMUI::ViewController* oldViewController, HMUI::ViewController* newViewController, HMUI::ViewController::AnimationType animationType);
 

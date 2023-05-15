@@ -29,6 +29,11 @@ namespace BeatTogether::UI {
 
         this->modeSelectionFlow = modeSelectionFlow;
         this->joiningLobbyView = joiningLobbyView;
+        serverOptions = List<Il2CppObject*>::New_ctor();
+        for (const auto& [serverName, server] : config.servers) serverOptions->Add(StringW(serverName));
+
+        _interactable = true;
+        _globalInteraction = true;
 
         instance = this;
     }
@@ -36,7 +41,7 @@ namespace BeatTogether::UI {
     void ServerSelectionController::Initialize() {
         _screen = BSML::FloatingScreen::CreateFloatingScreen({90, 90}, false, {0, 3, 4.35f}, {});
         BSML::parse_and_construct(IncludedAssets::ServerSelectionController_bsml, _screen->get_transform(), this);
-        reinterpret_cast<UnityEngine::RectTransform*>(serverList->get_transform()->GetChild(0))->set_sizeDelta({60, 0});
+        reinterpret_cast<UnityEngine::RectTransform*>(serverList->get_transform()->GetChild(1))->set_sizeDelta({60, 0});
         _screen->GetComponent<HMUI::CurvedCanvasSettings*>()->SetRadius(140);
         _screen->get_gameObject()->SetActive(false);
     }
@@ -68,6 +73,11 @@ namespace BeatTogether::UI {
         modeSelectionFlow->ReplaceTopViewController(joiningLobbyView, nullptr, HMUI::ViewController::AnimationType::None, HMUI::ViewController::AnimationDirection::Vertical);
     }
 
+    void ServerSelectionController::Activate(bool firstActivation) {
+        if (!firstActivation)
+            _screen->get_gameObject()->SetActive(true);
+    }
+
     void ServerSelectionController::Deactivate() {
         _screen->get_gameObject()->SetActive(false);
     }
@@ -78,8 +88,7 @@ namespace BeatTogether::UI {
         auto screenT = _screen->get_transform();
         auto scale = screenContainer->get_localScale();
         float extraYscale = screenSystem->get_localScale().y;
-        scale.y *= extraYscale;
-        screenT->set_localScale(scale);
+        screenT->set_localScale(scale * extraYscale);
 
         auto pos = screenContainer->get_position();
         pos.y += extraYscale * 1.15f;

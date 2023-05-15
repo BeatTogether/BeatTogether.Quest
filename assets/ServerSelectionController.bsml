@@ -1,4 +1,4 @@
-<horizontal>
+<horizontal pref-width='90' horizontal-fit='PreferredSize'>
     <list-setting
         text='Playing on'
         id='serverList'
@@ -7,6 +7,6 @@
         apply-on-change='true'
         rich-text='true'
         overflow-mode='Ellipsis'
-        size-delta-x='-75'
+        pref-width='90'
         anchor-pos-y='0'/>
 </horizontal>

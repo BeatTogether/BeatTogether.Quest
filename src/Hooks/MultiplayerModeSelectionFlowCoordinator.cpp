@@ -17,16 +17,16 @@ MAKE_AUTO_HOOK_ORIG_MATCH(MultiplayerModeSelectionFlowCoordinator_TopViewControl
         MultiplayerModeSelectionFlowCoordinator_TopViewControllerWillChange(self, oldViewController, newViewController, animationType);
     }
 }
-/*
+
 MAKE_AUTO_HOOK_MATCH(MultiplayerModeSelectionFlowCoordinator_DidActivate, &::GlobalNamespace::MultiplayerModeSelectionFlowCoordinator::DidActivate, void, GlobalNamespace::MultiplayerModeSelectionFlowCoordinator* self, bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) {
     auto controller = BeatTogether::UI::ServerSelectionController::get_instance();
     if (controller) {
-        controller->Activate();
+        controller->Activate(firstActivation);
     }
 
     MultiplayerModeSelectionFlowCoordinator_DidActivate(self, firstActivation, addedToHierarchy, screenSystemEnabling);
 }
-*/
+
 MAKE_AUTO_HOOK_MATCH(MultiplayerModeSelectionFlowCoordinator_DidDeactivate, &::GlobalNamespace::MultiplayerModeSelectionFlowCoordinator::DidDeactivate, void, GlobalNamespace::MultiplayerModeSelectionFlowCoordinator* self, bool removedFromHierarchy, bool screenSystemDisabling) {
     auto controller = BeatTogether::UI::ServerSelectionController::get_instance();
     if (controller) {
