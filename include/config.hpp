@@ -1,6 +1,8 @@
 #pragma once
 
 #include "multiplayer-core/shared/ServerConfig.hpp"
+#include <string>
+#include <map>
 
 #ifndef GRAPH_URL
 #error "Define GRAPH_URL!"
@@ -15,11 +17,14 @@
 #endif
 
 struct Config {
-    MultiplayerCore::ServerConfig serverConfig = MultiplayerCore::ServerConfig(
-        GRAPH_URL, STATUS_URL, MAX_PLAYER_COUNT
-    );
-
     std::string button = "Modded\nOnline";
+
+    std::string selectedServer = "BeatTogether";
+    std::map<std::string, MultiplayerCore::ServerConfig> servers = std::map<std::string, MultiplayerCore::ServerConfig>({
+        {"BeatTogether", {GRAPH_URL, STATUS_URL, MAX_PLAYER_COUNT}}
+    });
+
+    const MultiplayerCore::ServerConfig* GetSelectedConfig() const;
 };
 
 extern Config config;

@@ -7,7 +7,7 @@ Config config;
 
 std::string get_configPath() {
     auto path = Configuration::getConfigFilePath(modInfo);
-    return path.replace(path.length() - 4, 4, "cfg");
+    return path.replace(path.length() - 4, 4, "json");
 }
 
 void SaveConfig() {
@@ -18,8 +18,26 @@ void SaveConfig() {
     cfg.SetObject();
     auto& allocator = cfg.GetAllocator();
 
-    cfg.AddMember("button", config.button, allocator);
-    cfg.AddMember("serverConfig", config.serverConfig.toJson(allocator), allocator);
+    cfg.AddMember("button", rapidjson::Value(config.button.c_str(), config.button.size(), allocator), allocator);
+    cfg.AddMember("SelectedServer", rapidjson::Value(config.selectedServer.c_str(), config.selectedServer.size(), allocator), allocator);
+
+    rapidjson::Value serverArray;
+    serverArray.SetArray();
+
+    serverArray.Reserve(config.servers.size(), allocator);
+    for (const auto& [server, serverConfig] : config.servers) {
+        rapidjson::Value val;
+        val.SetObject();
+
+        val.AddMember("ServerName", server, allocator);
+        val.AddMember("ApiUrl", serverConfig.graphUrl, allocator);
+        val.AddMember("StatusUri", serverConfig.masterServerStatusUrl, allocator);
+        val.AddMember("MaxPartySize", serverConfig.maxPartySize, allocator);
+
+        serverArray.PushBack(val, allocator);
+    }
+
+    cfg.AddMember("Servers", serverArray, allocator);
 
     // doc to json string
     rapidjson::StringBuffer buff;
@@ -55,15 +73,32 @@ bool LoadConfig() {
         foundEverything = false;
     }
 
-    auto serverConfigItr = cfg.FindMember("serverConfig");
-    if (serverConfigItr != cfg.MemberEnd() && serverConfigItr->value.IsObject()) {
-        if (!config.serverConfig.readJson(serverConfigItr->value)) foundEverything = false;
+    auto selectedServerItr = cfg.FindMember("SelectedServer");
+    if (selectedServerItr != cfg.MemberEnd() && selectedServerItr->value.IsString()) {
+        config.selectedServer = {selectedServerItr->value.GetString(), selectedServerItr->value.GetStringLength()};
     } else {
         foundEverything = false;
     }
 
-    config.serverConfig.maxPartySize = std::clamp(config.serverConfig.maxPartySize, 0, 25);
+    auto serversItr = cfg.FindMember("Servers");
+    if (serversItr != cfg.MemberEnd() && serversItr->value.IsArray() && !serversItr->value.GetArray().Empty()) {
+        for (const auto& server : serversItr->value.GetArray()) {
+            config.servers[server["ServerName"].GetString()] = {
+                server["ApiUrl"].GetString(),
+                server["StatusUri"].GetString(),
+                server["MaxPartySize"].GetInt()
+            };
+        }
+    } else {
+        foundEverything = false;
+    }
 
     if (foundEverything) INFO("Config loaded!");
     return foundEverything;
+}
+
+const MultiplayerCore::ServerConfig* Config::GetSelectedConfig() const {
+    auto configItr = servers.find(selectedServer);
+    if (configItr == servers.end()) return nullptr;
+    return &configItr->second;
 }
