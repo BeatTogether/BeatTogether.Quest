@@ -2,7 +2,7 @@
 #include "logging.hpp"
 #include "beatsaber-hook/shared/config/config-utils.hpp"
 
-extern ModInfo modInfo;
+extern modloader::ModInfo modInfo;
 Config config;
 
 std::string get_configPath() {

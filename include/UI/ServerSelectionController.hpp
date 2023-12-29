@@ -12,7 +12,7 @@
 #include "GlobalNamespace/MultiplayerModeSelectionFlowCoordinator.hpp"
 #include "GlobalNamespace/JoiningLobbyViewController.hpp"
 
-DECLARE_CLASS_CODEGEN_INTERFACES(BeatTogether::UI, ServerSelectionController, Il2CppObject, std::vector<Il2CppClass*>({classof(Zenject::IInitializable*), classof(System::IDisposable*)}),
+DECLARE_CLASS_CODEGEN_INTERFACES(BeatTogether::UI, ServerSelectionController, System::Object, std::vector<Il2CppClass*>({classof(Zenject::IInitializable*), classof(System::IDisposable*)}),
     DECLARE_INSTANCE_FIELD(GlobalNamespace::MultiplayerModeSelectionFlowCoordinator*, modeSelectionFlow);
     DECLARE_INSTANCE_FIELD(GlobalNamespace::JoiningLobbyViewController*, joiningLobbyView);
 
@@ -21,13 +21,14 @@ DECLARE_CLASS_CODEGEN_INTERFACES(BeatTogether::UI, ServerSelectionController, Il
 
     DECLARE_INSTANCE_FIELD(BSML::FloatingScreen*, _screen);
     DECLARE_INSTANCE_FIELD(BSML::ListSetting*, serverList);
-    DECLARE_INSTANCE_FIELD_DEFAULT(ListW<Il2CppObject*>, serverOptions, nullptr);
+    DECLARE_INSTANCE_FIELD(ListW<System::Object*>, serverOptions);
 
-    DECLARE_INSTANCE_METHOD(Il2CppObject*, get_server);
-    DECLARE_INSTANCE_METHOD(void, set_server, Il2CppObject* server);
 
-    DECLARE_OVERRIDE_METHOD(void, Initialize, il2cpp_utils::il2cpp_type_check::MetadataGetter<&Zenject::IInitializable::Initialize>::get());
-    DECLARE_OVERRIDE_METHOD(void, Dispose, il2cpp_utils::il2cpp_type_check::MetadataGetter<&System::IDisposable::Dispose>::get());
+    DECLARE_INSTANCE_METHOD(System::Object*, get_server);
+    DECLARE_INSTANCE_METHOD(void, set_server, System::Object* server);
+
+    DECLARE_OVERRIDE_METHOD_MATCH(void, Initialize, &Zenject::IInitializable::Initialize);
+    DECLARE_OVERRIDE_METHOD_MATCH(void, Dispose, &System::IDisposable::Dispose);
 
     DECLARE_CTOR(ctor, GlobalNamespace::MultiplayerModeSelectionFlowCoordinator* modeSelectionFlow, GlobalNamespace::JoiningLobbyViewController* joiningLobbyView);
 

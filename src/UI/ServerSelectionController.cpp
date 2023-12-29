@@ -9,15 +9,19 @@
 #include "UnityEngine/RectTransform.hpp"
 #include "HMUI/CurvedCanvasSettings.hpp"
 
-#include "HMUI/ViewController_AnimationType.hpp"
-#include "HMUI/ViewController_AnimationDirection.hpp"
-
 #include "Polyglot/Localization.hpp"
 
 #include "multiplayer-core/shared/MultiplayerCore.hpp"
 
 DEFINE_TYPE(BeatTogether::UI, ServerSelectionController);
 
+static inline UnityEngine::Vector3 operator*(UnityEngine::Vector3 vec, float val) {
+    return {
+        vec.x * val,
+        vec.y * val,
+        vec.z * val,
+    };
+}
 namespace BeatTogether::UI {
     ServerSelectionController* ServerSelectionController::instance = nullptr;
     ServerSelectionController* ServerSelectionController::get_instance() {
@@ -29,8 +33,8 @@ namespace BeatTogether::UI {
 
         this->modeSelectionFlow = modeSelectionFlow;
         this->joiningLobbyView = joiningLobbyView;
-        serverOptions = List<Il2CppObject*>::New_ctor();
-        for (const auto& [serverName, server] : config.servers) serverOptions->Add(StringW(serverName));
+        serverOptions = ListW<System::Object*>::New();
+        for (const auto& [serverName, server] : config.servers) serverOptions->Add(static_cast<System::Object*>(StringW(serverName).convert()));
 
         _interactable = true;
         _globalInteraction = true;
@@ -40,7 +44,7 @@ namespace BeatTogether::UI {
 
     void ServerSelectionController::Initialize() {
         _screen = BSML::FloatingScreen::CreateFloatingScreen({90, 90}, false, {0, 3, 4.35f}, {});
-        BSML::parse_and_construct(IncludedAssets::ServerSelectionController_bsml, _screen->get_transform(), this);
+        BSML::parse_and_construct(Assets::ServerSelectionController_bsml, _screen->get_transform(), this);
         reinterpret_cast<UnityEngine::RectTransform*>(serverList->get_transform()->GetChild(1))->set_sizeDelta({60, 0});
         _screen->GetComponent<HMUI::CurvedCanvasSettings*>()->SetRadius(140);
         _screen->get_gameObject()->SetActive(false);
@@ -122,11 +126,11 @@ namespace BeatTogether::UI {
         serverList->set_interactable(_interactable && _globalInteraction);
     }
 
-    Il2CppObject* ServerSelectionController::get_server() {
-        return StringW(config.selectedServer);
+    System::Object* ServerSelectionController::get_server() {
+        return static_cast<System::Object*>(StringW(config.selectedServer).convert());
     }
 
-    void ServerSelectionController::set_server(Il2CppObject* server) {
+    void ServerSelectionController::set_server(System::Object* server) {
         ApplySelectedServer(StringW(server));
     }
 }

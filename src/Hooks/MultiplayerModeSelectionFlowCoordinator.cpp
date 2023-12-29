@@ -4,7 +4,6 @@
 #include "UI/ServerSelectionController.hpp"
 
 #include "GlobalNamespace/MultiplayerModeSelectionFlowCoordinator.hpp"
-#include "HMUI/ViewController_AnimationType.hpp"
 #include "HMUI/ViewController.hpp"
 
 // may not run orig

@@ -12,8 +12,8 @@ MAKE_AUTO_HOOK_ORIG_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationT
     DEBUG("Returning custom authentication token!");
     return System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>::New_ctor(GlobalNamespace::AuthenticationToken(
         GlobalNamespace::AuthenticationToken::Platform::OculusQuest,
-        self->userId, // Important for server and client to keep track of things, should not be modified
-        self->userName,
+        self->_userId, // Important for server and client to keep track of things, should not be modified
+        self->_userName,
         dummy_auth
     ));
 }

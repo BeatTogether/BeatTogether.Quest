@@ -4,7 +4,6 @@
 #include "UI/ServerSelectionController.hpp"
 
 #include "HMUI/FlowCoordinator.hpp"
-#include "HMUI/ViewController_AnimationType.hpp"
 
 MAKE_AUTO_HOOK_MATCH(FlowCoordinator_SetTitle, &::HMUI::FlowCoordinator::SetTitle, void, HMUI::FlowCoordinator* self, StringW value, HMUI::ViewController::AnimationType animationType) {
     auto controller = BeatTogether::UI::ServerSelectionController::get_instance();
