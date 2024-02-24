@@ -23,16 +23,16 @@ if ($env:version -eq "") {
     & qpm-rust package edit --version $VERSION
 }
 
-if ((Test-Path "./extern/includes/beatsaber-hook/src/inline-hook/And64InlineHook.cpp", "./extern/includes/beatsaber-hook/src/inline-hook/inlineHook.c", "./extern/includes/beatsaber-hook/src/inline-hook/relocate.c") -contains $false) {
+if ((Test-Path "./extern/includes/beatsaber-hook/shared/inline-hook/And64InlineHook.cpp", "./extern/includes/beatsaber-hook/shared/inline-hook/inlineHook.c", "./extern/includes/beatsaber-hook/shared/inline-hook/relocate.c") -contains $false) {
     Write-Host "Critical: Missing inline-hook"
-    if (!(Test-Path "./extern/includes/beatsaber-hook/src/inline-hook/And64InlineHook.cpp")) {
-        Write-Host "./extern/includes/beatsaber-hook/src/inline-hook/And64InlineHook.cpp"
+    if (!(Test-Path "./extern/includes/beatsaber-hook/shared/inline-hook/And64InlineHook.cpp")) {
+        Write-Host "./extern/includes/beatsaber-hook/shared/inline-hook/And64InlineHook.cpp"
     }
-    if (!(Test-Path "./extern/includes/beatsaber-hook/src/inline-hook/inlineHook.c")) {
-        Write-Host "./extern/includes/beatsaber-hook/src/inline-hook/inlineHook.c"
+    if (!(Test-Path "./extern/includes/beatsaber-hook/shared/inline-hook/inlineHook.c")) {
+        Write-Host "./extern/includes/beatsaber-hook/shared/inline-hook/inlineHook.c"
     }
-        if (!(Test-Path "./extern/includes/beatsaber-hook/inline-hook/src/relocate.c")) {
-        Write-Host "./extern/includes/beatsaber-hook/src/inline-hook/relocate.c"
+        if (!(Test-Path "./extern/includes/beatsaber-hook/inline-hook/shared/relocate.c")) {
+        Write-Host "./extern/includes/beatsaber-hook/shared/inline-hook/relocate.c"
     }
     Write-Host "Task Failed, see output above"
     exit 1;

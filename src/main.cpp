@@ -1,3 +1,4 @@
+#include "_config.h"
 #include "config.hpp"
 #include "hooking.hpp"
 #include "scotland2/shared/loader.hpp"
@@ -16,13 +17,13 @@ Logger& getLogger() {
     return *logger;
 }
 
-extern "C" void setup(CModInfo* info) {
+BEATTOGETHER_EXPORT_FUNC void setup(CModInfo* info) {
     info->id = MOD_ID;
     info->version = VERSION;
     info->version_long = VERSION_LONG;
 }
 
-extern "C" void load() {
+BEATTOGETHER_EXPORT_FUNC void late_load() {
     il2cpp_functions::Init();
 
     if (!LoadConfig())
