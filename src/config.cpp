@@ -33,6 +33,7 @@ void SaveConfig() {
         val.AddMember("ApiUrl", serverConfig.graphUrl, allocator);
         val.AddMember("StatusUri", serverConfig.masterServerStatusUrl, allocator);
         val.AddMember("MaxPartySize", serverConfig.maxPartySize, allocator);
+        val.AddMember("DisableSsl", serverConfig.disableSSL, allocator);
 
         serverArray.PushBack(val, allocator);
     }
@@ -86,7 +87,9 @@ bool LoadConfig() {
             config.servers[server["ServerName"].GetString()] = {
                 server["ApiUrl"].GetString(),
                 server["StatusUri"].GetString(),
-                server["MaxPartySize"].GetInt()
+                server["MaxPartySize"].GetInt(),
+                "",
+                server.HasMember("DisableSsl") ? server["DisableSsl"].GetBool() : true
             };
         }
     } else {

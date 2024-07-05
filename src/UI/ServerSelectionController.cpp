@@ -9,7 +9,7 @@
 #include "UnityEngine/RectTransform.hpp"
 #include "HMUI/CurvedCanvasSettings.hpp"
 
-#include "Polyglot/Localization.hpp"
+#include "BGLib/Polyglot/Localization.hpp"
 
 #include "multiplayer-core/shared/MultiplayerCore.hpp"
 
@@ -109,15 +109,18 @@ namespace BeatTogether::UI {
     }
 
     void ServerSelectionController::SetTitle(StringW& value, StringW title) {
-        if (Polyglot::Localization::Get("LABEL_CHECKING_SERVER_STATUS") == value) {
-            value = Polyglot::Localization::Get("LABEL_MULTIPLAYER_MODE_SELECTION");
+        if (BGLib::Polyglot::Localization::Get("LABEL_CHECKING_SERVER_STATUS") == value) {
+            value = BGLib::Polyglot::Localization::Get("LABEL_MULTIPLAYER_MODE_SELECTION");
         }
-        if (title == Polyglot::Localization::Get("LABEL_CHECKING_SERVER_STATUS") && value == "")
+        if (title == BGLib::Polyglot::Localization::Get("LABEL_CHECKING_SERVER_STATUS") && value == "")
             SetInteraction(true);
     }
 
     void ServerSelectionController::SetInteraction(bool value) {
         _interactable = value;
+        if (_allowSelectionOnce > 0) {
+            value = _allowSelectionOnce-- == 1;
+        }
         serverList->set_interactable(_interactable && _globalInteraction);
     }
 

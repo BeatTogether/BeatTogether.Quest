@@ -34,3 +34,18 @@ MAKE_AUTO_HOOK_MATCH(MultiplayerModeSelectionFlowCoordinator_DidDeactivate, &::G
 
     MultiplayerModeSelectionFlowCoordinator_DidDeactivate(self, removedFromHierarchy, screenSystemDisabling);
 }
+
+MAKE_AUTO_HOOK_MATCH(MultiplayerModeSelectionFlowCoordinator_PresentMasterServerUnavailableErrorDialog, 
+    &::GlobalNamespace::MultiplayerModeSelectionFlowCoordinator::PresentMasterServerUnavailableErrorDialog, 
+    void, GlobalNamespace::MultiplayerModeSelectionFlowCoordinator* self, 
+    ::GlobalNamespace::MultiplayerUnavailableReason reason, ::System::Exception* exception,
+    ::System::Nullable_1<int64_t> maintenanceWindowEndTime,
+    ::StringW remoteLocalizedMessage) 
+{
+    auto controller = BeatTogether::UI::ServerSelectionController::get_instance();
+    if (controller) {
+        controller->_allowSelectionOnce = 2;
+    }
+
+    MultiplayerModeSelectionFlowCoordinator_PresentMasterServerUnavailableErrorDialog(self, reason, exception, maintenanceWindowEndTime, remoteLocalizedMessage);
+}

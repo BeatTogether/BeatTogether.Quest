@@ -18,6 +18,7 @@ DECLARE_CLASS_CODEGEN_INTERFACES(BeatTogether::UI, ServerSelectionController, Sy
 
     DECLARE_INSTANCE_FIELD(bool, _interactable);
     DECLARE_INSTANCE_FIELD(bool, _globalInteraction);
+    DECLARE_INSTANCE_FIELD(uint8_t, _allowSelectionOnce);
 
     DECLARE_INSTANCE_FIELD(BSML::FloatingScreen*, _screen);
     DECLARE_INSTANCE_FIELD(BSML::ListSetting*, serverList);

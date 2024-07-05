@@ -5,14 +5,6 @@
 
 #include "paper/shared/logger.hpp"
 
-namespace BSML
-{
-    class Logging
-    {
-    public:
-        static Logger& getLogger();
-    };
-}
 template <> struct fmt::formatter<::StringW> : formatter<string_view> {
     // parse is inherited from formatter<string_view>.
     template <typename FormatContext>

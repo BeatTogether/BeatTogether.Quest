@@ -42,7 +42,7 @@ if ($qmodName -eq "")
 
 if (-not [string]::IsNullOrEmpty($Version)) {
     $clean = $true
-    & qpm-rust package edit --version $VERSION
+    & qpm package edit --version $VERSION
 }
 
 if ($package -eq $true) {
@@ -59,7 +59,7 @@ Write-Output "Server ${$GRAPH_URL} with statusUrl $STATUS_URL"
         exit $LASTEXITCODE
     }
 
-    qpm-rust qmod build
+    qpm qmod build
 }
 
 echo "Creating qmod from mod.json"
