@@ -43,7 +43,7 @@ namespace BeatTogether::UI {
     }
 
     void ServerSelectionController::Initialize() {
-        _screen = BSML::FloatingScreen::CreateFloatingScreen({90, 90}, false, {0, 3, 4.35f}, {});
+        _screen = BSML::FloatingScreen::CreateFloatingScreen({90, 90}, false, {0, 3, 4.35f}, UnityEngine::Quaternion::get_identity());
         BSML::parse_and_construct(Assets::ServerSelectionController_bsml, _screen->get_transform(), this);
         serverList->transform->GetChild(1).cast<UnityEngine::RectTransform>()->sizeDelta = {60, 0};
         _screen->GetComponent<HMUI::CurvedCanvasSettings*>()->SetRadius(140);
