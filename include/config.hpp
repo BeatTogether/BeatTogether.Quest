@@ -20,8 +20,10 @@ struct Config {
     std::string button = "Modded\nOnline";
 
     std::string selectedServer = "BeatTogether";
+    std::string officialServerName = "Official Servers";
     std::map<std::string, MultiplayerCore::ServerConfig> servers = std::map<std::string, MultiplayerCore::ServerConfig>({
-        {"BeatTogether", {GRAPH_URL, STATUS_URL, MAX_PLAYER_COUNT, "", true}}
+        {"BeatTogether", {GRAPH_URL, STATUS_URL, MAX_PLAYER_COUNT, "", true}},
+        {officialServerName, {"", ""}}
     });
 
     const MultiplayerCore::ServerConfig* GetSelectedConfig() const;

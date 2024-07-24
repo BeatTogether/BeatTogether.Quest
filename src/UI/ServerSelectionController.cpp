@@ -68,7 +68,11 @@ namespace BeatTogether::UI {
             return;
         }
 
-        MultiplayerCore::API::UseServer(cfg);
+        if (config.selectedServer == config.officialServerName) {
+            MultiplayerCore::API::UseOfficialServer();
+        } else {
+            MultiplayerCore::API::UseServer(cfg);
+        }
 
         SetInteraction(false);
 
@@ -118,9 +122,6 @@ namespace BeatTogether::UI {
 
     void ServerSelectionController::SetInteraction(bool value) {
         _interactable = value;
-        if (_allowSelectionOnce > 0) {
-            value = _allowSelectionOnce-- == 1;
-        }
         serverList->set_interactable(_interactable && _globalInteraction);
     }
 
