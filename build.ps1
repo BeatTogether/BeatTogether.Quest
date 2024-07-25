@@ -3,8 +3,9 @@ Param (
 [Parameter(Mandatory=$false, HelpMessage="Switch to create a clean compilation")][Alias("rebuild")][Switch]$clean,
 [Parameter(Mandatory=$false, HelpMessage="To create a release build")][Alias("publish")][Switch]$release,
 [Parameter(Mandatory=$false, HelpMessage="To create a github actions build, assumes specific Environment variables are set")][Alias("github-build")][Switch]$actions,
-[Parameter(Mandatory=$false, HelpMessage="Overwrite default GRAPH_URL")][Alias("host")][string]$GRAPH_URL,
-[Parameter(Mandatory=$false, HelpMessage="Overwrite default STATUS_URL")][string]$STATUS_URL
+[Parameter(Mandatory=$false, HelpMessage="Add custom SERVER_NAME")][Alias("name")][string]$SERVER_NAME,
+[Parameter(Mandatory=$false, HelpMessage="Add custom GRAPH_URL")][Alias("host")][string]$GRAPH_URL,
+[Parameter(Mandatory=$false, HelpMessage="Add custom STATUS_URL")][string]$STATUS_URL
 )
 # $NDKPath = Get-Content $PSScriptRoot/ndkpath.txt
 $QPMpackage = "./qpm.json"
@@ -66,6 +67,10 @@ if ($GRAPH_URL.Length -gt 0) {
         $argumentList += "-DSTATUS_URL=http://$GRAPH_URL/status"
     }
     $argumentList += "-DGRAPH_URL=$GRAPH_URL"
+
+    if ($SERVER_NAME.Length -gt 0) {
+        $argumentList += "-DSERVER_NAME=$SERVER_NAME"
+    }
 }
 
 Write-Host "Building with arguments: $argumentList"

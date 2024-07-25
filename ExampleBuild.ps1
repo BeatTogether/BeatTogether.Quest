@@ -15,19 +15,19 @@ $VERSION = $qpmjson.info.version
 if (-not $VERSION.Contains("-Test")) {
     $VERSION += "-Test"
 }
-& qpm-rust package edit --version $VERSION
+& qpm package edit --version $VERSION
 
 
-if ((Test-Path "./extern/includes/beatsaber-hook/src/inline-hook/And64InlineHook.cpp", "./extern/includes/beatsaber-hook/src/inline-hook/inlineHook.c", "./extern/includes/beatsaber-hook/src/inline-hook/relocate.c") -contains $false) {
+if ((Test-Path "./extern/includes/beatsaber-hook/shared/inline-hook/And64InlineHook.cpp", "./extern/includes/beatsaber-hook/shared/inline-hook/inlineHook.c", "./extern/includes/beatsaber-hook/shared/inline-hook/relocate.c") -contains $false) {
     Write-Host "Critical: Missing inline-hook"
-    if (!(Test-Path "./extern/includes/beatsaber-hook/src/inline-hook/And64InlineHook.cpp")) {
-        Write-Host "./extern/includes/beatsaber-hook/src/inline-hook/And64InlineHook.cpp"
+    if (!(Test-Path "./extern/includes/beatsaber-hook/shared/inline-hook/And64InlineHook.cpp")) {
+        Write-Host "./extern/includes/beatsaber-hook/shared/inline-hook/And64InlineHook.cpp"
     }
-    if (!(Test-Path "./extern/includes/beatsaber-hook/src/inline-hook/inlineHook.c")) {
-        Write-Host "./extern/includes/beatsaber-hook/src/inline-hook/inlineHook.c"
+    if (!(Test-Path "./extern/includes/beatsaber-hook/shared/inline-hook/inlineHook.c")) {
+        Write-Host "./extern/includes/beatsaber-hook/shared/inline-hook/inlineHook.c"
     }
-        if (!(Test-Path "./extern/includes/beatsaber-hook/inline-hook/src/relocate.c")) {
-        Write-Host "./extern/includes/beatsaber-hook/src/inline-hook/relocate.c"
+        if (!(Test-Path "./extern/includes/beatsaber-hook/inline-hook/shared/relocate.c")) {
+        Write-Host "./extern/includes/beatsaber-hook/shared/inline-hook/relocate.c"
     }
     Write-Host "Task Failed, see output above"
     exit 1;
@@ -48,10 +48,8 @@ if (($clean.IsPresent) -or (-not (Test-Path -Path "build")))
 }
 
 cd build
-# For overwriting the hostname and status url
-& cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DGRAPH_URL="YOUR_SERVER_GRAPH_URL" -DSTATUS_URL="http://YOUR_STATUS_URL" ../
-# If you also need to overwrite the port use the following line instead
-# & cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DGRAPH_URL="YOUR_SERVER_GRAPH_URL" -DSTATUS_URL="http://YOUR_STATUS_URL" ../
+# Adds your custom server and sets it as default
+& cmake -G "Ninja" -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DGRAPH_URL="YOUR_SERVER_GRAPH_URL" -DSTATUS_URL="http://YOUR_STATUS_URL" -DSERVER_NAME="Your Server Name" ../
 & cmake --build . -j 6
 $ExitCode = $LastExitCode
 cd ..

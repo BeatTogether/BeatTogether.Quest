@@ -1,16 +1,8 @@
 #pragma once
 
-#include "multiplayer-core/shared/ServerConfig.hpp"
+#include "multiplayer-core/shared/MultiplayerCore.hpp"
 #include <string>
 #include <map>
-
-#ifndef GRAPH_URL
-#error "Define GRAPH_URL!"
-#endif
-
-#ifndef STATUS_URL
-#error "Define STATUS_URL!"
-#endif
 
 #ifndef MAX_PLAYER_COUNT
 #define MAX_PLAYER_COUNT 10
@@ -19,10 +11,17 @@
 struct Config {
     std::string button = "Modded\nOnline";
 
+#if defined(SERVER_NAME)
+    std::string selectedServer = SERVER_NAME;
+#else
     std::string selectedServer = "BeatTogether";
+#endif
     std::string officialServerName = "Official Servers";
     std::map<std::string, MultiplayerCore::ServerConfig> servers = std::map<std::string, MultiplayerCore::ServerConfig>({
-        {"BeatTogether", {GRAPH_URL, STATUS_URL, MAX_PLAYER_COUNT, "", true}},
+        {"BeatTogether", {"http://master.beattogether.systems:8989", "http://master.beattogether.systems/status", MAX_PLAYER_COUNT, "", true, true}},
+        #if defined(GRAPH_URL) && defined(STATUS_URL) && defined(SERVER_NAME)
+        {SERVER_NAME, {GRAPH_URL, STATUS_URL, MAX_PLAYER_COUNT, "", true, true}},
+        #endif
         {officialServerName, {"", ""}}
     });
 
