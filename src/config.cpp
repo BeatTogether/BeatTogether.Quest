@@ -23,8 +23,9 @@ void SaveConfig() {
     rapidjson::Value serverArray;
     serverArray.SetArray();
 
-    serverArray.Reserve(config.servers.size(), allocator);
+    serverArray.Reserve(config.servers.size() - 1, allocator);
     for (const auto& [server, serverConfig] : config.servers) {
+        if (server == config.officialServerName) continue; // Skip the official server when saving
         rapidjson::Value val;
         val.SetObject();
 
@@ -59,6 +60,8 @@ bool LoadConfig() {
 
     bool foundEverything = true;
 
+    auto lastSelected = config.selectedServer;
+
     rapidjson::Document cfg;
     cfg.Parse(readfile(filePath));
     if (cfg.HasParseError() || !cfg.IsObject()) {
@@ -85,6 +88,13 @@ bool LoadConfig() {
             };
         }
     } else {
+        foundEverything = false;
+    }
+
+    // Check selected is in the list
+    if (config.servers.find(config.selectedServer) == config.servers.end()) {
+        WARNING("Selected server not found in config, using last selected {}", lastSelected);
+        config.selectedServer = lastSelected;
         foundEverything = false;
     }
 

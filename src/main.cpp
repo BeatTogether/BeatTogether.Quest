@@ -27,7 +27,18 @@ BEATTOGETHER_EXPORT_FUNC void late_load() {
 
     BeatTogether::Hooking::InstallHooks();
 
-    MultiplayerCore::API::UseServer(config.GetSelectedConfig());
+    auto selected = config.GetSelectedConfig();
+    if (config.selectedServer != config.officialServerName && selected) {
+        INFO("Setting selected server: {}", selected->graphUrl);
+        MultiplayerCore::API::UseServer(selected);
+    } else {
+        if (!selected) {
+            ERROR("Selected server is not in our config!");
+        }
+        INFO("Using official server");
+        // No need to call the below as official is default in MpCore
+        // MultiplayerCore::API::UseOfficialServer();
+    }
 
     auto zenjector = Lapiz::Zenject::Zenjector::Get();
     zenjector->Install(Lapiz::Zenject::Location::Menu, [](Zenject::DiContainer* container){

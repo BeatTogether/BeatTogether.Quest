@@ -68,10 +68,10 @@ namespace BeatTogether::UI {
             return;
         }
 
-        if (config.selectedServer == config.officialServerName) {
-            MultiplayerCore::API::UseOfficialServer();
-        } else {
+        if (config.selectedServer != config.officialServerName) {
             MultiplayerCore::API::UseServer(cfg);
+        } else {
+            MultiplayerCore::API::UseOfficialServer();
         }
 
         SetInteraction(false);
