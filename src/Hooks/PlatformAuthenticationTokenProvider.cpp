@@ -14,11 +14,13 @@ MAKE_AUTO_HOOK_ORIG_MATCH(PlatformAuthenticationTokenProvider_GetAuthenticationT
         using namespace std::chrono_literals;
         while (!(t->IsCompleted || t->IsCanceled)) std::this_thread::sleep_for(50ms);
         GlobalNamespace::AuthenticationToken token = t->ResultOnSuccess;
-        if (token) {
+        bool hasToken = !System::String::IsNullOrEmpty(token.sessionToken);
+        if (token && hasToken) {
             INFO("Successfully got auth token, returning it!");
             token.platform = GlobalNamespace::AuthenticationToken::Platform::OculusQuest; // Makes sure platform is set to OculusQuest
             return token;
         }
+        else if (!hasToken) ERROR("Session token is null or empty!!! Either they don't own the game or modded games no longer have access to tokens");
         ERROR("Failed to get auth token, returning custom authentication token!");
         return GlobalNamespace::AuthenticationToken(
             GlobalNamespace::AuthenticationToken::Platform::OculusQuest,
