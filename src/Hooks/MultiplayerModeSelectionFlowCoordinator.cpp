@@ -42,6 +42,8 @@ MAKE_AUTO_HOOK_MATCH(MultiplayerModeSelectionFlowCoordinator_PresentMasterServer
     ::System::Nullable_1<int64_t> maintenanceWindowEndTime,
     ::StringW remoteLocalizedMessage) 
 {
+    DEBUG("PresentMasterServerUnavailableErrorDialog hook called, with reason: {} and exception: {}", reason.value__, exception ? exception->Message : "nullptr");
+
     auto controller = BeatTogether::UI::ServerSelectionController::get_instance();
     if (controller) {
         controller->SetInteraction(true);
