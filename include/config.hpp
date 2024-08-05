@@ -9,8 +9,6 @@
 #endif
 
 struct Config {
-    std::string button = "Modded\nOnline";
-
 #if defined(SERVER_NAME)
     std::string selectedServer = SERVER_NAME;
 #else

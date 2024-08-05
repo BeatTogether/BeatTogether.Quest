@@ -18,7 +18,6 @@ void SaveConfig() {
     cfg.SetObject();
     auto& allocator = cfg.GetAllocator();
 
-    cfg.AddMember("button", rapidjson::Value(config.button.c_str(), config.button.size(), allocator), allocator);
     cfg.AddMember("SelectedServer", rapidjson::Value(config.selectedServer.c_str(), config.selectedServer.size(), allocator), allocator);
 
     rapidjson::Value serverArray;
@@ -65,13 +64,6 @@ bool LoadConfig() {
     if (cfg.HasParseError() || !cfg.IsObject()) {
         ERROR("Failed to parse config as json document");
         return false;
-    }
-
-    auto buttonItr = cfg.FindMember("button");
-    if (buttonItr != cfg.MemberEnd() && buttonItr->value.IsString()) {
-        config.button = {buttonItr->value.GetString(), buttonItr->value.GetStringLength()};
-    } else {
-        foundEverything = false;
     }
 
     auto selectedServerItr = cfg.FindMember("SelectedServer");
