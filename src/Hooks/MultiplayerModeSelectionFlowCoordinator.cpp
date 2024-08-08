@@ -6,6 +6,8 @@
 #include "GlobalNamespace/MultiplayerModeSelectionFlowCoordinator.hpp"
 #include "HMUI/ViewController.hpp"
 
+#include "System/Exception.hpp"
+
 // may not run orig
 MAKE_AUTO_HOOK_ORIG_MATCH(MultiplayerModeSelectionFlowCoordinator_TopViewControllerWillChange, &::GlobalNamespace::MultiplayerModeSelectionFlowCoordinator::TopViewControllerWillChange, void, GlobalNamespace::MultiplayerModeSelectionFlowCoordinator* self, HMUI::ViewController* oldViewController, HMUI::ViewController* newViewController, HMUI::ViewController::AnimationType animationType) {
     auto controller = BeatTogether::UI::ServerSelectionController::get_instance();
