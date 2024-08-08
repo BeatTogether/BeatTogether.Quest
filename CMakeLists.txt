@@ -39,7 +39,7 @@ if (DEFINED GRAPH_URL AND DEFINED STATUS_URL AND DEFINED SERVER_NAME)
     add_compile_definitions(GRAPH_URL=\"${GRAPH_URL}\")
     add_compile_definitions(STATUS_URL=\"${STATUS_URL}\")
     add_compile_definitions(SERVER_NAME=\"${SERVER_NAME}\")
-        message(AUTHOR_WARNING "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nOverriding default with ${SERVER_NAME} ${GRAPH_URL}:8989 with StatusUrl ${STATUS_URL}\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+        message(AUTHOR_WARNING "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nOverriding default with ${SERVER_NAME} ${GRAPH_URL} with StatusUrl ${STATUS_URL}\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 endif()
 
 
