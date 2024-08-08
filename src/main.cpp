@@ -1,6 +1,7 @@
 #include "_config.h"
 #include "config.hpp"
 #include "hooking.hpp"
+#include "logging.hpp"
 #include "scotland2/shared/loader.hpp"
 
 #include "multiplayer-core/shared/MultiplayerCore.hpp"
