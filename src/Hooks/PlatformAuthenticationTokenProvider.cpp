@@ -29,7 +29,7 @@ System::Threading::Tasks::Task_1<GlobalNamespace::AuthenticationToken>*, GlobalN
             return token;
         }
         else if (!hasToken && self->_platform.value__ != 20) ERROR("Session token is null or empty!!! Either they don't own the game or modded games no longer have access to tokens");
-        ERROR("Failed to get auth token, returning custom authentication token!");
+        WARNING("Failed to get auth token, returning custom authentication token!");
         return GlobalNamespace::AuthenticationToken(
             // GlobalNamespace::AuthenticationToken::Platform::OculusQuest,
             self->_platform == GlobalNamespace::AuthenticationToken::Platform::Oculus ? GlobalNamespace::AuthenticationToken::Platform::OculusQuest : self->_platform,
