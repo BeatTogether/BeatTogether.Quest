@@ -1,0 +1,12 @@
+<horizontal pref-width='90' horizontal-fit='PreferredSize'>
+    <list-setting
+        text='Playing on'
+        id='serverList'
+        options='serverOptions'
+        value='server'
+        apply-on-change='true'
+        rich-text='true'
+        overflow-mode='Ellipsis'
+        pref-width='90'
+        anchor-pos-y='0'/>
+</horizontal>

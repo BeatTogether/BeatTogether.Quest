@@ -1,9 +1,6 @@
 Param(
     [Parameter(Mandatory=$false, HelpMessage="The name the output qmod file should have")][String] $qmodname="BeatTogether",
     [Parameter(Mandatory=$false, HelpMessage="The version the mod should be compiled with")][Alias("ver")][string]$Version,
-    [Parameter(Mandatory=$false, HelpMessage="Switch to create a clean compilation")]
-    [Alias("rebuild")]
-    [Switch] $clean,
 
     [Parameter(Mandatory=$false, HelpMessage="Prints the help instructions")]
     [Switch] $help,
@@ -12,9 +9,9 @@ Param(
     [Alias("actions", "pack")]
     [Switch] $package,
 
-    [Parameter(Mandatory=$false, HelpMessage="Overwrite default HOST_NAME")][Alias("host")][string]$HOST_NAME,
-    [Parameter(Mandatory=$false, HelpMessage="Overwrite default PORT")][string]$PORT,
-    [Parameter(Mandatory=$false, HelpMessage="Overwrite default STATUS_URL")][string]$STATUS_URL
+    [Parameter(Mandatory=$false, HelpMessage="Add custom SERVER_NAME")][Alias("name")][string]$SERVER_NAME,
+    [Parameter(Mandatory=$false, HelpMessage="Add custom GRAPH_URL")][Alias("host")][string]$GRAPH_URL,
+    [Parameter(Mandatory=$false, HelpMessage="Add custom STATUS_URL")][string]$STATUS_URL
 
 )
 
@@ -43,7 +40,7 @@ if ($qmodName -eq "")
 
 if (-not [string]::IsNullOrEmpty($Version)) {
     $clean = $true
-    & qpm-rust package edit --version $VERSION
+    & qpm package edit --version $VERSION
 }
 
 if ($package -eq $true) {
@@ -52,68 +49,31 @@ if ($package -eq $true) {
 }
 if (($args.Count -eq 0) -And $package -eq $false) {
 Write-Output "Creating QMod $qmodName"
-Write-Output "Server ${$HOST_NAME}:$PORT with statusUrl $STATUS_URL"
-    & $PSScriptRoot/build.ps1 -clean:$clean -HOST_NAME:$HOST_NAME -STATUS_URL:$STATUS_URL -PORT:$PORT -Version:$Version -release:$true
+Write-Output "Server $SERVER_NAME GraphUrl ${$GRAPH_URL} and statusUrl $STATUS_URL"
+    & $PSScriptRoot/build.ps1 -clean:$clean -SERVER_NAME:$SERVER_NAME -GRAPH_URL:$GRAPH_URL -STATUS_URL:$STATUS_URL -Version:$Version -release:$true
 
     if ($LASTEXITCODE -ne 0) {
         Write-Output "Failed to build, exiting..."
         exit $LASTEXITCODE
     }
-
-    qpm-rust qmod build
 }
 
-echo "Creating qmod from mod.json"
+qpm qmod manifest
 
-$mod = "./mod.json"
-$modJson = Get-Content $mod -Raw | ConvertFrom-Json
-
-$filelist = @($mod)
-
-$cover = "./" + $modJson.coverImage
-if ((-not ($cover -eq "./")) -and (Test-Path $cover))
-{ 
-    $filelist += ,$cover
-} else {
-    echo "No cover Image found"
-}
-
-foreach ($mod in $modJson.modFiles)
-{
-    $path = "./build/" + $mod
-    if (-not (Test-Path $path))
-    {
-        $path = "./extern/libs/" + $mod
-    }
-    $filelist += $path
-}
-
-foreach ($lib in $modJson.libraryFiles)
-{
-    $path = "./extern/libs/" + $lib
-    if (-not (Test-Path $path))
-    {
-        $path = "./build/" + $lib
-    }
-    $filelist += $path
-}
+$qpmshared = "./qpm.shared.json"
+$qpmsharedJson = Get-Content $qpmshared -Raw | ConvertFrom-Json
 
 if ([string]::IsNullOrEmpty($env:version)) {
-    $qmodVersion = $modJson.version
+    $qmodVersion = $qpmsharedJson.config.info.version
     $qmodName += "_v$qmodVersion"
     echo "qmodName set to $qmodName"
 }
 
-$zip = $qmodName + ".zip"
+
 $qmod = $qmodName + ".qmod"
 
-if ((-not ($clean.IsPresent)) -and (Test-Path $qmod))
-{
-    echo "Making Clean Qmod"
-    Move-Item $qmod $zip -Force
-}
+qpm qmod zip -i ./build/ -i ./extern/libs/ $qmod
 
-Compress-Archive -Path $filelist -DestinationPath $zip -Update
-Move-Item $zip $qmod -Force
+# Move-Item BeatTogether.qmod $qmod -Force
 
 echo "Task Completed"
