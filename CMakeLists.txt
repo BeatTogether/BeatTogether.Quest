@@ -1,8 +1,8 @@
 # include some defines automatically made by qpm
 include(qpm_defines.cmake)
 
-# override mod id
-# set(MOD_ID "QuestSounds")
+# Bump Android sdk version
+set(ANDROID_PLATFORM 29)
 
 # Enable link time optimization
 # In my experience, this can be highly unstable but it nets a huge size optimization and likely performance
