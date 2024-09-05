@@ -6,32 +6,36 @@ Feel free to join our Discord! https://discord.com/invite/gezGrFG4tz (Support, C
 Want to support development and server costs? [Click Here](https://www.patreon.com/BeatTogether)
 
 ## Features
-* Private server free from Beat Saber official; allowing Quest to play freely on modded installs
+* All the features from MultiplayerCore
+* Private server free from Beat Saber official
 * Crossplay between all compatible platforms
-* Custom songs between platforms (With MultiplayerCore installed)
-* 10 Player lobbies (If a PC players hosts the lobby and has MultiplayerExtensions plugin installed which is PC only) **This Feature is EXPERIMENTAL. For optimal experience its recommended to stick with 5 players.**
 
 ## Installation
 
 **Recommended Install:**
 
-This mod is already installed automatically as a core mod as of 1.24.0. You shouldn't need to follow any steps on the github. Just go play! If your facing issues, join our Discord.
+You can install this mod using any of the currently supported modding tools like MBF/QuestPatcher. If your facing issues, join our Discord.
 
 **Manual Install:**
 
-To install, Download the latest mod from our releases. [Click Here](https://github.com/pythonology/BeatTogether.Quest/releases)
+To install, Download the latest mod from our releases. [Click Here](https://github.com/BeatTogether/BeatTogether.Quest/releases)
 
-You need to access BMBF from a computer. Open BMBF and go to the "Tools" tab. You should see a web address and a version number.
+Open [MBF](https://mbf.bsquest.xyz) using your computer or an android phone with you Quest connected to it.
 
-On your PC, type in that web address that is shown. You will be greeted with a upload interface.
+Inside MBF drag an drop the .qmod into the window to upload and install the mod
 
-Upload the .qmod you got from the download above. To be sure it downloaded correctly, check the "mods" tab and see if its enabled and active.
+After that check that both BeatTogether and MultiplayerCore are installed.
 
-## Custom Song Support
-Customs in multiplayer require [MultiplayerCore](https://github.com/EnderdracheLP/MultiplayerCore.Quest)
+The installation should be completed enjoy.
+
+If you encounter problems feel free to join [our Discord](https://discord.com/invite/gezGrFG4tz) and ask in the #help channel
 
 ## Special Thanks
-Special thanks to [Sc2ad](https://github.com/Sc2ad) for helping me debug this.
+A special thanks goes to the following contributors:
+
+[Sc2ad](https://github.com/Sc2ad) for helping us debug problems in the mod.
+
+[RedBrumbler](https://github.com/RedBrumbler) for doing a substantial part of the rewrite.
 
 ## Credits
 * [zoller27osu](https://github.com/zoller27osu), [Sc2ad](https://github.com/Sc2ad) and [jakibaki](https://github.com/jakibaki) - [beatsaber-hook](https://github.com/sc2ad/beatsaber-hook)
