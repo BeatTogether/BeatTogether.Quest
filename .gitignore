@@ -63,3 +63,6 @@ TestQMOD.ps1
 *.cmake
 BeatTogether.Quest.code-workspace
 mod.json
+
+# clangd
+.cache
