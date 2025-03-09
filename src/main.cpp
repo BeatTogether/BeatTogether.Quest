@@ -7,6 +7,7 @@
 #include "multiplayer-core/shared/MultiplayerCore.hpp"
 
 #include "UI/ServerSelectionController.hpp"
+// #include "Registries/ServerDetailsRegistry.hpp"
 #include "Zenject/FromBinderNonGeneric.hpp"
 
 #include "lapiz/shared/zenject/Zenjector.hpp"
@@ -42,7 +43,11 @@ BEATTOGETHER_EXPORT_FUNC void late_load() {
     }
 
     auto zenjector = Lapiz::Zenject::Zenjector::Get();
+    // zenjector->Install(Lapiz::Zenject::Location::App, [](Zenject::DiContainer* container){
+    //     container->BindInterfacesAndSelfTo<BeatTogether::Registries::ServerDetailsRegistry*>()->AsSingle();
+    // });
     zenjector->Install(Lapiz::Zenject::Location::Menu, [](Zenject::DiContainer* container){
         container->BindInterfacesAndSelfTo<BeatTogether::UI::ServerSelectionController*>()->AsSingle();
+
     });
 }

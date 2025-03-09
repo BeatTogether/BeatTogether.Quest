@@ -54,6 +54,76 @@ namespace BeatTogether::UI {
         if (instance == this) instance = nullptr;
     }
 
+    // void ServerSelectionController::ApplySelectedServer(Models::ServerDetails* server) {
+    //     if (il2cpp_utils::try_cast<Models::TemporaryServerDetails*>(server).has_value()) return;
+
+    //     // ApplyNetworkConfig(server);
+    //     // SyncTemporarySelectedServer();
+    //     // RefreshSwitchInteractable();
+        
+    //     // _modeSelectionFlow.DidDeactivate(false, false);
+    //     // _modeSelectionFlow.DidActivate(false, true, false);
+    //     // _modeSelectionFlow.ReplaceTopViewController(_joiningLobbyView,
+    //     //     animationDirection: ViewController.AnimationDirection.Vertical);
+    // }
+
+    // void SyncSelectedServer()
+    // {
+    //     Models::ServerDetails* selectedServer;
+
+    //     if (config.IsOverridingApi)
+    //     {
+    //         // Master server is being patched by MpCore, sync our selection
+    //         auto knownServer = config.servers.find(config.selectedServer);
+    //         if (knownServer != config.servers.end())
+    //         {
+    //             // Selected server is in our config
+    //             selectedServer = knownServer->second;
+    //         }
+    //         else
+    //         {
+    //             // Selected server is not in our config, set temporary value
+    //             DEBUG("Setting temporary server details (GraphUrl={})", config.selectedServer);
+    //             selectedServer = Models::TemporaryServerDetails::New_ctor(config.selectedServer, config.masterServerStatusUrl);
+    //         }
+    //     }
+    //     else
+    //     {
+    //         selectedServer = config.officialServer;
+    //     }
+
+    //     // ServerDetails selectedServer;
+        
+    //     // if (_networkConfig.IsOverridingApi)
+    //     // {
+    //     //     // Master server is being patched by MpCore, sync our selection
+    //     //     auto knownServer = _serverRegistry.Servers.FirstOrDefault(serverDetails =>
+    //     //         serverDetails.MatchesApiUrl(_networkConfig.GraphUrl));
+
+    //     //     if (knownServer != null)
+    //     //     {
+    //     //         // Selected server is in our config
+    //     //         selectedServer = knownServer;
+    //     //     }
+    //     //     else
+    //     //     {
+    //     //         // Selected server is not in our config, set temporary value
+    //     //         DEBUG("Setting temporary server details (GraphUrl={})", _networkConfig.GraphUrl);
+    //     //         selectedServer = TemporaryServerDetails::New_ctor(_networkConfig.GraphUrl!, _networkConfig.MasterServerStatusUrl);
+    //     //     }
+    //     // }
+    //     // else
+    //     // {
+    //     //     selectedServer = _serverRegistry->OfficialServer;
+    //     // }
+
+    //     // _serverRegistry.SetSelectedServer(selectedServer);
+        
+    //     // SyncTemporarySelectedServer();
+        
+    //     // OnPropertyChanged(nameof(_serverValue)); // for BSML binding
+    // }
+
     void ServerSelectionController::ApplySelectedServer(std::string server) {
         DEBUG("Server changed to {}", server);
 
@@ -122,6 +192,9 @@ namespace BeatTogether::UI {
 
     void ServerSelectionController::SetInteraction(bool value) {
         _interactable = value;
+        // if (_allowSelectionOnce > 0) {
+        //     value = _allowSelectionOnce-- == 1;
+        // }
         serverList->set_interactable(_interactable && _globalInteraction);
     }
 

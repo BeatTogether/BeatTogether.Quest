@@ -49,6 +49,7 @@ MAKE_AUTO_HOOK_MATCH(MultiplayerModeSelectionFlowCoordinator_PresentMasterServer
     auto controller = BeatTogether::UI::ServerSelectionController::get_instance();
     if (controller) {
         controller->SetInteraction(true);
+        // controller->_allowSelectionOnce = 2;
     }
 
     MultiplayerModeSelectionFlowCoordinator_PresentMasterServerUnavailableErrorDialog(self, reason, exception, maintenanceWindowEndTime, remoteLocalizedMessage);

@@ -20,6 +20,7 @@ DECLARE_CLASS_CODEGEN_INTERFACES(BeatTogether::UI, ServerSelectionController, Sy
 
     DECLARE_INSTANCE_FIELD(bool, _interactable);
     DECLARE_INSTANCE_FIELD(bool, _globalInteraction);
+    // DECLARE_INSTANCE_FIELD(uint8_t, _allowSelectionOnce);
 
     DECLARE_INSTANCE_FIELD(BSML::FloatingScreen*, _screen);
     DECLARE_INSTANCE_FIELD(BSML::ListSetting*, serverList);
@@ -38,6 +39,13 @@ DECLARE_CLASS_CODEGEN_INTERFACES(BeatTogether::UI, ServerSelectionController, Sy
         static ServerSelectionController* get_instance();
 
         void ApplySelectedServer(std::string server);
+        // void ApplySelectedServer(ServerDetails server);
+        // void SyncSelectedServer();
+        // void ApplyNetworkConfig(ServerDetails server);
+        // void SyncTemporarySelectedServer();
+        // TODO: Requires implementation in MultiplayerCore.Quest
+        // void HandleMpStatusUpdateForUrl(std::string url, MultiplayerCore::Models::MpStatusData* status);
+
         void SetInteraction(bool value);
         void SetGlobalUserInteraction(bool value);
         void SetTitle(StringW& value, StringW title);
