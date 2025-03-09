@@ -3,15 +3,7 @@
 #include "beatsaber-hook/shared/utils/typedefs.h"
 #include <string_view>
 
-#include "paper/shared/logger.hpp"
-
-template <> struct fmt::formatter<::StringW> : formatter<string_view> {
-    // parse is inherited from formatter<string_view>.
-    template <typename FormatContext>
-    auto format(StringW s, FormatContext& ctx) {
-        return formatter<string_view>::format(s ? static_cast<std::string>(s) : "NULL", ctx);
-    }
-};
+#include "paper2_scotland2/shared/logger.hpp"
 
 #define INFO(str, ...) Paper::Logger::fmtLogTag<Paper::LogLevel::INF>(str, "BeatTogether" __VA_OPT__(, __VA_ARGS__))
 #define ERROR(str, ...) Paper::Logger::fmtLogTag<Paper::LogLevel::ERR>(str, "BeatTogether" __VA_OPT__(, __VA_ARGS__))

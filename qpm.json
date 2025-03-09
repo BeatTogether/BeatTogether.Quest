@@ -3,81 +3,82 @@
   "sharedDir": "shared",
   "dependenciesDir": "extern",
   "info": {
-    "name": "BeatTogether",
-    "id": "BeatTogether",
-    "version": "2.2.0",
-    "url": "https://github.com/BeatTogether/BeatTogether.Quest",
-    "additionalData": {
-      "overrideSoName": "libBeatTogether.so",
-      "cmake": true
-    }
+ "name": "BeatTogether",
+ "id": "BeatTogether",
+ "version": "2.2.1",
+ "url": "https://github.com/BeatTogether/BeatTogether.Quest",
+ "additionalData": {
+   "overrideSoName": "libBeatTogether.so",
+   "cmake": true
+ }
   },
   "workspace": {
-    "scripts": {},
-    "qmodIncludeDirs": [],
-    "qmodIncludeFiles": [],
-    "qmodOutput": null
+ "scripts": {},
+ "ndk": "^27.2.12479018",
+ "qmodIncludeDirs": [],
+ "qmodIncludeFiles": [],
+ "qmodOutput": null
   },
   "dependencies": [
-    {
-      "id": "beatsaber-hook",
-      "versionRange": "^5.1.9",
-      "additionalData": {}
-    },
-    {
-      "id": "bs-cordl",
-      "versionRange": "^3700.0.0",
-      "additionalData": {}
-    },
-    {
-      "id": "multiplayer-core",
-      "versionRange": "^1.5.0",
-      "additionalData": {}
-    },
-    {
-      "id": "scotland2",
-      "versionRange": "^0.1.4",
-      "additionalData": {
-        "includeQmod": false,
-        "private": true
-      }
-    },
-    {
-      "id": "paper",
-      "versionRange": "^3.6.3",
-      "additionalData": {
-        "private": true
-      }
-    },
-    {
-      "id": "lapiz",
-      "versionRange": "^0.2.12",
-      "additionalData": {}
-    },
-    {
-      "id": "bsml",
-      "versionRange": "^0.4.43",
-      "additionalData": {}
-    },
-    {
-      "id": "custom-types",
-      "versionRange": "^0.17.10",
-      "additionalData": {}
-    },
-    {
-      "id": "kaleb",
-      "versionRange": "^0.1.9",
-      "additionalData": {}
-    },
-    {
-      "id": "custom-types",
-      "versionRange": "^0.17.10",
-      "additionalData": {}
-    },
-    {
-      "id": "custom-types",
-      "versionRange": "^0.17.10",
-      "additionalData": {}
-    }
+ {
+   "id": "beatsaber-hook",
+   "versionRange": "^6.4.1",
+   "additionalData": {}
+ },
+ {
+   "id": "bs-cordl",
+   "versionRange": "^4030.0.0",
+   "additionalData": {}
+ },
+ {
+   "id": "multiplayer-core",
+   "versionRange": "^1.6.1",
+   "additionalData": {}
+ },
+ {
+   "id": "scotland2",
+   "versionRange": "^0.1.6",
+   "additionalData": {
+  "includeQmod": false,
+  "private": true
+   }
+ },
+ {
+   "id": "paper2_scotland2",
+   "versionRange": "^4.6.1",
+   "additionalData": {
+  "private": true
+   }
+ },
+ {
+   "id": "lapiz",
+   "versionRange": "^0.2.17",
+   "additionalData": {}
+ },
+ {
+   "id": "bsml",
+   "versionRange": "^0.4.50",
+   "additionalData": {}
+ },
+ {
+   "id": "custom-types",
+   "versionRange": "^0.18.2",
+   "additionalData": {}
+ },
+ {
+   "id": "kaleb",
+   "versionRange": "^0.1.9",
+   "additionalData": {}
+ },
+ {
+   "id": "custom-types",
+   "versionRange": "^0.18.2",
+   "additionalData": {}
+ },
+ {
+   "id": "custom-types",
+   "versionRange": "^0.18.2",
+   "additionalData": {}
+ }
   ]
 }
