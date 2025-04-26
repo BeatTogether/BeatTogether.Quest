@@ -27,7 +27,7 @@
     },
     {
       "id": "bs-cordl",
-      "versionRange": "^4030.0.0",
+      "versionRange": "4004.*",
       "additionalData": {}
     },
     {
@@ -52,12 +52,12 @@
     },
     {
       "id": "lapiz",
-      "versionRange": "^0.2.17",
+      "versionRange": "^0.2.19",
       "additionalData": {}
     },
     {
       "id": "bsml",
-      "versionRange": "^0.4.50",
+      "versionRange": "^0.4.51",
       "additionalData": {}
     },
     {
