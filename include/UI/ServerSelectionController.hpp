@@ -6,19 +6,20 @@
 #include "bsml/shared/BSML/Components/Settings/ListSetting.hpp"
 #include "bsml/shared/BSML/FloatingScreen/FloatingScreen.hpp"
 
+#include "multiplayer-core/shared/Models/MpStatusData.hpp"
+
 #include "Zenject/IInitializable.hpp"
 #include "System/IDisposable.hpp"
 
 #include "GlobalNamespace/MultiplayerModeSelectionFlowCoordinator.hpp"
 #include "GlobalNamespace/JoiningLobbyViewController.hpp"
 
-DECLARE_CLASS_CODEGEN_INTERFACES(BeatTogether::UI, ServerSelectionController, System::Object, std::vector<Il2CppClass*>({classof(Zenject::IInitializable*), classof(System::IDisposable*)}),
+DECLARE_CLASS_CODEGEN_INTERFACES(BeatTogether::UI, ServerSelectionController, System::Object, ::Zenject::IInitializable*, ::System::IDisposable*) {
     DECLARE_INSTANCE_FIELD(GlobalNamespace::MultiplayerModeSelectionFlowCoordinator*, modeSelectionFlow);
     DECLARE_INSTANCE_FIELD(GlobalNamespace::JoiningLobbyViewController*, joiningLobbyView);
 
     DECLARE_INSTANCE_FIELD(bool, _interactable);
     DECLARE_INSTANCE_FIELD(bool, _globalInteraction);
-    DECLARE_INSTANCE_FIELD(uint8_t, _allowSelectionOnce);
 
     DECLARE_INSTANCE_FIELD(BSML::FloatingScreen*, _screen);
     DECLARE_INSTANCE_FIELD(BSML::ListSetting*, serverList);
@@ -46,4 +47,4 @@ DECLARE_CLASS_CODEGEN_INTERFACES(BeatTogether::UI, ServerSelectionController, Sy
 
     private:
         static ServerSelectionController* instance;
-)
+};
