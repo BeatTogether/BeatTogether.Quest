@@ -5,7 +5,7 @@
   "info": {
     "name": "BeatTogether",
     "id": "BeatTogether",
-    "version": "2.2.1",
+    "version": "2.2.2",
     "url": "https://github.com/BeatTogether/BeatTogether.Quest",
     "additionalData": {
       "overrideSoName": "libBeatTogether.so",
@@ -22,17 +22,17 @@
   "dependencies": [
     {
       "id": "beatsaber-hook",
-      "versionRange": "^6.4.1",
+      "versionRange": "^6.4.2",
       "additionalData": {}
     },
     {
       "id": "bs-cordl",
-      "versionRange": "4004.*",
+      "versionRange": "4006.*",
       "additionalData": {}
     },
     {
       "id": "multiplayer-core",
-      "versionRange": "^1.6.1",
+      "versionRange": "^1.6.2",
       "additionalData": {}
     },
     {
@@ -45,24 +45,24 @@
     },
     {
       "id": "paper2_scotland2",
-      "versionRange": "^4.6.1",
+      "versionRange": "^4.6.4",
       "additionalData": {
         "private": true
       }
     },
     {
       "id": "lapiz",
-      "versionRange": "^0.2.19",
+      "versionRange": "^0.2.21",
       "additionalData": {}
     },
     {
       "id": "bsml",
-      "versionRange": "^0.4.51",
+      "versionRange": "^0.4.53",
       "additionalData": {}
     },
     {
       "id": "custom-types",
-      "versionRange": "^0.18.2",
+      "versionRange": "^0.18.3",
       "additionalData": {}
     },
     {
