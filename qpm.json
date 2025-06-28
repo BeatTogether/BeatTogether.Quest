@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/QuestPackageManager/QPM.Package/refs/heads/main/qpm.schema.json",
   "version": "0.1.0",
   "sharedDir": "shared",
   "dependenciesDir": "extern",
@@ -13,11 +14,33 @@
     }
   },
   "workspace": {
-    "scripts": {},
+    "scripts": {
+      "build": [
+        "pwsh build.ps1 $0:?"
+      ],
+      "clean": [
+        "qpm s build -- -clean"
+      ],
+      "copy": [
+        "pwsh copy.ps1 $0:?"
+      ],
+      "log": [
+        "pwsh logging.ps1 $0:?"
+      ],
+      "qmod": [
+        "pwsh buildQMOD.ps1 BeatTogether"
+      ],
+      "stack": [
+        "pwsh ndk-stack.ps1 $0:?"
+      ]
+    },
     "ndk": "^27.2.12479018",
-    "qmodIncludeDirs": [],
+    "qmodIncludeDirs": [
+      "./build",
+      "./extern/libs"
+    ],
     "qmodIncludeFiles": [],
-    "qmodOutput": null
+    "qmodOutput": "BeatTogether.qmod"
   },
   "dependencies": [
     {
