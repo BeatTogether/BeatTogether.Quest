@@ -34,19 +34,31 @@ $QPMJson.dependencies | ForEach-Object -Begin { $i = -1 } -Process {
     $i++
     $dependency = $_
     $dependencyName = $dependency.id
+    $dependenyHasCaret = $dependency.versionRange.startsWith('^')
     $dependencyVersion = $dependency.versionRange.replace('^','')
-    $newVersion = (& $QPMPath list versions $dependencyName | Select-Object -Last 1).replace(' - ', '')
-    if ($dependencyVersion -eq ($newVersion -replace '\x1b\[[0-9;]*m', '')) {
-        Write-Host "$dependencyName version $dependencyVersion is already up to date"
-        return
+    if ($dependencyName -eq "bs-cordl") {
+        Write-Host "Current cordl version $dependencyVersion"
+        $newVersion = (& $QPMPath list versions $dependencyName) | foreach-object {$_.replace(' - ', '')} | Out-GridView -Title "Select current BS-Cordl version" -OutputMode Single
+        $newVersion = $newVersion -replace '\.\d\.\d', '.*'
+    } else {
+        $newVersion = (& $QPMPath list versions $dependencyName | Select-Object -Last 1).replace(' - ', '')
+        if ($dependencyVersion -eq ($newVersion -replace '\x1b\[[0-9;]*m', '')) {   
+            Write-Host "$dependencyName version $dependencyVersion is already up to date"
+            return     
+        }
     }
     Write-Host "Bumping $dependencyName from $($dependencyVersion) to $newVersion"
-    $QPMJson.dependencies[$i].versionRange = "^$(($newVersion -replace '\x1b\[[0-9;]*m', ''))"
+    $newVersion = $newVersion -replace '\x1b\[[0-9;]*m', ''
+    if ($dependenyHasCaret) {
+        $newVersion = "^" + $newVersion
+    }
+    $QPMJson.dependencies[$i].versionRange = $newVersion
 }
 
 # Write back to qpm.json and reduce indentation, 
 # since it's not that readable with that much indentation
-$QPMJson | ConvertTo-Json -Depth 100 | foreach-object {($_ -replace "(?m)    (?<=^(?:  )*)", " ") -replace '(?m)\:  (?<=(?: )*)', ": " } | Set-Content $QPMJsonPath
+# $QPMJson | ConvertTo-Json -Depth 100 | foreach-object {($_ -replace "(?m)  (?<=^(?:  )*)", " ") -replace '(?m)\:  (?<=(?: )*)', ": " } | Set-Content $QPMJsonPath
+$QPMJson | ConvertTo-Json -Depth 100 | Set-Content $QPMJsonPath
 
 
 # Restore depemdencies via QPM
