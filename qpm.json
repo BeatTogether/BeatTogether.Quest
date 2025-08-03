@@ -5,7 +5,7 @@
   "info": {
     "name": "BeatTogether",
     "id": "BeatTogether",
-    "version": "2.2.2",
+    "version": "2.2.3",
     "url": "https://github.com/BeatTogether/BeatTogether.Quest",
     "additionalData": {
       "overrideSoName": "libBeatTogether.so",
@@ -27,12 +27,12 @@
     },
     {
       "id": "bs-cordl",
-      "versionRange": "4006.*",
+      "versionRange": "4007.*",
       "additionalData": {}
     },
     {
       "id": "multiplayer-core",
-      "versionRange": "^1.6.2",
+      "versionRange": "^1.6.3",
       "additionalData": {}
     },
     {
@@ -52,12 +52,12 @@
     },
     {
       "id": "lapiz",
-      "versionRange": "^0.2.21",
+      "versionRange": "^0.2.22",
       "additionalData": {}
     },
     {
       "id": "bsml",
-      "versionRange": "^0.4.53",
+      "versionRange": "^0.4.54",
       "additionalData": {}
     },
     {

@@ -6,7 +6,7 @@
     "info": {
       "name": "BeatTogether",
       "id": "BeatTogether",
-      "version": "2.2.2",
+      "version": "2.2.3",
       "url": "https://github.com/BeatTogether/BeatTogether.Quest",
       "additionalData": {
         "overrideSoName": "libBeatTogether.so",
@@ -28,12 +28,12 @@
       },
       {
         "id": "bs-cordl",
-        "versionRange": "4006.*",
+        "versionRange": "4007.*",
         "additionalData": {}
       },
       {
         "id": "multiplayer-core",
-        "versionRange": "^1.6.2",
+        "versionRange": "^1.6.3",
         "additionalData": {}
       },
       {
@@ -53,12 +53,12 @@
       },
       {
         "id": "lapiz",
-        "versionRange": "^0.2.21",
+        "versionRange": "^0.2.22",
         "additionalData": {}
       },
       {
         "id": "bsml",
-        "versionRange": "^0.4.53",
+        "versionRange": "^0.4.54",
         "additionalData": {}
       },
       {
@@ -77,17 +77,17 @@
     {
       "dependency": {
         "id": "bsml",
-        "versionRange": "=0.4.53",
+        "versionRange": "=0.4.54",
         "additionalData": {
-          "soLink": "https://github.com/bsq-ports/Quest-BSML/releases/download/v0.4.53/libbsml.so",
-          "debugSoLink": "https://github.com/bsq-ports/Quest-BSML/releases/download/v0.4.53/debug_libbsml.so",
+          "soLink": "https://github.com/bsq-ports/Quest-BSML/releases/download/v0.4.54/libbsml.so",
+          "debugSoLink": "https://github.com/bsq-ports/Quest-BSML/releases/download/v0.4.54/debug_libbsml.so",
           "overrideSoName": "libbsml.so",
-          "modLink": "https://github.com/bsq-ports/Quest-BSML/releases/download/v0.4.53/BSML.qmod",
-          "branchName": "version/v0_4_53",
+          "modLink": "https://github.com/bsq-ports/Quest-BSML/releases/download/v0.4.54/BSML.qmod",
+          "branchName": "version/v0_4_54",
           "cmake": true
         }
       },
-      "version": "0.4.53"
+      "version": "0.4.54"
     },
     {
       "dependency": {
@@ -146,17 +146,17 @@
     {
       "dependency": {
         "id": "songcore",
-        "versionRange": "=1.1.22",
+        "versionRange": "=1.1.23",
         "additionalData": {
-          "soLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.22/libsongcore.so",
-          "debugSoLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.22/debug_libsongcore.so",
+          "soLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.23/libsongcore.so",
+          "debugSoLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.23/debug_libsongcore.so",
           "overrideSoName": "libsongcore.so",
-          "modLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.22/SongCore.qmod",
-          "branchName": "version/v1_1_22",
+          "modLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.23/SongCore.qmod",
+          "branchName": "version/v1_1_23",
           "cmake": true
         }
       },
-      "version": "1.1.22"
+      "version": "1.1.23"
     },
     {
       "dependency": {
@@ -232,25 +232,25 @@
     {
       "dependency": {
         "id": "multiplayer-core",
-        "versionRange": "=1.6.2",
+        "versionRange": "=1.6.3",
         "additionalData": {
-          "soLink": "https://github.com/EnderdracheLP/MultiplayerCore.Quest/releases/download/1.6.1/libMultiplayerCore.so",
-          "debugSoLink": "https://github.com/EnderdracheLP/MultiplayerCore.Quest/releases/download/1.6.1/debug_libMultiplayerCore.so",
+          "soLink": "https://github.com/EnderdracheLP/MultiplayerCore.Quest/releases/download/1.6.3/libMultiplayerCore.so",
+          "debugSoLink": "https://github.com/EnderdracheLP/MultiplayerCore.Quest/releases/download/1.6.3/debug_libMultiplayerCore.so",
           "overrideSoName": "libMultiplayerCore.so",
-          "modLink": "https://github.com/EnderdracheLP/MultiplayerCore.Quest/releases/download/1.6.1/MultiplayerCore_1.6.1.qmod",
-          "branchName": "version/1.6.1",
+          "modLink": "https://github.com/EnderdracheLP/MultiplayerCore.Quest/releases/download/1.6.3/MultiplayerCore_1.6.3.qmod",
+          "branchName": "version/1.6.3",
           "cmake": true
         }
       },
-      "version": "1.6.2"
+      "version": "1.6.3"
     },
     {
       "dependency": {
         "id": "bs-cordl",
-        "versionRange": "=4006.0.0",
+        "versionRange": "=4007.0.0",
         "additionalData": {
           "headersOnly": true,
-          "branchName": "version/v4006_0_0",
+          "branchName": "version/v4007_0_0",
           "compileOptions": {
             "includePaths": [
               "include"
@@ -266,22 +266,22 @@
           }
         }
       },
-      "version": "4006.0.0"
+      "version": "4007.0.0"
     },
     {
       "dependency": {
         "id": "lapiz",
-        "versionRange": "=0.2.21",
+        "versionRange": "=0.2.22",
         "additionalData": {
-          "soLink": "https://github.com/raineaeternal/Lapiz/releases/download/v0.2.21/liblapiz.so",
-          "debugSoLink": "https://github.com/raineaeternal/Lapiz/releases/download/v0.2.21/debug_liblapiz.so",
+          "soLink": "https://github.com/raineaeternal/Lapiz/releases/download/v0.2.22/liblapiz.so",
+          "debugSoLink": "https://github.com/raineaeternal/Lapiz/releases/download/v0.2.22/debug_liblapiz.so",
           "overrideSoName": "liblapiz.so",
-          "modLink": "https://github.com/raineaeternal/Lapiz/releases/download/v0.2.21/Lapiz.qmod",
-          "branchName": "version/v0_2_21",
+          "modLink": "https://github.com/raineaeternal/Lapiz/releases/download/v0.2.22/Lapiz.qmod",
+          "branchName": "version/v0_2_22",
           "cmake": true
         }
       },
-      "version": "0.2.21"
+      "version": "0.2.22"
     },
     {
       "dependency": {
@@ -305,22 +305,16 @@
     },
     {
       "dependency": {
-        "id": "fmt",
-        "versionRange": "=11.0.2",
+        "id": "scotland2",
+        "versionRange": "=0.1.6",
         "additionalData": {
-          "headersOnly": true,
-          "branchName": "version/v11_0_2",
-          "compileOptions": {
-            "systemIncludes": [
-              "fmt/include/"
-            ],
-            "cppFlags": [
-              "-DFMT_HEADER_ONLY"
-            ]
-          }
+          "soLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.6/libsl2.so",
+          "debugSoLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.6/debug_libsl2.so",
+          "overrideSoName": "libsl2.so",
+          "branchName": "version/v0_1_6"
         }
       },
-      "version": "11.0.2"
+      "version": "0.1.6"
     },
     {
       "dependency": {
@@ -339,16 +333,22 @@
     },
     {
       "dependency": {
-        "id": "scotland2",
-        "versionRange": "=0.1.6",
+        "id": "fmt",
+        "versionRange": "=11.0.2",
         "additionalData": {
-          "soLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.6/libsl2.so",
-          "debugSoLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.6/debug_libsl2.so",
-          "overrideSoName": "libsl2.so",
-          "branchName": "version/v0_1_6"
+          "headersOnly": true,
+          "branchName": "version/v11_0_2",
+          "compileOptions": {
+            "systemIncludes": [
+              "fmt/include/"
+            ],
+            "cppFlags": [
+              "-DFMT_HEADER_ONLY"
+            ]
+          }
         }
       },
-      "version": "0.1.6"
+      "version": "11.0.2"
     }
   ]
 }
