@@ -9,6 +9,7 @@
   "description": "A multiplayer private server for the modding community. Supports crossplay between PC and Quest.",
   "coverImage": "Cover.png",
   "dependencies": [],
+  "lateModFiles": ["${binary}"],
   "modFiles": [],
   "lateModFiles": [
     "${binary}"
