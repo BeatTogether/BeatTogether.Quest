@@ -69,7 +69,7 @@
       },
       {
         "id": "paper2_scotland2",
-        "versionRange": "4.6.*",
+        "versionRange": "^4.6.4",
         "additionalData": {
           "private": true
         }
@@ -216,12 +216,12 @@
     {
       "dependency": {
         "id": "paper2_scotland2",
-        "versionRange": "=4.6.4",
+        "versionRange": "=4.7.0",
         "additionalData": {
-          "soLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.6.4/libpaper2_scotland2.so",
+          "soLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.7.0/libpaper2_scotland2.so",
           "overrideSoName": "libpaper2_scotland2.so",
-          "modLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.6.4/paper2_scotland2.qmod",
-          "branchName": "version/v4_6_4",
+          "modLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.7.0/paper2_scotland2.qmod",
+          "branchName": "version/v4_7_0",
           "compileOptions": {
             "systemIncludes": [
               "shared/utfcpp/source"
@@ -230,7 +230,7 @@
           "cmake": false
         }
       },
-      "version": "4.6.4"
+      "version": "4.7.0"
     },
     {
       "dependency": {
