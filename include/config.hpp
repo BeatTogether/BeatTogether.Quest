@@ -20,7 +20,7 @@ struct Config {
         #if defined(GRAPH_URL) && defined(STATUS_URL) && defined(SERVER_NAME)
         {SERVER_NAME, {GRAPH_URL, STATUS_URL, MAX_PLAYER_COUNT, "", true}},
         #endif
-        {officialServerName, MultiplayerCore::API::GetOfficialServer() ? *MultiplayerCore::API::GetOfficialServer() : MultiplayerCore::ServerConfig()}
+        //{officialServerName, MultiplayerCore::API::GetOfficialServer() ? *MultiplayerCore::API::GetOfficialServer() : MultiplayerCore::ServerConfig()}
     });
 
     const MultiplayerCore::ServerConfig* GetSelectedConfig() const;
