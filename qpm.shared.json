@@ -7,7 +7,7 @@
     "info": {
       "name": "BeatTogether",
       "id": "BeatTogether",
-      "version": "2.2.4",
+      "version": "2.2.5",
       "url": "https://github.com/BeatTogether/BeatTogether.Quest",
       "additionalData": {
         "overrideSoName": "libBeatTogether.so",
@@ -56,7 +56,7 @@
       },
       {
         "id": "multiplayer-core",
-        "versionRange": "^1.6.4",
+        "versionRange": "^1.6.5",
         "additionalData": {}
       },
       {
@@ -69,7 +69,7 @@
       },
       {
         "id": "paper2_scotland2",
-        "versionRange": "^4.6.4",
+        "versionRange": "4.6.*",
         "additionalData": {
           "private": true
         }
@@ -169,17 +169,17 @@
     {
       "dependency": {
         "id": "songcore",
-        "versionRange": "=1.1.24",
+        "versionRange": "=1.1.25",
         "additionalData": {
-          "soLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.24/libsongcore.so",
-          "debugSoLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.24/debug_libsongcore.so",
+          "soLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.25/libsongcore.so",
+          "debugSoLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.25/debug_libsongcore.so",
           "overrideSoName": "libsongcore.so",
-          "modLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.24/SongCore.qmod",
-          "branchName": "version/v1_1_24",
+          "modLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.25/SongCore.qmod",
+          "branchName": "version/v1_1_25",
           "cmake": true
         }
       },
-      "version": "1.1.24"
+      "version": "1.1.25"
     },
     {
       "dependency": {
@@ -235,13 +235,13 @@
     {
       "dependency": {
         "id": "custom-types",
-        "versionRange": "=0.18.3",
+        "versionRange": "=0.18.4",
         "additionalData": {
-          "soLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.3/libcustom-types.so",
-          "debugSoLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.3/debug_libcustom-types.so",
+          "soLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.4/libcustom-types.so",
+          "debugSoLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.4/debug_libcustom-types.so",
           "overrideSoName": "libcustom-types.so",
-          "modLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.3/CustomTypes.qmod",
-          "branchName": "version/v0_18_3",
+          "modLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.4/CustomTypes.qmod",
+          "branchName": "version/v0_18_4",
           "compileOptions": {
             "cppFlags": [
               "-Wno-invalid-offsetof"
@@ -250,22 +250,22 @@
           "cmake": true
         }
       },
-      "version": "0.18.3"
+      "version": "0.18.4"
     },
     {
       "dependency": {
         "id": "multiplayer-core",
-        "versionRange": "=1.6.4",
+        "versionRange": "=1.6.5",
         "additionalData": {
-          "soLink": "https://github.com/EnderdracheLP/MultiplayerCore.Quest/releases/download/1.6.4/libMultiplayerCore.so",
-          "debugSoLink": "https://github.com/EnderdracheLP/MultiplayerCore.Quest/releases/download/1.6.4/debug_libMultiplayerCore.so",
+          "soLink": "https://github.com/EnderdracheLP/MultiplayerCore.Quest/releases/download/1.6.5/libMultiplayerCore.so",
+          "debugSoLink": "https://github.com/EnderdracheLP/MultiplayerCore.Quest/releases/download/1.6.5/debug_libMultiplayerCore.so",
           "overrideSoName": "libMultiplayerCore.so",
-          "modLink": "https://github.com/EnderdracheLP/MultiplayerCore.Quest/releases/download/1.6.4/MultiplayerCore_1.6.4.qmod",
-          "branchName": "version/1.6.4",
+          "modLink": "https://github.com/EnderdracheLP/MultiplayerCore.Quest/releases/download/1.6.5/MultiplayerCore_1.6.5.qmod",
+          "branchName": "version/1.6.5",
           "cmake": true
         }
       },
-      "version": "1.6.4"
+      "version": "1.6.5"
     },
     {
       "dependency": {
@@ -328,6 +328,34 @@
     },
     {
       "dependency": {
+        "id": "scotland2",
+        "versionRange": "=0.1.6",
+        "additionalData": {
+          "soLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.6/libsl2.so",
+          "debugSoLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.6/debug_libsl2.so",
+          "overrideSoName": "libsl2.so",
+          "branchName": "version/v0_1_6"
+        }
+      },
+      "version": "0.1.6"
+    },
+    {
+      "dependency": {
+        "id": "beatsaverplusplus",
+        "versionRange": "=0.2.3",
+        "additionalData": {
+          "soLink": "https://github.com/bsq-ports/BeatSaverPlusPlus/releases/download/v0.2.3/libbeatsaverplusplus.so",
+          "debugSoLink": "https://github.com/bsq-ports/BeatSaverPlusPlus/releases/download/v0.2.3/debug_libbeatsaverplusplus.so",
+          "overrideSoName": "libbeatsaverplusplus.so",
+          "modLink": "https://github.com/bsq-ports/BeatSaverPlusPlus/releases/download/v0.2.3/BeatSaverPlusPlus.qmod",
+          "branchName": "version/v0_2_3",
+          "cmake": false
+        }
+      },
+      "version": "0.2.3"
+    },
+    {
+      "dependency": {
         "id": "fmt",
         "versionRange": "=11.0.2",
         "additionalData": {
@@ -344,34 +372,6 @@
         }
       },
       "version": "11.0.2"
-    },
-    {
-      "dependency": {
-        "id": "beatsaverplusplus",
-        "versionRange": "=0.2.2",
-        "additionalData": {
-          "soLink": "https://github.com/bsq-ports/BeatSaverPlusPlus/releases/download/v0.2.2/libbeatsaverplusplus.so",
-          "debugSoLink": "https://github.com/bsq-ports/BeatSaverPlusPlus/releases/download/v0.2.2/debug_libbeatsaverplusplus.so",
-          "overrideSoName": "libbeatsaverplusplus.so",
-          "modLink": "https://github.com/bsq-ports/BeatSaverPlusPlus/releases/download/v0.2.2/BeatSaverPlusPlus.qmod",
-          "branchName": "version/v0_2_2",
-          "cmake": false
-        }
-      },
-      "version": "0.2.2"
-    },
-    {
-      "dependency": {
-        "id": "scotland2",
-        "versionRange": "=0.1.6",
-        "additionalData": {
-          "soLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.6/libsl2.so",
-          "debugSoLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.6/debug_libsl2.so",
-          "overrideSoName": "libsl2.so",
-          "branchName": "version/v0_1_6"
-        }
-      },
-      "version": "0.1.6"
     }
   ]
 }

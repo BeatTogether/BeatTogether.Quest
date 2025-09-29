@@ -6,7 +6,7 @@
   "info": {
     "name": "BeatTogether",
     "id": "BeatTogether",
-    "version": "2.2.4",
+    "version": "2.2.5",
     "url": "https://github.com/BeatTogether/BeatTogether.Quest",
     "additionalData": {
       "overrideSoName": "libBeatTogether.so",
@@ -55,7 +55,7 @@
     },
     {
       "id": "multiplayer-core",
-      "versionRange": "^1.6.4",
+      "versionRange": "^1.6.5",
       "additionalData": {}
     },
     {
@@ -68,7 +68,7 @@
     },
     {
       "id": "paper2_scotland2",
-      "versionRange": "^4.6.4",
+      "versionRange": "4.6.*",
       "additionalData": {
         "private": true
       }
